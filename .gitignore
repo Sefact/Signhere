@@ -16,7 +16,6 @@ local.properties
 
 # ignore properties file
 config.properties
-pom.properties
 
 # External tool builders
 .externalToolBuilders/
@@ -98,24 +97,3 @@ hs_err_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse
 /target/
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
