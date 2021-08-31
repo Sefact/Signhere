@@ -2,15 +2,20 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
 		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
 	
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/WEB-INF/config/config.properties"/>
+		<property name="fileEncoding" value="UTF-8"/>
+	</bean>	
 	<!-- Root Context: defines shared resources visible to all other web components -->
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
-		<property name="url" value="jdbc:oracle:thin:@192.168.0.4:1521:xe" />
-		<property name="username" value="DBA_SAMPLE" />
-		<property name="password" value="1234" />
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="${spring.datasource.driverClassName}" />
+    	<property name="url" value="${spring.datasource.url}" />
+    	<property name="username" value="${spring.datasource.username}" />
+    	<property name="password" value="${spring.datasource.password}" />
 	</bean>
 
 	<bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >
