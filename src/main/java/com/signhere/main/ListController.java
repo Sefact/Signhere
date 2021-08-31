@@ -26,8 +26,8 @@ public class ListController {
 		
 		sqlSession.selectList("myDraft", db);
 		
-    	// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
-    	// 항목들 get해서 myDraft 페이지로 이동
+    // UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
+    // 항목들 get해서 myDraft 페이지로 이동
 
 		mav.setViewName("myDraft");
 		return mav;
@@ -141,4 +141,5 @@ public class ListController {
 		mav.setViewName("receiveList");
 		return mav;
 	}
+
 }
