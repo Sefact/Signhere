@@ -20,14 +20,21 @@ public class ListController {
 	@Autowired
 	SqlSession sqlSession;
 	
+	@PostMapping("/myDraft")
+	public ModelAndView myDraft(DocumentBean db) {
+		  
+		sqlSession.selectList("myDraft", db);
+  }
+  
 	//내가 보낸 기안
 	@PostMapping("/myDraft")
 	public ModelAndView myDraft(DocumentBean db) {
 		
 		sqlSession.selectList("myDraft", db);
 		
-//		UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
-//		항목들 get해서 myDraft 페이지로 이동
+    // UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
+    // 항목들 get해서 myDraft 페이지로 이동
+
 		mav.setViewName("myDraft");
 			return mav;
 	}
@@ -40,8 +47,7 @@ public class ListController {
 		return mav;
 	}
 	
-	//결제대기함
-	
+  //결제대기함
 	@PostMapping("/apToDoList")
 	public ModelAndView apToDoList(DocumentBean db) {
 		
@@ -50,7 +56,8 @@ public class ListController {
 		return mav;
 	}
 	
-	//결제진행함
+
+  //결제진행함
 	@PostMapping("/apIngList")
 	public ModelAndView apIngList(DocumentBean db) {
 		
@@ -76,7 +83,8 @@ public class ListController {
 		return mav;
 	}
 	
-	//참조열람함
+
+  //참조열람함
 	@PostMapping("/apReferenceList")
 	public ModelAndView apReferenceList(DocumentBean db) {
 		
@@ -91,17 +99,15 @@ public class ListController {
 		mav.setViewName("apCompleteList");
 		return mav;
 	}
-	
-	//개인보관함페이지
-	
+		
 	@PostMapping("/myList")
 	public ModelAndView myList(DocumentBean db) {
-		
-		
-		mav.setViewName("myList");
+
+    mav.setViewName("myList");
 		return mav;
 	}
 	
+
 	//개인보관함으로 이동시키는 JOB
 	@PostMapping("/goMyList")
 	public ModelAndView goMyList(DocumentBean db) {
@@ -119,7 +125,6 @@ public class ListController {
 	}
 
 	//문서검색 JOB
-	
 	@PostMapping("/searchText")
 	public List<DocumentBean> searchText(DocumentBean db) {
 		
@@ -142,6 +147,7 @@ public class ListController {
 		mav.setViewName("receiveList");
 		return mav;
 	}
+}	
 	
 	
 }
