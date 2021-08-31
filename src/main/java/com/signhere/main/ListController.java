@@ -33,7 +33,6 @@ public class ListController {
 	}
 	
 	//내가 보낸 시행
-	
 	@PostMapping("/myEnforceMent")
 	public ModelAndView myEnforceMent(DocumentBean db) {
 		
