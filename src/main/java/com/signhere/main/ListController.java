@@ -23,7 +23,7 @@ public class ListController {
 	//내가 보낸 기안
 	@PostMapping("/myDraft")
 	public ModelAndView myDraft(DocumentBean db) {
-		
+		  
 		sqlSession.selectList("myDraft", db);
 		
 //		UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
