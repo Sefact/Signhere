@@ -18,6 +18,15 @@
 	<resources mapping="/js/**" location="/resources/js/" />
 	<resources mapping="/img/**" location="/resources/img/" />
 
+	<context:property-placeholder location="classpath:config/*"/>
+
+    <beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <beans:property name="driverClassName" value="${db.driver}"/>
+        <beans:property name="url" value="${db.url}">
+        <beans:property name="username" value="${db.username}"/>
+        <beans:property name="password" value="${db.password}"/>
+    </beans:bean>
+
 
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
