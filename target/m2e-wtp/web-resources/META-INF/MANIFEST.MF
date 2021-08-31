@@ -1,5 +1,10 @@
 Manifest-Version: 1.0
+<<<<<<< HEAD
 Built-By: Dongmin Geum
 Build-Jdk: 11.0.10
+=======
+Built-By: H
+Build-Jdk: 11.0.12
+>>>>>>> 4e25fc0aaada1a69622b188d4c1130b72366ef6d
 Created-By: Maven Integration for Eclipse
 
