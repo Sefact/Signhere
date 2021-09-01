@@ -17,7 +17,7 @@ public class DraftController {
 	@Autowired
 	private Document doc;
 	private ModelAndView mav;
-	
+
 	@PostMapping("/writeDraft")
 	public List<UserBean> writeDraft(@RequestBody List<UserBean> ulist) {
 		ulist = doc.mWriteDraft(ulist.get(0));
