@@ -6,6 +6,7 @@
 <meta charset="UTF-8">
 <title>SignHere</title>
 <link rel="stylesheet" href="css/index.css" />
+<script src="/resources/js/document.js"></script>
 </head>
 <body>
 	<div class="screen">
@@ -14,11 +15,11 @@
 		</section>
 		<section class="mainScreen">
 			<div class ="sideNavBar">
-				<button>결재문 작성</button>
+				<button onclick="waitApproval()">결재문 작성</button>
 				<nav>
 					<ol class="sideBarBtn">
 						<li>내가보낸 결재</li>
-						<li>결재 대기함</li>
+						<li><a href="javascript:void(0);" onclick="writeApproval();">결제 대기함</a></li>
 						<li>결재 진행함</li>
 						<li>완료 문서함</li>
 						<li>반려 문서함</li>
@@ -27,7 +28,7 @@
 						<li>내가보낸 협조문</li>
 						<li>공문 수신함</li>
 						<li>개인 보관함</li>
-						<li>위임권 관리</li>
+						<li><a href="javascript:void(0);" onclick="setEntrust();">위임권 관리</a></li>
 					</ol>
 				</nav>
 			</div>
