@@ -22,7 +22,7 @@ public class TextController {
 	private FileUtils fut;
 	private ModelAndView mav;
 	
-	@PostMapping("preview")
+	@PostMapping("/preview")
 	public List<DocumentBean> preview(@RequestBody List<DocumentBean> dlist) {
 		List<DocumentBean> docList;
 		
@@ -31,42 +31,42 @@ public class TextController {
 		return docList;
 	}
 	
-	@PostMapping("requestdraft")
+	@PostMapping("/requestdraft")
 	public ModelAndView requestdraft(DocumentBean db) {
 		mav = fut.mRequestDraft(db);
 		
 		return mav;
 	}
 	
-	@PostMapping("approval")
+	@PostMapping("/approval")
 	public ModelAndView approval(ApprovalBean ab, ApprovalCommentBean acb) {
 		mav = fut.mApproval(ab, acb);
 		
 		return mav;
 	}
 	
-	@PostMapping("companion")
+	@PostMapping("/companion")
 	public ModelAndView companion(DocumentBean db, CompanionDeferBean cdb) {
 		mav = fut.mCompanion(db, cdb);
 		
 		return mav;
 	}
 	
-	@PostMapping("defer")
+	@PostMapping("/defer")
 	public ModelAndView defer(ApprovalBean ab, CompanionDeferBean cdb) {
 		mav = fut.mDefer(ab, cdb);
 		
 		return mav;
 	}
 	
-	@PostMapping("draftCancel")
+	@PostMapping("/draftCancel")
 	public ModelAndView draftCancel(DocumentBean db) {
 		mav = fut.mDraftCancel(db);
 		
 		return mav;
 	}
 	
-	@PostMapping("viewDrafter")
+	@PostMapping("/viewDrafter")
 	public List<UserBean> viewDrafter(@RequestBody List<UserBean> ulist) {
 		List<UserBean> userList;
 		
@@ -75,21 +75,21 @@ public class TextController {
 		return userList;
 	}
 	
-	@PostMapping("readingAuthority")
+	@PostMapping("/readingAuthority")
 	public ModelAndView readingAuthority(UserBean ub) {
 		mav = fut.mReadingAuthority(ub);
 		
 		return mav;
 	}
 	
-	@PostMapping("grantAuthority")
+	@PostMapping("/grantAuthority")
 	public ModelAndView grantAuthority(ReadingReferenceBean rb) {
 		mav = fut.mGrantAuthority(rb);
 		
 		return mav;
 	}
 	
-	@PostMapping("documentBox")
+	@PostMapping("/documentBox")
 	public List<DocumentBean> documentBox(@RequestBody List<DocumentBean> dlist) {
 		List<DocumentBean> docList;
 		
