@@ -9,5 +9,6 @@
 <body>
 	<input type="text" name="userId" placeholder="아이디"/>
 	<input type="button" value="Send" onClick="sendUserInfo()" />
+	<input type="button" value="Move" onClick="location.href='/join'" />
 </body>
 </html>
