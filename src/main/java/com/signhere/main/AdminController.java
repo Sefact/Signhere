@@ -57,3 +57,4 @@ public class AdminController {
 		return mag.mApListRemove(dmCode);
 	}
 }
+
