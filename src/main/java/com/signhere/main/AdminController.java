@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Management;
 
-
+@Controller
 public class AdminController {
 	@Autowired
 	private Management mag;
@@ -57,3 +57,4 @@ public class AdminController {
 		return mag.mApListRemove(dmCode);
 	}
 }
+
