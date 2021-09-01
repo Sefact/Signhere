@@ -18,21 +18,21 @@ public class DraftController {
 	private Document doc;
 	private ModelAndView mav;
 	
-	@PostMapping("writeDraft")
+	@PostMapping("/writeDraft")
 	public List<UserBean> writeDraft(@RequestBody List<UserBean> ulist) {
 		ulist = doc.mWriteDraft(ulist.get(0));
 		
 		return ulist;
 	}
 	
-	@PostMapping("confirmDraft")
+	@PostMapping("/confirmDraft")
 	public ModelAndView confirmDraft(DocumentBean db) {
 		mav = doc.mConfirmDraft(db);
 		
 		return mav;
 	}
 	
-	@PostMapping("modifyDraft")
+	@PostMapping("/modifyDraft")
 	public List<DocumentBean> modifyDraft(@RequestBody List<DocumentBean> dlist) {
 		List<DocumentBean> tempList;
 		
@@ -41,7 +41,7 @@ public class DraftController {
 		return tempList;
 	}
 
-	@PostMapping("draftPage")
+	@PostMapping("/draftPage")
 	public ModelAndView draftPage(DocumentBean db) {
 		mav = doc.mDraftPage(db);
 		
