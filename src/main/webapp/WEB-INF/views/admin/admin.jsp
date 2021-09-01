@@ -56,9 +56,7 @@ position: absolute;
 			<br>
  			<input type="button" name="search" value="검색" />
 	 	</div>
-
 	</div>
-  
   		<div id="bottom_input">
   			<input type="button" name="addMember" value="직원추가" />
   			<input type="button" name="delMember" value="직원삭제" />
