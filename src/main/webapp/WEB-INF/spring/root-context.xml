@@ -9,8 +9,6 @@
 
 	<context:property-placeholder location="/config/*.properties" /> 
 	
-	<!-- Root Context: defines shared resources visible to all other web components -->
-
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${spring.datasource.driverClassName}" />
 		<property name="url" value="${spring.datasource.url}" />

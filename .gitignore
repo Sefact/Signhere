@@ -118,6 +118,7 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+<<<<<<< HEAD
 MANIFEST
 
 # PyDev specific (Python IDE for Eclipse)
@@ -194,3 +195,6 @@ hs_err_pid*
 
 # End of https://www.toptal.com/developers/gitignore/api/java,eclipse
 /target/
+=======
+MANIFEST
+>>>>>>> 0e1d5bac51baf1a8c47c35939a2ac5dca80de19f
