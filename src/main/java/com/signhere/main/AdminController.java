@@ -56,4 +56,9 @@ public class AdminController {
 		//문서 삭제를 한꺼번에 여러개 가능 하게 할경우에 RequestBody(json)나 modelAttribute로 받아야함
 		return mag.mApListRemove(dmCode);
 	}
+<<<<<<< HEAD
 }
+=======
+}
+
+>>>>>>> branch 'master' of https://github.com/Sefact/Signhere.git

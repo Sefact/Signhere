@@ -25,6 +25,7 @@ public class EntrustController {
 		return mav;
 	}
 	
+
 	@PostMapping("/mandatary")
 	public List<UserBean> mandatary(@RequestBody List<UserBean> ulist) {
 		ulist = ent.mMandatary(ulist.get(0));
