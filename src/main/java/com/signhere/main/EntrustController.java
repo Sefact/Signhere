@@ -18,28 +18,28 @@ public class EntrustController {
 	private Entrust ent;
 	private ModelAndView mav;
 	
-	@PostMapping("setEntrust")
+	@PostMapping("/setEntrust")
 	public ModelAndView setEntrust(EntrustBean eb) {
 		mav = ent.mSetEntrust(eb);
 		
 		return mav;
 	}
 	
-	@PostMapping("mandatary")
+	@PostMapping("/mandatary")
 	public List<UserBean> mandatary(@RequestBody List<UserBean> ulist) {
 		ulist = ent.mMandatary(ulist.get(0));
 		
 		return ulist;
 	}
 	
-	@PostMapping("saveEntrust")
+	@PostMapping("/saveEntrust")
 	public ModelAndView saveEntrust(EntrustBean eb) {
 		mav = ent.mSaveEntrust(eb);
 		
 		return mav;
 	}
 	
-	@PostMapping("disCheckEntrust")
+	@PostMapping("/disCheckEntrust")
 	public ModelAndView disCheckEntrust(EntrustBean eb) {
 		mav = ent.mDisCheckEntrust(eb);
 		
