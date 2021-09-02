@@ -23,21 +23,22 @@ public class ListController {
 	//내가 보낸 기안
 	@PostMapping("/myDraft")
 	public ModelAndView myDraft(DocumentBean db) {
-		
-		sqlSession.selectList("myDraft", db);
+		mav = new ModelAndView();
+		//sqlSession.selectList("myDraft", db);
 		
     		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
     		// 항목들 get해서 myDraft 페이지로 이동
 
-		mav.setViewName("myDraft");
+		mav.setViewName("document/myDraft");
 		return mav;
 	}
 	
 	//내가 보낸 시행
 	@PostMapping("/myEnforceMent")
 	public ModelAndView myEnforceMent(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		mav.setViewName("myEnforceMent");
+		mav.setViewName("document/myEnforceMent");
 		return mav;
 	}
 	
@@ -55,26 +56,27 @@ public class ListController {
   	//결제진행함
 	@PostMapping("/apIngList")
 	public ModelAndView apIngList(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		
-		mav.setViewName("apIngList");
+		mav.setViewName("document/approvalProcced");
 		return mav;
 	}
 	
 	//반려함
-	@PostMapping("/apReturnList")	
+	@PostMapping("/apReturnList")
 	public ModelAndView apReturnList(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		mav.setViewName("apReturnList");
+		mav.setViewName("document/companionApproval");
 		return mav;
 	}
 	
 	//보류함
 	@PostMapping("/deferList")
 	public ModelAndView deferList(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		
-		mav.setViewName("deferList");
+		mav.setViewName("document/deferList");
 		return mav;
 	}
 	
@@ -82,40 +84,48 @@ public class ListController {
   	//참조열람함
 	@PostMapping("/apReferenceList")
 	public ModelAndView apReferenceList(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		mav.setViewName("apReferenceList");
+		mav.setViewName("document/referenceApproval");
 		return mav;
 	}
 	
 	//결재완료함
 	@PostMapping("/apCompleteList")
 	public ModelAndView apCompleteList(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		mav.setViewName("apCompleteList");
+		mav.setViewName("document/completeApproval");
 		return mav;
 	}
 		
 	@PostMapping("/myList")
 	public ModelAndView myList(DocumentBean db) {
-
-    		mav.setViewName("myList");
-		return mav;
+		mav = new ModelAndView();
+		
+    	mav.setViewName("document/myList");
+		
+    	return mav;
 	}
 	
 
 	//개인보관함으로 이동시키는 JOB
 	@PostMapping("/goMyList")
 	public ModelAndView goMyList(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		mav.setViewName("myList");
+		mav.setViewName("document/myList");
+		
 		return mav;
 	}
 	
 	//개인보관함에 있는 문서 삭제 JOB
 	@PostMapping("/delMyList")
 	public ModelAndView delMyList(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		mav.setViewName("myList");
+		mav.setViewName("document/myList");
+		
 		return mav;
 	}
 
@@ -138,8 +148,10 @@ public class ListController {
 	//공문수신함
 	@PostMapping("/receiveList")
 	public ModelAndView receiveList(DocumentBean db) {
+		mav = new ModelAndView();
 		
-		mav.setViewName("receiveList");
+		mav.setViewName("document/receiveNotice");
+		
 		return mav;
 	}
 }

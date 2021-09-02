@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>CompanionApproval</title>
+	<title>myEnforceMent</title>
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
