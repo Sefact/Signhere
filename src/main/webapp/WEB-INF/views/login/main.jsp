@@ -20,6 +20,7 @@
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
 <body>
+	<!-- fix -->
 	<jsp:include page="../utils/navigation.jsp" />
 	
 	<jsp:include page="../utils/chart.jsp" />
