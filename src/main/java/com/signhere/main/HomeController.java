@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.AccessBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Authentication;
@@ -30,9 +31,9 @@ public class HomeController {
 	}
 	
 	@PostMapping("/login")
-	public ModelAndView login(@ModelAttribute UserBean ub) {
-		mav = auth.insUser(ub);
-		//mav = auth.mLogin(ub);
+	public ModelAndView login(@ModelAttribute AccessBean ab) {
+		//mav = auth.insUser(ub);
+		mav = auth.mLogin(ab);
 		return mav;
 	}
 	

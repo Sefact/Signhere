@@ -18,9 +18,13 @@ public class AdminController {
 	private ModelAndView mav;
 	
 	//직원 관리 페이지로 이동 
-	@GetMapping("/admin")
-	public String admin() {
-		return "admin";
+	@PostMapping("/admin")
+	public ModelAndView admin() {
+		mav = new ModelAndView();
+		
+		mav.setViewName("admin/admin");
+		
+		return mav;
 	}
 	
 	//직원 관리 페이지에서 새로운 직원 추가
@@ -46,7 +50,7 @@ public class AdminController {
 		return mag.mUpdateEmployee(ub);
 	}
 	
-	@GetMapping("/apListAdmin")
+	@PostMapping("/apListAdmin")
 	public ModelAndView apListAdmin() {
 		return mag.mApListAdmin();
 	}
@@ -56,5 +60,5 @@ public class AdminController {
 		//문서 삭제를 한꺼번에 여러개 가능 하게 할경우에 RequestBody(json)나 modelAttribute로 받아야함
 		return mag.mApListRemove(dmCode);
 	}
-}
 
+}

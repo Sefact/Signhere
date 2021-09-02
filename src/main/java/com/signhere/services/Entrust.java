@@ -19,7 +19,7 @@ public class Entrust {
 	public ModelAndView mSetEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("setEntrust");
+		mav.setViewName("document/setEntrust");
 		
 		return mav;
 	}
