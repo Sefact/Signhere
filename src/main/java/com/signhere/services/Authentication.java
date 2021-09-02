@@ -31,7 +31,7 @@ public class Authentication implements FriendsInter {
 	public ModelAndView mLogin(AccessBean ab) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("main");
+		mav.setViewName("login/main");
 		//mav.setViewName("myInfo");
 		
 		return mav;
