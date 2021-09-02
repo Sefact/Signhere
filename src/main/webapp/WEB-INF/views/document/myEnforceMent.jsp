@@ -3,8 +3,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-	<title>CompleteApproval</title>
+	<meta charset="UTF-8">
+	<title>myEnforceMent</title>
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
@@ -21,6 +21,5 @@
 </head>
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
-
 </body>
 </html>

@@ -47,6 +47,9 @@ public class Management {
 	}
 
 	public ModelAndView mApListAdmin() {
+		mav = new ModelAndView();
+		
+		mav.setViewName("admin/aplistAdmin");
 		
 		return mav;
 	}
