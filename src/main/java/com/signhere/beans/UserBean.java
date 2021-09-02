@@ -18,3 +18,5 @@ public class UserBean {
 	private String grName;
 	private List<CompanyBean> company;
 }
+
+

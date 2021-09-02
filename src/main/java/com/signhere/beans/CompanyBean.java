@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class CompanyBean {
 	private String cmCode;
-	pirvate String cmName;
+	private String cmName;
 }
