@@ -4,7 +4,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>DeferList</title>
+	<title>DeferLissa</title>
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
