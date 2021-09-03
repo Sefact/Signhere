@@ -36,6 +36,7 @@ public class Management {
 		
 		//default = 실패, 성공시 message = 성공 
 		mav.addObject("네트워크 오류! message","직원삭제 실패");
+		mav.setViewName("home");
 		
 		return mav;
 	}
