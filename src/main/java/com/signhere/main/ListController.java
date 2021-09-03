@@ -27,11 +27,24 @@ public class ListController {
 	public ModelAndView myDraft(DocumentBean db) {
 		mav = new ModelAndView();
 		//sqlSession.selectList("myDraft", db);
-		
-    		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
-    		// 항목들 get해서 myDraft 페이지로 이동
-
+		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
+		// 항목들 get해서 myDraft 페이지로 이동
 		mav.setViewName("document/myDraft");
+		List<DocumentBean> docList;
+		
+		docList=sqlSession.selectList("myDraft", db);
+		
+
+		
+		System.out.println(db.getDmNum());
+		System.out.println(db.getDmTitle());
+		System.out.println(db.getApCode());
+		System.out.println(db.getDmCode());
+		System.out.println(db.getDmDate());
+		
+		
+		
+		
 		return mav;
 	}
 	
