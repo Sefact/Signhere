@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
@@ -131,10 +133,18 @@ public class ListController {
 
 	//문서검색 JOB
 	@PostMapping("/searchText")
-	public List<DocumentBean> searchText(DocumentBean db) {
+	public ModelAndView searchText(DocumentBean db) {
+		System.out.println(db.getDmNum());
+		System.out.println(db.getDmTitle());
+		System.out.println(db.getApCode());
+		System.out.println(db.getDmCode());
+		System.out.println(db.getDmDate());
 		
+		mav = new ModelAndView();
 		
-		return null;
+		mav.setViewName("redirect:/");
+		
+		return mav;
 	}
 	
 	//페이지이동 JOB

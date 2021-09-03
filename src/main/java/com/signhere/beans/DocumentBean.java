@@ -14,7 +14,8 @@ public class DocumentBean {
 	private String dmWriteId;
 	private String dmWriter;
 	private String dmTitle;
-	private Date dmDate;
+	private String dmDate;
+	private String dmDate2;
 	private String dmCode;
 	private String dmName;
 }
