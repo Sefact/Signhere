@@ -31,7 +31,7 @@
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li class="active"><a href="#">결제문 작성 <span class="sr-only">(current)</span></a></li>
+            <li class="active"><a href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav nav-sidebar"> 
             <li><a onclick="myDraft();">내가보낸 결재</a></li>
