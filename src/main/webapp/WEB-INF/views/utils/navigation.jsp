@@ -11,7 +11,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Project name</a>
+          <a class="navbar-brand" href="#">Sign Here</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -34,7 +34,7 @@
             <li class="active"><a href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav nav-sidebar"> 
-            <li><a onclick="myDraft();">내가보낸 결재</a></li>
+            <li><a onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
             <li><a onclick="myEnforceMent();">내가보낸 시행문</a></li>
           </ul>
           <ul class="nav nav-sidebar">

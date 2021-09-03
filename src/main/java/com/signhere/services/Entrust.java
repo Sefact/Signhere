@@ -16,6 +16,7 @@ public class Entrust {
 	SqlSessionTemplate sqlSession;
 	ModelAndView mav;
 	
+	
 	public ModelAndView mSetEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
 		
