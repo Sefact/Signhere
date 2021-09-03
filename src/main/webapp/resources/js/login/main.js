@@ -1,6 +1,17 @@
 /**
  * 
  */
+
+
+function changePage(pageName,method){
+	let form = makeForm(pageName, method);
+	
+	//form.appendChild(userId);
+	
+	document.body.appendChild(form);
+	form.submit();
+}
+
 // 내가보낸기안
 function myDraft() {
 	//const userId = document.getElementsByName("userId")[0];

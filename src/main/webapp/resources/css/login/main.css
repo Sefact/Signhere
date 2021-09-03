@@ -87,6 +87,63 @@ body {
   margin-bottom: 30px;
   text-align: center;
 }
+
+.searchBox{
+	display:flex;
+	flex-direction:column;
+	border:1px solid black;
+	padding:5%;
+}
+
+#searchBtn{
+	width:5%;
+	height:5%;
+}
+.docNum,.docTitle{
+	display:flex;
+	flex-direction:row;
+	justify-content:space-between;
+	padding:0% 5%;
+	margin-bottom:15px;
+}
+
+.docNum > input, .docTitle>input{
+	width:80%;
+}
+
+.inputBox{
+	display:flex;
+	padding: 5%;
+}
+
+.inputBox > div{
+	display:flex;
+	flex-direction:column;
+	width:100%;
+}
+
+.searchOptionBox{
+	display:flex;
+	flex-direction:row;
+	justify-content:space-between;
+}
+
+.dmCodeBox{
+	display:flex;
+	flex-direction:row;
+}
+
+.dateOption{
+	display:flex;
+	flex-direction:column;
+}
+
+.startDateBox, .endDateBox{
+	display:flex;
+	flex-direction:row;
+	justify-content:space-between;
+}
+
 .placeholders h4 {
   margin-bottom: 0;
 }
