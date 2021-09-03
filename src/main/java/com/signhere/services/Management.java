@@ -49,6 +49,8 @@ public class Management {
 
 	public ModelAndView mApListAdmin() {
 		mav = new ModelAndView();
+		// session에 id와 company Code가 있다는 가정하에 진행 
+		
 		
 		mav.setViewName("admin/aplistAdmin");
 		
