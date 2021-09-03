@@ -23,7 +23,5 @@
 </head>
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
-	
-	<jsp:include page="../utils/draft.jsp" />
 </body>
 </html>
