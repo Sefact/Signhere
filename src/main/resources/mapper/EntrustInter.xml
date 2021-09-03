@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.signhere.mapper.EntrustInter">
+	<select id="selReceiver" resultType="UserBean" parameterType="UserBean">
+		SELECT ID AS "USERID", DEPARTMENT_CODE AS "DPCODE", GRADE_CODE AS "GRCODE", NAME AS "USERNAME" FROM MEMBER WHERE ID = ${userId}
+	</select>
+</mapper>
