@@ -4,10 +4,6 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.signhere.mapper.FriendsInter">
-	<insert id="insertUser" parameterType="UserBean">
-		INSERT INTO SAMPLEUSER VALUES (#{userId})
-	</insert>
-	
 </mapper>
 	
 	
