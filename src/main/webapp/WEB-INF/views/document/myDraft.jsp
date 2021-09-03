@@ -8,6 +8,8 @@
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
+	<!-- Resources JS -->
+	<script src="/resources/js/document/myDraft.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
 	<!-- JQuery -->
