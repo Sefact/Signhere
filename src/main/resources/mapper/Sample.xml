@@ -7,4 +7,7 @@
 	<insert id="insertUser" parameterType="UserBean">
 		INSERT INTO SAMPLEUSER VALUES (#{userId})
 	</insert>
+	
 </mapper>
+	
+	
