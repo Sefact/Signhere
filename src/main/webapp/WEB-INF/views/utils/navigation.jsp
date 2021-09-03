@@ -34,7 +34,7 @@
             <li class="active"><a href="#">결제문 작성 <span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav nav-sidebar"> 
-            <li><a onclick="myDraft();">내가보낸 결재</a></li>
+            <li><a onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
             <li><a onclick="myEnforceMent();">내가보낸 시행문</a></li>
           </ul>
           <ul class="nav nav-sidebar">

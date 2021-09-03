@@ -21,5 +21,6 @@
 </head>
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
+	<jsp:include page="../utils/chart.jsp" />
 </body>
 </html>
