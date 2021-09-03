@@ -21,5 +21,10 @@
 </head>
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
+	<label for="Name">이름</label>
+	<input type="text" /><br>
+	<label for="grade">직급</label>
+	<input type="text" /><br>
+	<label for="department">부서</label>
 </body>
 </html>

@@ -5,12 +5,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>MyList</title>
-	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
-	<!-- JQuery -->
+	<!-- JQuery --> 
 	<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 	<!-- popper.js -->
 	<script src="/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
