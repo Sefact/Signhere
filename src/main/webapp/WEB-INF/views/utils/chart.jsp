@@ -3,45 +3,44 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-	<h1 class="page-header">결재대기함</h1>
+	<h1 class="page-header">Dashboard</h1>
 
 	<div class="row placeholders">
-		<div class="searchBox">
-					<div class="inputBox">
-						<div>
-							<div class="docNum">
-								<label for="dmNum">문서번호</label>	
-								<input type="text" name="dmNum"/>
-							</div>
-							<div class="docTitle">
-								<label for="dmTitle">제목</label>
-								<input type="text" name="dmTitle">
-							</div>
-						</div>
-						<button id="searchBtn">검색</button>
-					</div>
-					<div class="searchOptionBox">
-						<div class="dmCodeBox">
-							<label for="dmCode">문서종류</label>
-							<select name="dmCode">
-								<option>페이지 로드시 db에서받아옴</option>
-							</select>
-						</div>
-						<div class="dateOption">
-							<div class="startDateBox">
-								<label for="dmDateStart">START DATE</label>
-								<input type="date" name="dmDateStart" />
-							</div>
-							<div class="endDateBox">
-								<label for="dmDateEnd">END DATE</label>
-								<input type="date" name="dmDateEnd" />
-							</div>
-						</div>
-					</div>
-				</div>
+		<div class="col-xs-6 col-sm-3 placeholder">
+			<img
+				src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+				width="200" height="200" class="img-responsive"
+				alt="Generic placeholder thumbnail">
+			<h4>Label</h4>
+			<span class="text-muted">Something else</span>
+		</div>
+		<div class="col-xs-6 col-sm-3 placeholder">
+			<img
+				src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+				width="200" height="200" class="img-responsive"
+				alt="Generic placeholder thumbnail">
+			<h4>Label</h4>
+			<span class="text-muted">Something else</span>
+		</div>
+		<div class="col-xs-6 col-sm-3 placeholder">
+			<img
+				src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+				width="200" height="200" class="img-responsive"
+				alt="Generic placeholder thumbnail">
+			<h4>Label</h4>
+			<span class="text-muted">Something else</span>
+		</div>
+		<div class="col-xs-6 col-sm-3 placeholder">
+			<img
+				src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
+				width="200" height="200" class="img-responsive"
+				alt="Generic placeholder thumbnail">
+			<h4>Label</h4>
+			<span class="text-muted">Something else</span>
+		</div>
 	</div>
 
-	
+	<h2 class="sub-header">Section title</h2>
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>

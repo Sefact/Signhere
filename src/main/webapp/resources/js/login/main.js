@@ -158,7 +158,6 @@ function admin() {
 
 // 결재문서 관리
 function apListAdmin() {
-	//const userId = document.getElementsByName("userId")[0];
 	
 	let form = makeForm("apListAdmin", "post");
 	
