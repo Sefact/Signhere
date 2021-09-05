@@ -9,4 +9,5 @@ import com.signhere.beans.DocumentBean;
 
 public interface DocumentInter {
 	public ModelAndView myDraft(DocumentBean db); 
+	public ModelAndView myEnforceMent(DocumentBean db); 
 }

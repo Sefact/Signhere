@@ -16,12 +16,27 @@
         		INNER JOIN APS
         		ON DM.APPROVAL_CODE = APS.APPROVAL_CODE
         		WHERE WRITER = '202103001' AND DOCUMENT_CODE='D'
+        		
+        	</select> 		
+        		
+      <select id="myEnforceMent" parameterType="DocumentBean" resultType="DocumentBean">
+		SELECT  DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+        		APS.APPROVAL_NAME AS "apName",
+        		DOCUMENT_DATE AS "dmDate"
+        		FROM MM
+        		INNER JOIN DM
+        		ON MM.COMPANY_CODE = DM.COMPANY_CODE
+        		INNER JOIN APS
+        		ON DM.APPROVAL_CODE = APS.APPROVAL_CODE
+        		WHERE WRITER = '202103001' AND DOCUMENT_CODE='E'
+
+ 		
+        		
 
 	</select>
-
-
-
 </mapper>
-	
+
+
 	
 	

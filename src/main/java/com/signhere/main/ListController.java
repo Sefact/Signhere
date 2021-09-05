@@ -45,6 +45,9 @@ public class ListController implements DocumentInter {
 		mav.addObject("dmCode",docList.get(0).getDmCode());
 		mav.addObject("dmDate",docList.get(0).getDmDate());
 		
+		//현재 ID는 interface.xml에 임의값 where절에 집어넣음.
+		
+		
 	
 //		실수... db 통해서 쓴 sql System.out.println(db.get(0).getDmNum());
 //		System.out.println(db.get(0).getDmTitle());
@@ -64,6 +67,20 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/myEnforceMent");
+		
+		
+		
+		List<DocumentBean> docList;
+		
+		docList=sqlSession.selectList("myDraft", db);
+		
+		mav.addObject("dmNum",docList.get(0).getDmNum());
+		mav.addObject("dmTitle",docList.get(0).getDmTitle());
+		mav.addObject("apName",docList.get(0).getApName());
+		mav.addObject("dmCode",docList.get(0).getDmCode());
+		mav.addObject("dmDate",docList.get(0).getDmDate());
+		
+		
 		return mav;
 	}
 	
