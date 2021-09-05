@@ -32,19 +32,16 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		//sqlSession.selectList("myDraft", db);
 		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
-		// 항목들 get해서 myDraft 페이지로 이동
-		
+		// 항목들 get해서 myDraft 페이지로 이동	
 		mav.setViewName("document/myDraft");
 		
 		List<DocumentBean> docList;
-				
 		
 		docList=sqlSession.selectList("myDraft", db);
 		
-	
 		mav.addObject("dmNum",docList.get(0).getDmNum());
 		mav.addObject("dmTitle",docList.get(0).getDmTitle());
-		mav.addObject("apCode",docList.get(0).getApCode());
+		mav.addObject("apName",docList.get(0).getApName());
 		mav.addObject("dmCode",docList.get(0).getDmCode());
 		mav.addObject("dmDate",docList.get(0).getDmDate());
 		

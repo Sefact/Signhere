@@ -75,8 +75,7 @@
 					<tr>
 						<th>문서번호</th>
 						<th>문서제목</th>
-						<th>문서상태</th>
-						<th>문서종류</th>
+						<th> &nbsp; 문서상태</th>
 						<th>날짜</th>
 					</tr>
 				</thead>
@@ -84,8 +83,7 @@
 					<tr>
 						<td>${dmNum }</td>
 						<td>${dmTitle }</td>
-						<td>${apCode }</td>
-						<td>${dmCode }</td>
+						<td>  &nbsp; &nbsp; ${apName }</td>
 						<td>${dmDate }</td>
 					</tr>
 
