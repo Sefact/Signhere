@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.signhere.mapper.ManagementInter">
+	<select id="getAllApListAdmin" parameterType="DocumentBean" resultType="DocumentBean">
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		WHERE DM.COMPANY_CODE=#{cmCode} AND DM.APPROVAL_CODE=#{apCode} ORDER BY DM.document_date DESC
+	</select>
+</mapper>

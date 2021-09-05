@@ -9,7 +9,7 @@
 	<form>
 		<div class="form-row">
 			<div class="form-group col-md-1">
-				<label for="inputDocumentNum">문서번호</label>
+				<label for="dmNum">문서번호</label>
 			</div>
 			<div class="form-group col-md-11">
 				 <input type="text" class="form-control" name="dmNum" placeholder="문서번호">
@@ -17,7 +17,7 @@
 		</div>
 		<div class="form-row">
 			<div class="form-group col-md-1">
-				<label for="inputDocumentNum">제목</label>
+				<label for="dmTitle">제목</label>
 			</div>
 			<div class="form-group col-md-11">
 				 <input type="text" class="form-control" name="dmTitle" placeholder="제목">
@@ -25,12 +25,20 @@
 		</div>
 		<div class="form-row">
 			<div class="form-group col-md-1">
-				<label for="inputDocumentNum">문서상태</label>
+				<label for="dmWriter">작성자</label>
+			</div>
+			<div class="form-group col-md-11">
+				 <input type="text" class="form-control" name="dmWriter" placeholder="작성자">
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-1">
+				<label for="apCode">문서상태</label>
 			</div>
 			<div class="form-group col-md-5">
 				<select name="apCode"
 					class="form-control">
-					<option>선택</option>
+					<option value="">선택</option>
 					<option value="P">진행</option>
 					<option value="C">완료</option>
 					<option value="R">반려</option>
@@ -39,12 +47,12 @@
 				</select>
 			</div>
 			<div class="form-group col-md-1">
-				<label for="inputDocumentNum">문서종류</label>
+				<label for="dmCode">문서종류</label>
 			</div>
 			<div class="form-group col-md-5">
 				<select name="dmCode"
 					class="form-control">
-					<option>선택</option>
+					<option value="">선택</option>
 					<option value="D">기안</option>
 					<option value="E">시행</option>
 				</select>
@@ -58,7 +66,7 @@
 				<input type="date" class="form-control" name="dmDate"/>
 			</div>
 			<div class="form-group col-md-5">
-				<input type="date" class="form-control" name="dmDate"/>
+				<input type="date" class="form-control" name="dmDate2"/>
 			</div>
 			<div class="form-group col-md-1">
 				<input type="button" class="btn btn-primary" value="Search" onClick="sampleFunction()"/>
@@ -71,126 +79,23 @@
 		<div class="table-responsive">
 			<table class="table table-striped">
 				<thead>
-					<tr>
-						<th>#</th>
-						<th>Header</th>
-						<th>Header</th>
-						<th>Header</th>
-						<th>Header</th>
+					<tr class="tableHeader">
+						<th>문서번호</th>
+						<th>제목</th>
+						<th>문서상태</th>
+						<th>문서종류</th>
+						<th>작성자</th>
+						<th>날짜</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td>1,001</td>
-						<td>Lorem</td>
-						<td>ipsum</td>
-						<td>dolor</td>
-						<td>sit</td>
-					</tr>
-					<tr>
-						<td>1,002</td>
-						<td>amet</td>
-						<td>consectetur</td>
-						<td>adipiscing</td>
-						<td>elit</td>
-					</tr>
-					<tr>
-						<td>1,003</td>
-						<td>Integer</td>
-						<td>nec</td>
-						<td>odio</td>
-						<td>Praesent</td>
-					</tr>
-					<tr>
-						<td>1,003</td>
-						<td>libero</td>
-						<td>Sed</td>
-						<td>cursus</td>
-						<td>ante</td>
-					</tr>
-					<tr>
-						<td>1,004</td>
-						<td>dapibus</td>
-						<td>diam</td>
-						<td>Sed</td>
-						<td>nisi</td>
-					</tr>
-					<tr>
-						<td>1,005</td>
-						<td>Nulla</td>
-						<td>quis</td>
-						<td>sem</td>
-						<td>at</td>
-					</tr>
-					<tr>
-						<td>1,006</td>
-						<td>nibh</td>
-						<td>elementum</td>
-						<td>imperdiet</td>
-						<td>Duis</td>
-					</tr>
-					<tr>
-						<td>1,007</td>
-						<td>sagittis</td>
-						<td>ipsum</td>
-						<td>Praesent</td>
-						<td>mauris</td>
-					</tr>
-					<tr>
-						<td>1,008</td>
-						<td>Fusce</td>
-						<td>nec</td>
-						<td>tellus</td>
-						<td>sed</td>
-					</tr>
-					<tr>
-						<td>1,009</td>
-						<td>augue</td>
-						<td>semper</td>
-						<td>porta</td>
-						<td>Mauris</td>
-					</tr>
-					<tr>
-						<td>1,010</td>
-						<td>massa</td>
-						<td>Vestibulum</td>
-						<td>lacinia</td>
-						<td>arcu</td>
-					</tr>
-					<tr>
-						<td>1,011</td>
-						<td>eget</td>
-						<td>nulla</td>
-						<td>Class</td>
-						<td>aptent</td>
-					</tr>
-					<tr>
-						<td>1,012</td>
-						<td>taciti</td>
-						<td>sociosqu</td>
-						<td>ad</td>
-						<td>litora</td>
-					</tr>
-					<tr>
-						<td>1,013</td>
-						<td>torquent</td>
-						<td>per</td>
-						<td>conubia</td>
-						<td>nostra</td>
-					</tr>
-					<tr>
-						<td>1,014</td>
-						<td>per</td>
-						<td>inceptos</td>
-						<td>himenaeos</td>
-						<td>Curabitur</td>
-					</tr>
-					<tr>
-						<td>1,015</td>
-						<td>sodales</td>
-						<td>ligula</td>
-						<td>in</td>
-						<td>libero</td>
+						<td><input type="checkBox">${docList[0].dmNum}</td>
+						<td>${docList[0].dmTitle}</td>
+						<td>${docList[0].apCode}</td>
+						<td>${docList[0].dmCode}</td>
+						<td>${docList[0].dmWriter}</td>
+						<td>${docList[0].dmDate}</td>
 					</tr>
 				</tbody>
 			</table>

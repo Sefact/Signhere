@@ -1,10 +1,13 @@
 package com.signhere.services;
 
+import java.util.List;
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 
 @Service
@@ -16,7 +19,7 @@ public class Management {
 	
 	Management(){
 		//mav 초기화 
-		mav = null;
+		mav = new ModelAndView();
 	}
 
 	public ModelAndView mAddEmployee(UserBean ub) {
@@ -47,11 +50,21 @@ public class Management {
 	}
 
 	public ModelAndView mApListAdmin() {
-		mav = new ModelAndView();
 		// session에 id와 company Code가 있다는 가정하에 진행 
+		DocumentBean db = new DocumentBean();
+		db.setCmCode("1234567890");
+		db.setApCode("C");
+		List<DocumentBean> searchedList;
 		
+		searchedList = sqlSession.selectList("getAllApListAdmin",db);
 		
+		mav.addObject("docList",searchedList);
 		mav.setViewName("admin/aplistAdmin");
+		
+		for(DocumentBean list: searchedList) {
+			System.out.println(list.getDmTitle());
+			System.out.println(list.getDmWriter());
+		}
 		
 		return mav;
 	}

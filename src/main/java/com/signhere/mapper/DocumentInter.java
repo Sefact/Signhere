@@ -1,5 +1,9 @@
 package com.signhere.mapper;
 
-public interface DocumentInter {
+import java.util.List;
 
+import com.signhere.beans.DocumentBean;
+
+public interface DocumentInter {
+	public List<DocumentBean> selectAllCompletedDocs(DocumentBean db);
 }

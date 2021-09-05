@@ -18,4 +18,5 @@ public class DocumentBean {
 	private String dmDate2;
 	private String dmCode;
 	private String dmName;
+	private char searchCode;
 }

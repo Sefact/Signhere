@@ -16,6 +16,8 @@
 	<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 	<!-- popper.js -->
 	<script src="/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
+	<!--  aplistAdmin.js -->
+	<script defer src="/resources/js/admin/aplistAdmin.js"></script>
 	<!-- Font-Awesome -->
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<!-- Resources CSS -->
@@ -24,5 +26,7 @@
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
 	<jsp:include page="../utils/draft.jsp" />
+	<div>
+	</div>
 </body>
 </html>

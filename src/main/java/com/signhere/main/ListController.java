@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
 import com.signhere.services.Document;
+import com.signhere.services.Management;
 
 @Controller
 public class ListController {
@@ -147,17 +148,10 @@ public class ListController {
 	//문서검색 JOB
 	@PostMapping("/searchText")
 	public ModelAndView searchText(DocumentBean db) {
-		System.out.println(db.getDmNum());
-		System.out.println(db.getDmTitle());
-		System.out.println(db.getApCode());
-		System.out.println(db.getDmCode());
-		System.out.println(db.getDmDate());
 		
-		mav = new ModelAndView();
+		System.out.println("listcontroller");
 		
-		mav.setViewName("redirect:/");
-		
-		return mav;
+		return doc.mSearchText(db);
 	}
 	
 	//페이지이동 JOB
