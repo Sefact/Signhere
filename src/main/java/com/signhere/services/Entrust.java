@@ -9,12 +9,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.EntrustBean;
 import com.signhere.beans.UserBean;
+import com.signhere.mapper.EntrustInter;
 
 @Service
 public class Entrust {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	ModelAndView mav;
+	EntrustInter ent;
 	
 	
 	public ModelAndView mSetEntrust(EntrustBean eb) {
@@ -28,7 +30,9 @@ public class Entrust {
 	public List<UserBean> mMandatary(UserBean ub) {
 		List<UserBean> userList;
 		
-		userList = null;
+		ub.setAdmin(ub.getCompany().get(0).getCmCode());
+		
+		userList = sqlSession.selectList("selReceiver", ub);
 		
 		return userList;
 	}
