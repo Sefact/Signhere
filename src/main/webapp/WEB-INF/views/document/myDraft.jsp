@@ -1,7 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
-<%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
-
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>myDraft</title>
+	
+	<!-- Resources JS -->
+	<script src="/resources/js/login/main.js"></script>
+	<!-- Bootstrap core CSS -->
+	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
+	<!-- JQuery -->
+	<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+	<!-- popper.js -->
+	<script src="/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
+	<!-- Font-Awesome -->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<!-- Resources CSS -->
+	<link href="/resources/css/login/main.css" rel="stylesheet">
+</head>
+<body>
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 	<h1 class="page-header">MyDraft</h1>
@@ -68,7 +86,7 @@
 	</form>
 	
 
-		<h2 class="sub-header">Section title</h2>
+		<h2 class="sub-header">문서 목록</h2>
 		<div class="table-responsive">
 			<table class="table table-striped">
 				<thead>
@@ -92,3 +110,7 @@
 			</table>
 		</div>
 	</div>
+	
+		<jsp:include page="../utils/navigation.jsp" />
+	</body>
+	</html>

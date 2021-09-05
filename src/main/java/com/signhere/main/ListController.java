@@ -30,22 +30,27 @@ public class ListController implements DocumentInter {
 	@PostMapping("/myDraft")
 	public ModelAndView myDraft(@ModelAttribute DocumentBean db) {
 		mav = new ModelAndView();
-		//sqlSession.selectList("myDraft", db);
 		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
-		// 항목들 get해서 myDraft 페이지로 이동	
+		// 항목들 get해서 myDraft 페이지로 이동
+		
+		//page 이동
 		mav.setViewName("document/myDraft");
 		
+		//DocumentBean을 List에 생성?
 		List<DocumentBean> docList;
 		
+		//21번째줄 DocumentInte
 		docList=sqlSession.selectList("myDraft", db);
 		
+		
+		//현재 ID(DM테이블의 WRITER)는 interface.xml에 임의값 where절에 집어넣음.
 		mav.addObject("dmNum",docList.get(0).getDmNum());
 		mav.addObject("dmTitle",docList.get(0).getDmTitle());
 		mav.addObject("apName",docList.get(0).getApName());
 		mav.addObject("dmCode",docList.get(0).getDmCode());
 		mav.addObject("dmDate",docList.get(0).getDmDate());
-		
-		//현재 ID는 interface.xml에 임의값 where절에 집어넣음.
+
+
 		
 		
 	
