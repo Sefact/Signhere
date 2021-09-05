@@ -30,9 +30,9 @@ public class Entrust {
 	public List<UserBean> mMandatary(UserBean ub) {
 		List<UserBean> userList;
 		
-		userList = sqlSession.selectList("selReceiver", ub);
+		ub.setAdmin(ub.getCompany().get(0).getCmCode());
 		
-		System.out.println(userList);
+		userList = sqlSession.selectList("selReceiver", ub);
 		
 		return userList;
 	}

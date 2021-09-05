@@ -12,10 +12,10 @@
 					<input type="text" class="form-control" name="dmDate" placeholder="위임사유"/>
 				</div>
 				<div class="form-group col-md-1">
-					<button type="button" class="btn btn-primary" id="btnTest">Receiver</button>
+					<button type="button" class="btn btn-primary" id="modalReceiver">Receiver</button>
 				</div>
 				<div class="form-group col-md-5">
-					<input type="text" class="form-control" name="dmDate" placeholder="수임자" disabled/>
+					<input type="text" class="form-control" name="etReceiver" placeholder="수임자" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
@@ -59,10 +59,11 @@
             <button type="button" data-dismiss="modal" class="close">&times;</button>
             <h4 class="modal-title">조직도</h4>
           </div>
-          <div class="modal-body">
+          <div id="selMember" class="modal-body">
             <p>Modal Body</p>
           </div>
           <div class="modal-footer">
+            <button type="button" data-dismiss="modal" id="selReceiver" class="btn btn primary">Send</button>
             <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
           </div>
         </div>
@@ -72,10 +73,10 @@
 	<!-- JQuery -->
 	<script type="text/javascript">
 		$('document').ready(function() {
-			$('#btnTest').click(function() {
-				var data = [{ 'userId' : "202103001" }];
+			$('#modalReceiver').click(function() {
+				var data = [{'company':[{ 'cmCode' : '1234567890' }]}];
 				var json = JSON.stringify(data);
-				alert(json);
+				var outHtml = '';
 				
 				$.ajax({
 					type: 'POST',
@@ -84,14 +85,28 @@
 					contentType: "application/json;charset=UTF-8",
 					dataType: 'json'
 				})
-				.done(function() {
+				.done(function(data) {
+					$.each(data, function(index, value) {
+						console.log(index + " " + value.userId + " " + value.userName);
+						outHtml += '<div>' + '</div>';
+						outHtml += "<input type='radio' name='userName' value=" + value.userName + ">";
+						outHtml += value.userId;
+					});
+					$('#selMember').html(outHtml);
 					
-					$('#dummyModal').modal('show');
-					console.log("Success");
+					$('#dummyModal').modal('show');					
 				})
-				.fail(function() {
+				.fail(function(data) {
 					console.log("Fail");
 				})
+			});
+		});
+	</script>
+	
+	<script type="text/javascript">
+		$('document').ready(function() {
+			$('#selReceiver').click(function() {
+				alert("Select Receiver");
 			});
 		});
 	</script>
