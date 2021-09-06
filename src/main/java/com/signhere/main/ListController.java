@@ -1,48 +1,66 @@
 package com.signhere.main;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
+import com.signhere.mapper.DocumentInter;
 import com.signhere.services.Document;
 
 @Controller
-public class ListController {
+public class ListController implements DocumentInter {
 	@Autowired
 	private Document doc;
 	private ModelAndView mav;
 	
 	@Autowired
-	SqlSession sqlSession;
+	SqlSessionTemplate sqlSession;
   
 	//내가 보낸 기안
 	@PostMapping("/myDraft")
-	public ModelAndView myDraft(DocumentBean db) {
+	public ModelAndView myDraft(@ModelAttribute DocumentBean db) {
 		mav = new ModelAndView();
-		//sqlSession.selectList("myDraft", db);
 		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
 		// 항목들 get해서 myDraft 페이지로 이동
+		
+		//page 이동
 		mav.setViewName("document/myDraft");
+		
+		//DocumentBean을 List에 생성?
 		List<DocumentBean> docList;
 		
+		//21번째줄 DocumentInte
 		docList=sqlSession.selectList("myDraft", db);
 		
+		
+		//현재 ID(DM테이블의 WRITER)는 interface.xml에 임의값 where절에 집어넣음.
+		mav.addObject("dmNum",docList.get(0).getDmNum());
+		mav.addObject("dmTitle",docList.get(0).getDmTitle());
+		mav.addObject("apName",docList.get(0).getApName());
+		mav.addObject("dmCode",docList.get(0).getDmCode());
+		mav.addObject("dmDate",docList.get(0).getDmDate());
+
 
 		
-		System.out.println(db.getDmNum());
-		System.out.println(db.getDmTitle());
-		System.out.println(db.getApCode());
-		System.out.println(db.getDmCode());
-		System.out.println(db.getDmDate());
 		
-		
+	
+//		실수... db 통해서 쓴 sql System.out.println(db.get(0).getDmNum());
+//		System.out.println(db.get(0).getDmTitle());
+//		System.out.println(db.get(0).getApCode());
+//		System.out.println(db.get(0).getDmCode());
+//		System.out.println(db.get(0).getDmDate());
+//		
+	
 		
 		
 		return mav;
@@ -54,6 +72,20 @@ public class ListController {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/myEnforceMent");
+		
+		
+		
+		List<DocumentBean> docList;
+		
+		docList=sqlSession.selectList("myDraft", db);
+		
+		mav.addObject("dmNum",docList.get(0).getDmNum());
+		mav.addObject("dmTitle",docList.get(0).getDmTitle());
+		mav.addObject("apName",docList.get(0).getApName());
+		mav.addObject("dmCode",docList.get(0).getDmCode());
+		mav.addObject("dmDate",docList.get(0).getDmDate());
+		
+		
 		return mav;
 	}
 	
@@ -168,12 +200,23 @@ public class ListController {
 		return null;
 	}
 	
-	//공문수신함
+	//공문수신함 ssm
 	@PostMapping("/receiveList")
-	public ModelAndView receiveList(DocumentBean db) {
+	public ModelAndView receiveList(@ModelAttribute DocumentBean db) {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/receiveNotice");
+		
+		List<DocumentBean>docList;
+		
+		docList=sqlSession.selectList("receiveList",db);
+		
+		mav.addObject("dmNum",docList.get(0).getDmNum());
+		mav.addObject("dmTitle",docList.get(0).getDmTitle());
+		mav.addObject("dmWriterId",docList.get(0).getDmWriter());
+		mav.addObject("dmCode",docList.get(0).getDmCode());
+		mav.addObject("apCode",docList.get(0).getApCode());
+		mav.addObject("dmDate",docList.get(0).getDmDate());
 		
 		return mav;
 	}

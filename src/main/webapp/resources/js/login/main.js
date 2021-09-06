@@ -18,10 +18,17 @@ function myDraft() {
 	
 	let form = makeForm("myDraft", "post");
 	
+	let docNum = document.getElementsByName("docNum")[0];
+	
+	
 	//form.appendChild(userId);
 	
 	document.body.appendChild(form);
 	form.submit();
+	
+	
+	
+	
 }
 
 // 내가보낸시행
