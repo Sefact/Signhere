@@ -10,4 +10,8 @@ import com.signhere.beans.DocumentBean;
 public interface DocumentInter {
 	public ModelAndView myDraft(DocumentBean db); 
 	public ModelAndView myEnforceMent(DocumentBean db); 
+	public ModelAndView apToDoList(DocumentBean db);
+	public ModelAndView apIngList(DocumentBean db);
+	public ModelAndView apCompleteList(DocumentBean db);
+	
 }

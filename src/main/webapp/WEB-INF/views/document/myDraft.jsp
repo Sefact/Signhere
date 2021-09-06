@@ -102,7 +102,7 @@
 						<td>${dmNum }</td>
 						<td>${dmTitle }</td>
 						<td>  &nbsp; &nbsp; ${apName }</td>
-						<td>${dmDate }</td>
+						<td>${dmDate } ${map }</td>
 					</tr>
 
 

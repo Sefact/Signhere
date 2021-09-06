@@ -1,13 +1,16 @@
 package com.signhere.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,11 +42,15 @@ public class ListController implements DocumentInter {
 		//DocumentBean을 List에 생성?
 		List<DocumentBean> docList;
 		
-		//21번째줄 DocumentInte
+		
+		//작성자ID(로그인한 사용자) 임의저장
+		db.setDmWriteId("202103001");
+		
+		//DoucmentInter.xml, query 참조
 		docList=sqlSession.selectList("myDraft", db);
-		
-		
+				
 		//현재 ID(DM테이블의 WRITER)는 interface.xml에 임의값 where절에 집어넣음.
+		
 		mav.addObject("dmNum",docList.get(0).getDmNum());
 		mav.addObject("dmTitle",docList.get(0).getDmTitle());
 		mav.addObject("apName",docList.get(0).getApName());
@@ -51,18 +58,13 @@ public class ListController implements DocumentInter {
 		mav.addObject("dmDate",docList.get(0).getDmDate());
 
 
-		
-		
-	
 //		실수... db 통해서 쓴 sql System.out.println(db.get(0).getDmNum());
-//		System.out.println(db.get(0).getDmTitle());
-//		System.out.println(db.get(0).getApCode());
-//		System.out.println(db.get(0).getDmCode());
-//		System.out.println(db.get(0).getDmDate());
-//		
+//		System.out.println(db.get(0).getDmTitle());		
+				
+//		 Map<String, Object> map = new HashMap<String, Object>();
+//		 map.put("docList", docList);
+//		 mav.addObject("map",map);
 	
-		
-		
 		return mav;
 	}
 	
@@ -73,11 +75,13 @@ public class ListController implements DocumentInter {
 		
 		mav.setViewName("document/myEnforceMent");
 		
-		
-		
+	
 		List<DocumentBean> docList;
 		
-		docList=sqlSession.selectList("myDraft", db);
+		//작성자ID(로그인한 사용자) 임의저장
+		db.setDmWriteId("202103001");
+		
+		docList=sqlSession.selectList("myEnforceMent", db);
 		
 		mav.addObject("dmNum",docList.get(0).getDmNum());
 		mav.addObject("dmTitle",docList.get(0).getDmTitle());
@@ -85,7 +89,7 @@ public class ListController implements DocumentInter {
 		mav.addObject("dmCode",docList.get(0).getDmCode());
 		mav.addObject("dmDate",docList.get(0).getDmDate());
 		
-		
+	
 		return mav;
 	}
 	
@@ -95,6 +99,21 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();		
 		
 		mav.setViewName("document/waitApproval");
+		
+		List <DocumentBean> docList;
+		
+		docList=sqlSession.selectList("waitApproval",db);
+		
+		
+		//APPROVAL_ID=로그인한아이디 =>'202103003'xml에서 where절에 입력.
+		
+		mav.addObject("dmNum",docList.get(0).getDmNum());
+		mav.addObject("dmTitle",docList.get(0).getDmTitle());
+		mav.addObject("dmCode",docList.get(0).getDmCode());
+		mav.addObject("dmWriter",docList.get(0).getDmWriter());
+		mav.addObject("dmDate",docList.get(0).getDmDate());
+		
+		System.out.println(docList);
 		
 		return mav;
 	}
@@ -106,6 +125,41 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/approvalProcced");
+		
+		List <DocumentBean> docList;
+		
+		docList=sqlSession.selectList("approvalProcced",db);
+		
+		//APPROVAL_ID=로그인한아이디 =>'202103003'xml에서 where절에 입력.
+		
+		mav.addObject("dmNum",docList.get(0).getDmNum());
+		mav.addObject("dmTitle",docList.get(0).getDmTitle());
+		mav.addObject("dmCode",docList.get(0).getDmCode());
+		mav.addObject("dmWriter",docList.get(0).getDmWriter());
+		mav.addObject("dmDate",docList.get(0).getDmDate());
+		
+		return mav;
+	}
+	
+	//결재완료함
+	@PostMapping("/apCompleteList")
+	public ModelAndView apCompleteList(DocumentBean db) {
+		mav = new ModelAndView();
+		
+		mav.setViewName("document/completeApproval");
+		
+		List <DocumentBean> docList;
+		
+		docList=sqlSession.selectList("completeApproval",db);
+		
+		//APPROVAL_ID=로그인한아이디 =>'202103003'xml에서 where절에 입력.
+		
+		mav.addObject("dmNum",docList.get(0).getDmNum());
+		mav.addObject("dmTitle",docList.get(0).getDmTitle());
+		mav.addObject("dmCode",docList.get(0).getDmCode());
+		mav.addObject("dmWriter",docList.get(0).getDmWriter());
+		mav.addObject("dmDate",docList.get(0).getDmDate());
+		
 		return mav;
 	}
 	
@@ -137,14 +191,7 @@ public class ListController implements DocumentInter {
 		return mav;
 	}
 	
-	//결재완료함
-	@PostMapping("/apCompleteList")
-	public ModelAndView apCompleteList(DocumentBean db) {
-		mav = new ModelAndView();
-		
-		mav.setViewName("document/completeApproval");
-		return mav;
-	}
+
 		
 	@PostMapping("/myList")
 	public ModelAndView myList(DocumentBean db) {
