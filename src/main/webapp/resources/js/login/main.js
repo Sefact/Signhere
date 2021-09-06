@@ -3,22 +3,26 @@
  */
 // 내가보낸기안
 function myDraft() {
-	//const userId = document.getElementsByName("userId")[0];
+
 	
 	let form = makeForm("myDraft", "post");
 	
-	let docNum = document.getElementsByName("docNum")[0];
-	
-	
-	//form.appendChild(userId);
-	
 	document.body.appendChild(form);
 	form.submit();
+
+	}
 	
+function list(){
+		
+		let table1 = document.getElementById("table1");
+		let data='<tr><td>${docList[0].dmNum }</td><td>${docList[0].dmTitle }</td><td>${docList[0].apName }</td><td>${docList[0].dmDate }</td></tr>';
+		table1.innnerHTML = data;
+		console.log(table1);
+		console.log(table1.innerHTML);
 	
+}	
 	
-	
-}
+
 
 // 내가보낸시행
 function myEnforceMent() {

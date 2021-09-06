@@ -19,7 +19,8 @@
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
-<body>
+<body onLoad='list()'>
+ 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 	<h1 class="page-header">MyDraft</h1>
@@ -97,15 +98,9 @@
 						<th>날짜</th>
 					</tr>
 				</thead>
-				<tbody>
-					<tr>
-						<td>${dmNum }</td>
-						<td>${dmTitle }</td>
-						<td>  &nbsp; &nbsp; ${apName }</td>
-						<td>${dmDate } ${map }</td>
-					</tr>
-
-
+				<tbody id="table1">
+	
+	
 				</tbody>
 			</table>
 		</div>
