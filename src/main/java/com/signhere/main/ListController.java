@@ -51,10 +51,8 @@ public class ListController implements DocumentInter {
 				
 		//현재 ID(DM테이블의 WRITER)는 interface.xml에 임의값 where절에 집어넣음.
 	
-		for(int i=0; i<docList.size(); i++) {
 		mav.addObject("docList",docList);
-		
-		}
+
 	
 //		실수... db 통해서 쓴 sql System.out.println(db.get(0).getDmNum());
 //		System.out.println(db.get(0).getDmTitle());		
@@ -81,11 +79,7 @@ public class ListController implements DocumentInter {
 		
 		docList=sqlSession.selectList("myEnforceMent", db);
 		
-		mav.addObject("dmNum",docList.get(0).getDmNum());
-		mav.addObject("dmTitle",docList.get(0).getDmTitle());
-		mav.addObject("apName",docList.get(0).getApName());
-		mav.addObject("dmCode",docList.get(0).getDmCode());
-		mav.addObject("dmDate",docList.get(0).getDmDate());
+		mav.addObject("docList",docList);
 
 		return mav;
 	}
@@ -102,13 +96,8 @@ public class ListController implements DocumentInter {
 		docList=sqlSession.selectList("waitApproval",db);
 		
 		
-		//APPROVAL_ID=로그인 한 아이디 =>'202103003'xml에서 where절에 입력.
-		
-		mav.addObject("dmNum",docList.get(0).getDmNum());
-		mav.addObject("dmTitle",docList.get(0).getDmTitle());
-		mav.addObject("dmCode",docList.get(0).getDmCode());
-		mav.addObject("dmWriter",docList.get(0).getDmWriter());
-		mav.addObject("dmDate",docList.get(0).getDmDate());
+		//APPROVAL_ID=로그인 한 아이디 =>'202103003' / xml에서 where절에 입력.
+		mav.addObject("docList",docList);
 		
 
 		
@@ -125,13 +114,8 @@ public class ListController implements DocumentInter {
 		List <DocumentBean> docList;		
 		docList=sqlSession.selectList("approvalProcced",db);
 		
-		//APPROVAL_ID=로그인한아이디 =>'202103003'xml에서 where절에 입력.
-		
-		mav.addObject("dmNum",docList.get(0).getDmNum());
-		mav.addObject("dmTitle",docList.get(0).getDmTitle());
-		mav.addObject("dmCode",docList.get(0).getDmCode());
-		mav.addObject("dmWriter",docList.get(0).getDmWriter());
-		mav.addObject("dmDate",docList.get(0).getDmDate());
+		//APPROVAL_ID=로그인한아이디 =>'202103002' / xml에서 where절에 입력.		
+		mav.addObject("docList",docList);
 		
 		
 		return mav;
@@ -148,13 +132,8 @@ public class ListController implements DocumentInter {
 		
 		docList=sqlSession.selectList("completeApproval",db);
 		
-		//APPROVAL_ID=로그인한아이디 =>'202103003'xml에서 where절에 입력.
-		
-		mav.addObject("dmNum",docList.get(0).getDmNum());
-		mav.addObject("dmTitle",docList.get(0).getDmTitle());
-		mav.addObject("dmCode",docList.get(0).getDmCode());
-		mav.addObject("dmWriter",docList.get(0).getDmWriter());
-		mav.addObject("dmDate",docList.get(0).getDmDate());		
+		//APPROVAL_ID=로그인한아이디 =>'202103001'xml에서 where절에 입력.
+		mav.addObject("docList",docList);	
 		return mav;
 		
 	}
@@ -162,18 +141,32 @@ public class ListController implements DocumentInter {
 	//반려함
 	@PostMapping("/apReturnList")
 	public ModelAndView apReturnList(DocumentBean db) {
-		mav = new ModelAndView();
-		
+		mav = new ModelAndView();		
 		mav.setViewName("document/companionApproval");
+		
+		List <DocumentBean> docList;
+		
+		docList=sqlSession.selectList("compaionApproval", db);
+		
+		//APPROVAL_ID=로그인한아이디 =>'202103001'xml에서 where절에 입력.
+		mav.addObject("docList",docList);
+		
 		return mav;
 	}
 	
 	//보류함
 	@PostMapping("/deferList")
 	public ModelAndView deferList(DocumentBean db) {
-		mav = new ModelAndView();
-		
+		mav = new ModelAndView();		
 		mav.setViewName("document/deferList");
+		
+		List <DocumentBean> docList;
+		docList=sqlSession.selectList("deferList",db);
+		
+		
+		//APPROVAL_ID=로그인한아이디 =>'202103001'xml에서 where절에 입력.
+		mav.addObject("docList",docList);
+		
 		return mav;
 	}
 	
@@ -184,11 +177,18 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/referenceApproval");
+		
+		List <DocumentBean> docList;
+		docList=sqlSession.selectList("referenceApproval", db);
+		
+		//APPROVAL_ID=로그인한아이디 =>'202103002'xml에서 where절에 입력.
+		mav.addObject("docList",docList);
+		
 		return mav;
 	}
 	
 
-		
+	//개인보관함	
 	@PostMapping("/myList")
 	public ModelAndView myList(DocumentBean db) {
 		mav = new ModelAndView();

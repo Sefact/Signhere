@@ -13,5 +13,8 @@ public interface DocumentInter {
 	public ModelAndView apToDoList(DocumentBean db);
 	public ModelAndView apIngList(DocumentBean db);
 	public ModelAndView apCompleteList(DocumentBean db);
+	public ModelAndView apReturnList(DocumentBean db);
+	public ModelAndView deferList(DocumentBean db);
+	public ModelAndView apReferenceList(DocumentBean db);
 	
 }

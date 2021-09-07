@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -93,20 +94,19 @@
 					<tr>
 						<th>문서번호</th>
 						<th>문서제목</th>
-						<th> &nbsp; 문서상태</th>
+						<th>문서상태</th>
 						<th>날짜</th>
 					</tr>
 				</thead>
 				<tbody>
-				
-				
-					<tr>
-						<td>${dmNum }</td>
-						<td>${dmTitle }</td>
-						<td>  &nbsp; &nbsp; ${apName }</td>
-						<td>${dmDate }</td>
+					<c:forEach var="docList" items="${docList}">
+				<tr>
+				<td><c:out value="${docList.dmNum }"/></td>
+				<td><c:out value="${docList.dmTitle }"/></td>
+				<td><c:out value="${docList.apName }"/></td>
+				<td><c:out value="${docList.dmDate }"/></td>
 					</tr>
-
+					</c:forEach>	
 
 				</tbody>
 			</table>

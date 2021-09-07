@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,8 +20,8 @@
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
-<body onLoad='list()'>
- 
+<body>
+
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 	<h1 class="page-header">MyDraft</h1>
@@ -94,13 +95,19 @@
 					<tr>
 						<th>문서번호</th>
 						<th>문서제목</th>
-						<th> &nbsp; 문서상태</th>
+						<th>문서상태</th>
 						<th>날짜</th>
 					</tr>
 				</thead>
-				<tbody id="table1">
-	
-	
+				<tbody>
+				<c:forEach var="docList" items="${docList}">
+				<tr>
+				<td><c:out value="${docList.dmNum}"/></td>
+				<td><c:out value="${docList.dmTitle}"/></td>
+				<td><c:out value="${docList.apName}"/></td>
+				<td><c:out value="${docList.dmDate}"/></td>
+					</tr>
+					</c:forEach>			
 				</tbody>
 			</table>
 		</div>
