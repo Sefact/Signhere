@@ -12,7 +12,7 @@
 </head>
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
-	<jsp:include page="../utils/draft.jsp" />
+	<jsp:include page="../utils/apList.jsp" />
 </body>
 <!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>

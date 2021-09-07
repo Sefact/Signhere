@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
@@ -147,10 +148,8 @@ public class ListController {
 
 	//문서검색 JOB
 	@PostMapping("/searchText")
-	public ModelAndView searchText(DocumentBean db) {
-		
-		System.out.println("listcontroller");
-		
+	@ResponseBody
+	public List<DocumentBean> searchText(@RequestBody DocumentBean db) {
 		return doc.mSearchText(db);
 	}
 	

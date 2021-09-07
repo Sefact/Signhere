@@ -6,24 +6,23 @@
 	
 <mapper namespace="com.signhere.mapper.DocumentInter">
 
-	<select id="selectAllCompletedDocs" parameterType="DocumentBean" resultType="DocumentBean">
-		SELECT 
-		DM.DOCUMENT_NUM AS dmNum,
+	<select id="searchCompletedDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+        DM.COMPANY_CODE AS cmCode,
 		DM.DOCUMENT_TITLE AS dmTitle,
 		DM.APPROVAL_CODE AS apCode,
 		DM.DOCUMENT_CODE AS dmCode,
 		MM.ID AS dmWriteId,
 		MM.NAME AS dmWriter,
 		DM.DOCUMENT_DATE AS dmDate 
-		FROM DM 
-		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		FROM DM INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
 		WHERE DM.COMPANY_CODE=#{cmCode} 
-		AND (DOCUMENT_NUM = #{dmNum} 
-		OR NAME = #{dmWriter} 
-		OR DOCUMENT_TITLE=#{dmTitle} 
-		OR DOCUMENT_CODE=#{dmCode} 
-		OR APPROVAL_CODE=#{apCode} 
-		OR (DOCUMENT_DATE &gt;= TO_DATE(#{dmDate},'YYYYMMDD') AND DOCUMENT_DATE &lt;= TO_DATE(#{dmDate2},'YYYYMMDD')))
+        AND DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%' 
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DOCUMENT_CODE LIKE '%'|| #{dmCode} ||'%' 
+		AND APPROVAL_CODE = 'C'   
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
 	</select>
 </mapper>
 	
