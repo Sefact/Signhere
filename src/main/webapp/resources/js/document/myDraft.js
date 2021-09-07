@@ -2,7 +2,10 @@
  * 
  */
 
+
 function sampleFunction() {
+	
+	
 	const dmNum = document.getElementsByName("dmNum")[0];
 	const dmTitle = document.getElementsByName("dmTitle")[0];
 	const dmWriter = document.getElementsByName("dmWriter")[0];
@@ -23,7 +26,9 @@ function sampleFunction() {
 
 	document.body.appendChild(form);
 	form.submit();
+	
 }
+
 
 
 function makeForm(action, method, name = null) {
@@ -36,4 +41,38 @@ function makeForm(action, method, name = null) {
 	form.setAttribute("method", method);
 	
 	return form;
+}
+
+
+
+function deleteDoc(){
+	const docListItems = document.querySelectorAll(".docListRow");
+	let arr=[];
+	let objArray;
+		
+	
+	for(let i =0; i< docListItems.length; i++){
+		if(docListItems[i].checked ==true){
+			arr.push(docListItems[i].value);
+		}
+	}
+	objArray={"dmNumArr":arr}
+	
+	fetch('/apListRemove',{
+		method:'post',
+		headers:{
+			'Accept': 'application/json, text/plain, */*',
+			'Content-Type':'application/json'
+		},
+		body: JSON.stringify(objArray)
+	}).then(res => res.json())
+	.then(res=> console.log(res));
+	
+}
+
+
+function list(data){
+	console.log(data);
+	console.log(typeof data);
+	alert(data[0]);
 }

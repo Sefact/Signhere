@@ -5,8 +5,16 @@
 <head>
 	<meta charset="UTF-8">
 	<title>AplistAdmin</title>
-	
-	<!-- Resources JS -->
+	<!-- Font-Awesome -->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	<!-- Resources CSS -->
+	<link href="/resources/css/login/main.css" rel="stylesheet">
+</head>
+<body>
+	<jsp:include page="../utils/navigation.jsp" />
+	<jsp:include page="../utils/draft.jsp" />
+</body>
+<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
 	<!-- Resources JS -->
 	<script src="/resources/js/document/myDraft.js"></script>
@@ -17,16 +25,5 @@
 	<!-- popper.js -->
 	<script src="/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
 	<!--  aplistAdmin.js -->
-	<script defer src="/resources/js/admin/aplistAdmin.js"></script>
-	<!-- Font-Awesome -->
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-	<!-- Resources CSS -->
-	<link href="/resources/css/login/main.css" rel="stylesheet">
-</head>
-<body>
-	<jsp:include page="../utils/navigation.jsp" />
-	<jsp:include page="../utils/draft.jsp" />
-	<div>
-	</div>
-</body>
+	<script src="/resources/js/admin/aplistAdmin.js"></script>
 </html>
