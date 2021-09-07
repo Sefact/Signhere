@@ -127,7 +127,7 @@
         			WHERE RF.REFERENCE_ID='202103002' OR RD.READER_ID='202103002'
         	
         	</select>
-        	
+
 </mapper>
 
 

@@ -194,6 +194,11 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
     	mav.setViewName("document/myList");
+   
+    
+    	
+    	
+    	
 		
     	return mav;
 	}
@@ -249,6 +254,12 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/receiveNotice");
+		
+		List <DocumentBean> docList;
+		
+		docList=sqlSession.selectList("receiveNotice",db);
+		
+		mav.addObject("docList",docList);
 		
 		return mav;
 	}

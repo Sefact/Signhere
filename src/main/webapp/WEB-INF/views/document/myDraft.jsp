@@ -101,11 +101,11 @@
 				</thead>
 				<tbody>
 				<c:forEach var="docList" items="${docList}">
-				<tr>
-				<td><c:out value="${docList.dmNum}"/></td>
-				<td><c:out value="${docList.dmTitle}"/></td>
-				<td><c:out value="${docList.apName}"/></td>
-				<td><c:out value="${docList.dmDate}"/></td>
+					<tr>
+						<td><c:out value="${docList.dmNum}"/></td>
+						<td><c:out value="${docList.dmTitle}"/></td>
+						<td><c:out value="${docList.apName}"/></td>
+						<td><c:out value="${docList.dmDate}"/></td>
 					</tr>
 					</c:forEach>			
 				</tbody>
