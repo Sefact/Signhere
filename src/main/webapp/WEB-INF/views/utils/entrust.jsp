@@ -3,30 +3,28 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-	
 		<h1 class="page-header">Entrust</h1>
-	
 		<form>
 			<div class="form-row">
 				<div class="form-group col-md-6">
-					<input type="text" class="form-control" name="dmDate" placeholder="위임사유"/>
+					<input type="text" class="form-control" name="etReason" placeholder="위임사유"/>
 				</div>
 				<div class="form-group col-md-1">
 					<button type="button" class="btn btn-primary" id="modalReceiver">Receiver</button>
 				</div>
-				<div class="form-group col-md-5">
-					<input type="text" class="form-control" name="etReceiver" placeholder="수임자" disabled/>
+				<div id="receiverForm" class="form-group col-md-5">
+					<input type="text" class="form-control" name="etReceiverId" placeholder="수임자" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12">
-					<input type="button" class="btn btn-primary" value="save"/>
+					<input type="button" class="btn btn-primary" id="entrustSave" value="save"/>
 				</div>
 			</div>
 		</form>
 	
 			<h2 class="sub-header">Entrust List</h2>
-			<div class="table-responsive">
+			<div id="entrustForm" class="table-responsive">
 				<table class="table table-striped">
 					<thead>
 						<tr>
@@ -48,8 +46,6 @@
 				</table>
 			</div>
 	</div>
-
-
 
 	<!-- modal -->
 	<div id="dummyModal" role="dialog" class="modal fade">
@@ -87,14 +83,17 @@
 				})
 				.done(function(data) {
 					$.each(data, function(index, value) {
-						console.log(index + " " + value.userId + " " + value.userName);
-						outHtml += '<div>' + '</div>';
-						outHtml += "<input type='radio' name='userName' value=" + value.userName + ">";
+						console.log(index + " " + value);
+						outHtml += '<div>';
+						outHtml += "<input type='radio' name='userName' value=" + value.userId + ">";
 						outHtml += value.userId;
+						outHtml += '</div>';
 					});
 					$('#selMember').html(outHtml);
 					
-					$('#dummyModal').modal('show');					
+					$('#dummyModal').modal('show');
+					
+					
 				})
 				.fail(function(data) {
 					console.log("Fail");
@@ -106,8 +105,69 @@
 	<script type="text/javascript">
 		$('document').ready(function() {
 			$('#selReceiver').click(function() {
-				alert("Select Receiver");
+				var radioValue = document.getElementsByName("userName").length;
+				
+				for (var i=0; i<radioValue; i++) {
+		            if (document.getElementsByName("userName")[i].checked == true) {
+		                var userValue = document.getElementsByName("userName")[i].value;
+		            }
+		        }
+
+				var receiveHtml = '';
+				receiveHtml += "<input type='text' class='form-control' name='etReceiverId' value=" + userValue + " disabled/>";
+				
+				$('#receiverForm').html(receiveHtml);
+				//$('#receiverForm').append(receiveHtml);
 			});
 		});
 	</script>
 	
+	<script type="text/javascript">
+		$('document').ready(function() {			
+			$('#entrustSave').click(function() {
+				var etReason = document.getElementsByName("etReason")[0];
+				var etReceiverId = document.getElementsByName("etReceiverId")[0];
+				
+				var data = [{'etReceiverId':etReceiverId.value, 'etReason':etReason.value}];
+				var json = JSON.stringify(data);
+				var entrustForm = '';
+				
+				$.ajax({
+					type: 'POST',
+					url : '/saveEntrust',
+					data : json,
+					contentType: "application/json;charset=UTF-8",
+					dataType: 'json'
+				})
+				.done(function(data) {
+					var elength = Object.keys(data.entrustList).length
+					
+					entrustForm += '<table class="table table-striped">';
+					entrustForm += '<thead>';
+					entrustForm += '<tr>';
+					entrustForm += '<th>NUM</th>';
+					entrustForm += '<th>SENDER</th>';
+					entrustForm += '<th>RECEIVER</th>';
+					entrustForm += '<th>SETTING</th>';
+					entrustForm += '<th>REASON</th>';
+					entrustForm += '</tr>';
+					entrustForm += '</thead>';
+					entrustForm += '<tbody>';
+					for(var i=0;i<elength;i++){
+						entrustForm += '<tr>';
+						entrustForm += '<td>' + data.entrustList[i].etNum + '</td>';
+						entrustForm += '<td>' + data.entrustList[i].etSender + '</td>';
+						entrustForm += '<td>' + data.entrustList[i].etReceiver + '</td>';
+						entrustForm += '<td>' + data.entrustList[i].etSet + '</td>';
+						entrustForm += '<td>' + data.entrustList[i].etReason + '</td>';
+						entrustForm += '</tr>';
+					}		
+					entrustForm += '</table>';
+					$('#entrustForm').html(entrustForm);
+				})
+				.fail(function(data) {
+					console.log("Fail");
+				})
+			});
+		});
+	</script>

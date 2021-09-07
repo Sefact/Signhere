@@ -1,6 +1,9 @@
 package com.signhere.services;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +20,6 @@ public class Entrust {
 	SqlSessionTemplate sqlSession;
 	ModelAndView mav;
 	EntrustInter ent;
-	
 	
 	public ModelAndView mSetEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
@@ -40,7 +42,13 @@ public class Entrust {
 	public ModelAndView mSaveEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("redirect:/");
+		//sqlSession.insert("insEntrust", eb);
+		
+		//List<Map<String, Object>> entrustList = sqlSession.selectList("selEntrust", eb);
+		List<EntrustBean> entrustList = sqlSession.selectList("selEntrust", eb);
+		
+		mav.addObject("entrustList", entrustList);
+		mav.setViewName("jsonView");
 		
 		return mav;
 	}

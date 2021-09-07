@@ -23,6 +23,7 @@ public class EntrustController {
 	
 	@PostMapping("/setEntrust")
 	public ModelAndView setEntrust(EntrustBean eb) {
+		
 		mav = ent.mSetEntrust(eb);
 		
 		return mav;
@@ -38,8 +39,10 @@ public class EntrustController {
 	}
 	
 	@PostMapping("/saveEntrust")
-	public ModelAndView saveEntrust(EntrustBean eb) {
-		mav = ent.mSaveEntrust(eb);
+	@ResponseBody
+	public ModelAndView saveEntrust(@RequestBody List<EntrustBean> eb) {
+		
+		mav = ent.mSaveEntrust(eb.get(0));
 		
 		return mav;
 	}

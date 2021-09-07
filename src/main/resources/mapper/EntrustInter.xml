@@ -5,6 +5,12 @@
 	
 <mapper namespace="com.signhere.mapper.EntrustInter">
 	<select id="selReceiver" resultType="UserBean" parameterType="UserBean">
-		SELECT ID AS "USERID", DEPARTMENT_CODE AS "DPCODE", GRADE_CODE AS "GRCODE", NAME AS "USERNAME" FROM MEMBER WHERE COMPANY_CODE = ${admin}
+		SELECT ID AS "USERID", DEPARTMENT_CODE AS "DPCODE", GRADE_CODE AS "GRCODE", NAME AS "USERNAME" FROM MEMBER WHERE COMPANY_CODE = #{admin} AND ID NOT LIKE '202103001'
+	</select>
+	<insert id="insEntrust" parameterType="EntrustBean">
+		INSERT INTO ENTRUST VALUES (SEQ_ENTRUST.NEXTVAL, '202103001', #{etReceiverId}, '1', #{etReason})
+	</insert>
+	<select id="selEntrust" resultType="EntrustBean" parameterType="EntrustBean">
+		SELECT ENTRUST_NUM AS "ETNUM", SENDER AS "ETSENDER", RECEIVER AS "ETRECEIVER", SETTING AS "ETSET", REASON AS "ETREASON" FROM ENTRUST WHERE SENDER = '202103001'
 	</select>
 </mapper>
