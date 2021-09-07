@@ -102,10 +102,10 @@
 				<tbody>
 				<c:forEach var="docList" items="${docList}">
 					<tr>
-						<td><c:out value="${docList.dmNum}"/></td>
-						<td><c:out value="${docList.dmTitle}"/></td>
-						<td><c:out value="${docList.apName}"/></td>
-						<td><c:out value="${docList.dmDate}"/></td>
+						<td><a onClick='clicktest(${docList.dmNum})'><c:out value="${docList.dmNum}"/></a></td>
+						<td><a onClick='clicktest("${docList.dmTitle}")'><c:out value="${docList.dmTitle}"/></a></td>
+						<td><a onClick='clicktest("${docList.apName}")'><c:out value="${docList.apName}"/></a></td>
+						<td><a onClick='clicktest(${docList.dmDate})'><c:out value="${docList.dmDate}"/></a></td>
 					</tr>
 					</c:forEach>			
 				</tbody>
