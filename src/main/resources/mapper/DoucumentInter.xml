@@ -37,7 +37,7 @@
 	  
 	   <select id="waitApproval" parameterType="DocumentBean" resultType="DocumentBean">
 		
-			SELECT  DISTINCT
+			SELECT  
         			DM.DOCUMENT_NUM AS "dmNum",
         			DM.DOCUMENT_TITLE AS "dmTitle",
         			DS.DOCUMENT_TITLE AS "dmCode",
@@ -47,11 +47,11 @@
         			INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
         			INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
         			INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
-        			WHERE DM.APPROVAL_CODE = 'P' AND AL.APPROVAL_ID = '202103003'
-        			AND AL.SIGN_LOCATION IS NULL
-        			AND AL.APPROVAL_SEQ = (SELECT MIN(APPROVAL_SEQ)
-       				FROM AL
-        			WHERE SIGN_LOCATION IS NULL)
+        			WHERE DM.APPROVAL_CODE = 'P' 
+       				AND AL.SIGN_LOCATION IS NULL
+        			AND AL.APPROVAL_SEQ=(SELECT MIN(APPROVAL_SEQ)
+        			FROM AL
+        			WHERE SIGN_LOCATION IS NULL AND APPROVAL_ID='202103003')
 
 	  </select>
 	  
