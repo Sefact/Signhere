@@ -1,6 +1,17 @@
 /**
  * 
  */
+
+
+function changePage(pageName,method){
+	let form = makeForm(pageName, method);
+	
+	//form.appendChild(userId);
+	
+	document.body.appendChild(form);
+	form.submit();
+}
+
 // 내가보낸기안
 function myDraft() {
 	//const userId = document.getElementsByName("userId")[0];
@@ -147,7 +158,6 @@ function admin() {
 
 // 결재문서 관리
 function apListAdmin() {
-	//const userId = document.getElementsByName("userId")[0];
 	
 	let form = makeForm("apListAdmin", "post");
 	
@@ -156,6 +166,7 @@ function apListAdmin() {
 	document.body.appendChild(form);
 	form.submit();
 }
+
 
 function makeForm(action, method, name = null) {
 	let form = document.createElement("form");

@@ -1,13 +1,22 @@
 package com.signhere.main;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Management;
 
@@ -55,10 +64,13 @@ public class AdminController {
 		return mag.mApListAdmin();
 	}
 	
+	
 	@PostMapping("/apListRemove")
-	public ModelAndView	apListRemove(@RequestParam String dmCode) {
+	@ResponseBody
+	public String apListRemove(@RequestBody DocumentBean docList) {
 		//문서 삭제를 한꺼번에 여러개 가능 하게 할경우에 RequestBody(json)나 modelAttribute로 받아야함
-		return mag.mApListRemove(dmCode);
+		System.out.println("controller");
+		String result = mag.mApListRemove(docList);
+		return result;
 	}
-
 }

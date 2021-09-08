@@ -1,5 +1,7 @@
 package com.signhere.services;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -15,36 +17,95 @@ public class Document {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	ModelAndView mav;
-	
-	public List<UserBean> mWriteDraft(UserBean ub) {
-		List<UserBean> userList;
-		
-		userList = null;
-		
-		return userList;
-	}
-	
-	public ModelAndView mConfirmDraft(DocumentBean db) {
-		mav = new ModelAndView();
-		
-		mav.setViewName("writeDraft");
-		
-		return mav;
-	}
-	
-	public List<DocumentBean> mModifyDraft(DocumentBean db) {
+
+
+	public List<DocumentBean> mSearchText(DocumentBean db){
+
+		//여기서 sessino에 들어간 cmCode 저장
+		db.setCmCode("1234567890");
+		this.handleNullValues(db);
+		this.changeDateFormat(db);
+
 		List<DocumentBean> docList;
+
+		System.out.println("dmCode:" + db.getCmCode());
+		System.out.println("dmNum:" + db.getDmNum());
+		System.out.println("dmwriter:" + db.getDmWriter());
+		System.out.println("dmCode:" + db.getDmCode());
+		System.out.println("apcode:" + db.getApCode());
+		System.out.println("dmtitle:" + db.getDmTitle());
+		System.out.println("dmdate:" + db.getDmDate());
+		System.out.println("dmdate2:" + db.getDmDate2());
 		
-		docList = null;
+		docList = sqlSession.selectList("searchCompletedDocs", db);
 		
 		return docList;
 	}
+
 	
+
+	public List<UserBean> mWriteDraft(UserBean ub) {
+		List<UserBean> userList;
+
+		userList = null;
+
+		return userList;
+	}
+
+	public ModelAndView mConfirmDraft(DocumentBean db) {
+		mav = new ModelAndView();
+
+		mav.setViewName("writeDraft");
+
+		return mav;
+	}
+
+	public List<DocumentBean> mModifyDraft(DocumentBean db) {
+		List<DocumentBean> docList;
+
+		docList = null;
+
+		return docList;
+	}
+
 	public ModelAndView mDraftPage(DocumentBean db) {
 		mav = new ModelAndView();
-		
+
 		mav.setViewName("redirect:/");
-		
+
 		return mav;
+	}
+
+	private String getToday() {
+		LocalDate today = LocalDate.now();
+		return today.plusDays(1).toString();
+	}
+
+	private void handleNullValues(DocumentBean db) {
+		if(db.getDmNum().isEmpty()) {
+			db.setDmNum("");
+		}
+		if(db.getDmTitle().isEmpty()) {
+			db.setDmTitle("");
+		}
+		if(db.getDmCode().isEmpty()) {
+			db.setDmCode("");
+		}
+		if(db.getDmDate().isEmpty()) {
+			db.setDmDate("0001-01-01");
+		}
+		if(db.getDmDate2().isEmpty()) {
+			db.setDmDate2(this.getToday());
+		}
+	}
+	
+	private void changeDateFormat(DocumentBean db) {
+		try {
+			db.setDmDate(db.getDmDate().replaceAll("-", ""));
+			db.setDmDate2(db.getDmDate2().replaceAll("-", ""));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
