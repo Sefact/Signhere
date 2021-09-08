@@ -53,11 +53,9 @@ public class Entrust {
 	public ModelAndView mSaveEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
 		
-		//sqlSession.insert("insEntrust", eb);
+		sqlSession.insert("insEntrust", eb);
 		
-		//List<Map<String, Object>> entrustList = sqlSession.selectList("selEntrust", eb);
 		List<EntrustBean> entrustList = sqlSession.selectList("selEntrust", eb);
-		// mav != json
 		
 		mav.addObject("entrustList", entrustList);
 		mav.setViewName("jsonView");
