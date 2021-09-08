@@ -17,6 +17,8 @@ function myDraft() {
 function clicktest(data){
 	alert(data);
 	
+	
+	
 }	
 	
 

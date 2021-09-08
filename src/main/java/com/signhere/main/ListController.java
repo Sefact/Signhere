@@ -69,9 +69,10 @@ public class ListController implements DocumentInter {
 	public ModelAndView myEnforceMent(DocumentBean db) {
 		mav = new ModelAndView();
 		
+		//페이지이동
 		mav.setViewName("document/myEnforceMent");
 		
-	
+		//DocumentBean을 List에 생성
 		List<DocumentBean> docList;
 		
 		//작성자ID(로그인한 사용자) 임의저장
