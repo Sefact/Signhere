@@ -82,28 +82,53 @@ public class Management {
 		return mav;
 	}
 
-	public List<DocumentBean> mApListRemove(DocumentBean docList) {
+	public String mApListRemove(DocumentBean db) {
 		// session에 id와 company Code가 있다는 가정하에 진행 
-		docList.setCmCode("1234567890");
-		System.out.println(docList);
+		db.setCmCode("1234567890");
 		
+		String message = db.getDmNumArr().length + "개의 문서가 삭제 완료되었습니다.";
+
 		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
+
+
+		String[] toSelectTables = {"selectALList","selectACList","selectCODList","selectDMCList","selectRFList","selectRDList","selectPLList","selectDMList"};
+		String[] toDeleteTables = {"removeAlList","removeACList","removeCODList","removeDMCList","removeRFList","removeRDList","removePLList","removeDMList"};
+		int[] resultArr = new int[8];
+		int selResult = 0;
+
+
+		for(int i = 0; i < db.getDmNumArr().length; i++) {
+			db.setDmNum(db.getDmNumArr()[i]);
+			for(int j = 0; j <toDeleteTables.length; j++) {
+				System.out.println("ㅇㅇ:"+db.getDmNum());
+				selResult = sqlSession.selectOne(toSelectTables[j],db);
+				resultArr[j] = selResult - sqlSession.delete(toDeleteTables[j],db);
+			}
+			//1.AL테이블 삭제 복수의 row 무조건 기안자 존재 
+			//2.AC테이블 무조건 기안자 존재 
+			//3.COD테이블 있을수도 있고 없을수도 있음 
+			//4.DMC테이블 있을수도 있고 없을수도 있음
+			//5.RF테이블 있을수도 있고 없을수도 있음
+			//6.RD테이블 있을수도있고 없을수도 있음 
+			//7.PL테이블 있을수도있고 없을수도 있음
+			//8.DM테이블 무조건 존재 
+		}
+
+		int counter=0;
+
+		for(int i =0; i< resultArr.length; i++) {
+			counter += resultArr[i];
+		}
 		
-		int resultCount=0;
-
-		for(int i = 0; i < docList.getDmNumArr().length; i++) {
-			docList.setDmCode(docList.getDmNumArr()[i]);
-			
-			//resultCount += sqlSession.delete("removeApList",docList.getDmNum());
-		}
-		if (resultCount == docList.getDmNumArr().length) {
-			this.setTransactionResult(true);
-		}else {
+		if(counter != 0) {
 			this.setTransactionResult(false);
+			message="네으퉈으 오류! 삭제실패";
+
 		}
+		System.out.println(counter);
+		this.setTransactionResult(true);
 
-
-		return null;
+		return message;
 	}
 
 	//Transaction configuration 

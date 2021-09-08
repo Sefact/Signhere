@@ -60,7 +60,6 @@ public class AdminController {
 	}
 	
 	@PostMapping("/apListAdmin")
-	@ResponseBody
 	public ModelAndView apListAdmin() {
 		return mag.mApListAdmin();
 	}
@@ -68,9 +67,10 @@ public class AdminController {
 	
 	@PostMapping("/apListRemove")
 	@ResponseBody
-	public List<DocumentBean> apListRemove(@RequestBody DocumentBean docList) {
+	public String apListRemove(@RequestBody DocumentBean docList) {
 		//문서 삭제를 한꺼번에 여러개 가능 하게 할경우에 RequestBody(json)나 modelAttribute로 받아야함
-		//System.out.println(docList.get(1));
-		return mag.mApListRemove(docList);
+		System.out.println("controller");
+		String result = mag.mApListRemove(docList);
+		return result;
 	}
 }

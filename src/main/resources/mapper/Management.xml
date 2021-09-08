@@ -17,7 +17,71 @@
 		FROM DM INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
 		INNER JOIN APS ON DM.APPROVAL_CODE = APS.APPROVAL_CODE 
 		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE 
-		WHERE DM.COMPANY_CODE=#{cmCode} AND (DM.APPROVAL_CODE='C' OR DM.APPROVAL_CODE='R') ORDER BY DM.document_date DESC
+		WHERE DM.COMPANY_CODE=#{cmCode} AND DM.APPROVAL_CODE='C' ORDER BY DM.document_date DESC
 	</select>
+	
+	<select id="selectALList" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT(*) FROM AL WHERE DOCUMENT_NUM = #{dmNum}
+	</select>
+	
+	<select id="selectACList" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT(*) FROM AC WHERE DOCUMENT_NUM = #{dmNum}
+	</select>
+	
+	<select id="selectCODList" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT(*) FROM COD WHERE DOCUMENT_NUM = #{dmNum}
+	</select>
+	
+	<select id="selectDMCList" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT(*) FROM DMC WHERE DOCUMENT_NUM = #{dmNum}
+	</select>
+	
+	<select id="selectRFList" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT(*) FROM RF WHERE DOCUMENT_NUM = #{dmNum}
+	</select>
+	
+	<select id="selectRDList" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT(*) FROM RD WHERE DOCUMENT_NUM = #{dmNum}
+	</select>
+	
+	<select id="selectPLList" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT(*) FROM PL WHERE DOCUMENT_NUM = #{dmNum}
+	</select>
+	
+	<select id="selectDMList" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT(*) FROM DM WHERE DOCUMENT_NUM = #{dmNum}
+	</select>
+	
+	<delete id="removeAlList" parameterType="DocumentBean">
+		DELETE FROM AL WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
+	
+	<delete id="removeACList" parameterType="DocumentBean">
+		DELETE FROM AC WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
+	
+	<delete id="removeCODList" parameterType="DocumentBean">
+		DELETE FROM COD WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
+	
+	<delete id="removeDMCList" parameterType="DocumentBean">
+		DELETE FROM DMC WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
+	
+	<delete id="removeRFList" parameterType="DocumentBean">
+		DELETE FROM RF WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
+	
+	<delete id="removeRDList" parameterType="DocumentBean">
+		DELETE FROM RD WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
+	
+	<delete id="removePLList" parameterType="DocumentBean">
+		DELETE FROM PL WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
+	
+	<delete id="removeDMList" parameterType="DocumentBean">
+		DELETE FROM DM WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
 	
 </mapper>
