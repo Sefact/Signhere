@@ -22,6 +22,18 @@ function entrustSave() {
 }
 */
 
+function entrustDel() {
+	var etNum = document.getElementsByName("etNum")[0];
+	
+	let form = makeForm("disCheckEntrust", "post");
+
+	form.appendChild(etNum);
+	
+	document.body.appendChild(form);
+	
+	form.submit();
+}
+
 function makeForm(action, method, name = null) {
 	let form = document.createElement("form");
 	

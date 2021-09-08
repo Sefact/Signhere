@@ -4,7 +4,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 		<h1 class="page-header">Entrust</h1>
-		<form>
+		<form id="entForm">
 			<div class="form-row">
 				<div class="form-group col-md-6">
 					<input type="text" class="form-control" name="etReason" placeholder="위임사유"/>
@@ -23,28 +23,51 @@
 			</div>
 		</form>
 	
-			<h2 class="sub-header">Entrust List</h2>
+			<h2 class="sub-header">Entrust List</h2>		
+			<input type="button" class="btn btn-primary" onClick="entrustDel()" value="del"/>	
 			<div id="entrustForm" class="table-responsive">
 				<table class="table table-striped">
 					<thead>
 						<tr>
 							<th>#</th>
-							<th>Header</th>
-							<th>Header</th>
-							<th>Header</th>
-							<th>Header</th>
-						</tr>
+							<th>NUM</th>
+							<th>SENDER</th>
+							<th>RECEIVER</th>
+							<th>SETTING</th>
+							<th>REASON</th>
+							</tr>
 					</thead>
 					<tbody>
+					<c:forEach var="tableEntrust" items="${tableEntrust}">
 						<tr>
-							<td>1,001</td>
-							<td>Lorem</td>
-							<td>ipsum</td>
-							<td>dolor</td>
-							<td>sit</td>
+							<td><input type="radio" name="etNum" value="${tableEntrust.etNum}"/></td>
+							<td><c:out value="${tableEntrust.etNum}"/></td>
+							<td><c:out value="${tableEntrust.etSender}"/></td>
+							<td><c:out value="${tableEntrust.etReceiver}"/></td>
+							<td><c:out value="${tableEntrust.etSet}"/></td>
+							<td><c:out value="${tableEntrust.etReason}"/></td>
 						</tr>
+					</c:forEach>
+					</tbody>
 				</table>
 			</div>
+			<ul class="btn-group pagination">
+				    <c:if test="${pagination.prev }">
+				    <li>
+				        <a href='<c:url value="/setEntrust?page=${pagination.startPage-1 }"/>'><i class="fa fa-chevron-left"></i></a>
+				    </li>
+				    </c:if>
+				    <c:forEach begin="${pagination.startPage }" end="${pagination.endPage }" var="pageNum">
+				    <li>
+				        <a href='<c:url value="/setEntrust?page=${pageNum }"/>'><i class="fa">${pageNum }</i></a>
+				    </li>
+				    </c:forEach>
+				    <c:if test="${pagination.next && pagination.endPage >0 }">
+				    <li>
+				        <a href='<c:url value="/setEntrust?page=${pagination.endPage+1 }"/>'><i class="fa fa-chevron-right"></i></a>
+				    </li>
+				    </c:if>
+				</ul>
 	</div>
 
 	<!-- modal -->
@@ -127,6 +150,7 @@
 			$('#entrustSave').click(function() {
 				var etReason = document.getElementsByName("etReason")[0];
 				var etReceiverId = document.getElementsByName("etReceiverId")[0];
+				console.log(etReason.value + " : " + etReceiverId);
 				
 				var data = [{'etReceiverId':etReceiverId.value, 'etReason':etReason.value}];
 				var json = JSON.stringify(data);
@@ -145,6 +169,7 @@
 					entrustForm += '<table class="table table-striped">';
 					entrustForm += '<thead>';
 					entrustForm += '<tr>';
+					entrustForm += '<th>#</th>';
 					entrustForm += '<th>NUM</th>';
 					entrustForm += '<th>SENDER</th>';
 					entrustForm += '<th>RECEIVER</th>';
@@ -155,13 +180,15 @@
 					entrustForm += '<tbody>';
 					for(var i=0;i<elength;i++){
 						entrustForm += '<tr>';
+						entrustForm += '<td>' + '<input type="radio" name="etNum" value=' + data.entrustList[i].etNum +'>' + '</td>';
 						entrustForm += '<td>' + data.entrustList[i].etNum + '</td>';
 						entrustForm += '<td>' + data.entrustList[i].etSender + '</td>';
 						entrustForm += '<td>' + data.entrustList[i].etReceiver + '</td>';
 						entrustForm += '<td>' + data.entrustList[i].etSet + '</td>';
 						entrustForm += '<td>' + data.entrustList[i].etReason + '</td>';
 						entrustForm += '</tr>';
-					}		
+					}
+					entrustForm += '</tbody>';
 					entrustForm += '</table>';
 					$('#entrustForm').html(entrustForm);
 				})
@@ -170,4 +197,27 @@
 				})
 			});
 		});
+	</script>
+	
+	<script>
+	$(function(){
+	    $("#entrustSave").click(function(){
+	        var isRight = true;
+	        $("#entForm").find("input[type=text]").each(function(index, item){
+	            if ($(this).val().trim() == '') {
+	                alert($(this).attr("name")+" 항목을 입력하세요.");
+	                isRight = false;
+	                return false;
+	            }
+	        });
+	
+	        if (!isRight) {
+	            return;
+	        }
+	
+	        $(this).prop("disabled", true);
+	        $(this).prop("disabled", false);
+	    });
+	
+	});
 	</script>

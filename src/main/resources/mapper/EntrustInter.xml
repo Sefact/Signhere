@@ -4,6 +4,24 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.signhere.mapper.EntrustInter">
+	<select id="selEntrustList" resultType="EntrustBean" parameterType="EntrustBean">
+		<![CDATA[
+			SELECT * 
+			FROM(
+			    SELECT ROWNUM AS RNUM, A.*
+			    FROM ENTRUST A
+			    )
+			WHERE RNUM BETWEEN #{pageStart} AND ${perPageNum}
+		]]>
+	</select>
+	<select id="countEntrustList" resultType="Integer">
+		<![CDATA[
+        SELECT
+            count(*)
+        FROM
+			ENTRUST
+    	]]>
+	</select>
 	<select id="selReceiver" resultType="UserBean" parameterType="UserBean">
 		SELECT ID AS "USERID", DEPARTMENT_CODE AS "DPCODE", GRADE_CODE AS "GRCODE", NAME AS "USERNAME" FROM MEMBER WHERE COMPANY_CODE = #{admin} AND ID NOT LIKE '202103001'
 	</select>
@@ -13,4 +31,7 @@
 	<select id="selEntrust" resultType="EntrustBean" parameterType="EntrustBean">
 		SELECT ENTRUST_NUM AS "ETNUM", SENDER AS "ETSENDER", RECEIVER AS "ETRECEIVER", SETTING AS "ETSET", REASON AS "ETREASON" FROM ENTRUST WHERE SENDER = '202103001'
 	</select>
+	<delete id="delEntrust">
+		DELETE FROM ENTRUST WHERE ENTRUST_NUM = #{etNum}
+	</delete>
 </mapper>

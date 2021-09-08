@@ -21,10 +21,21 @@ public class Entrust {
 	ModelAndView mav;
 	EntrustInter ent;
 	
-	public ModelAndView mSetEntrust(EntrustBean eb) {
+	public ModelAndView mSetEntrust(Criteria cri) {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/setEntrust");
+		
+		Pagination pagination = new Pagination();
+		pagination.setCri(cri);
+		pagination.setTotalCount((Integer) sqlSession.selectOne("countEntrustList"));
+		
+		List<Map<String, Object>> entrustList = sqlSession.selectList("selEntrustList", cri);
+		List<EntrustBean> tbEntrustList = sqlSession.selectList("selEntrust");
+		
+		mav.addObject("entrustList", entrustList);
+		mav.addObject("pagination", pagination);
+		mav.addObject("tableEntrust", tbEntrustList);
 		
 		return mav;
 	}
@@ -46,6 +57,7 @@ public class Entrust {
 		
 		//List<Map<String, Object>> entrustList = sqlSession.selectList("selEntrust", eb);
 		List<EntrustBean> entrustList = sqlSession.selectList("selEntrust", eb);
+		// mav != json
 		
 		mav.addObject("entrustList", entrustList);
 		mav.setViewName("jsonView");
@@ -56,7 +68,15 @@ public class Entrust {
 	public ModelAndView mDisCheckEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("redirect:/");
+		System.out.println(eb.getEtNum());
+		
+		String etNum = eb.getEtNum();
+		
+		if(etNum != null) {
+			sqlSession.delete("delEntrust", eb);
+		}
+		
+		mav.setViewName("redirect:/setEntrust");
 		
 		return mav;
 	}

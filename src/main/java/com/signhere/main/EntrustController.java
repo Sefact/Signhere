@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.EntrustBean;
 import com.signhere.beans.UserBean;
+import com.signhere.services.Criteria;
 import com.signhere.services.Entrust;
 
 @Controller
@@ -21,10 +22,10 @@ public class EntrustController {
 	private Entrust ent;
 	private ModelAndView mav;
 	
-	@PostMapping("/setEntrust")
-	public ModelAndView setEntrust(EntrustBean eb) {
+	@RequestMapping(value="/setEntrust", method = {RequestMethod.GET, RequestMethod.POST})
+	public ModelAndView setEntrust(Criteria cri) {
 		
-		mav = ent.mSetEntrust(eb);
+		mav = ent.mSetEntrust(cri);
 		
 		return mav;
 	}
@@ -49,6 +50,8 @@ public class EntrustController {
 	
 	@PostMapping("/disCheckEntrust")
 	public ModelAndView disCheckEntrust(EntrustBean eb) {
+		System.out.println(eb.getEtNum());
+		
 		mav = ent.mDisCheckEntrust(eb);
 		
 		return mav;
