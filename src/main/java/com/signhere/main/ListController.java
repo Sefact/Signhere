@@ -14,11 +14,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
 import com.signhere.mapper.DocumentInter;
 import com.signhere.services.Document;
+import com.signhere.services.Management;
 
 @Controller
 public class ListController implements DocumentInter {
@@ -227,18 +229,9 @@ public class ListController implements DocumentInter {
 
 	//문서검색 JOB
 	@PostMapping("/searchText")
-	public ModelAndView searchText(DocumentBean db) {
-		System.out.println(db.getDmNum());
-		System.out.println(db.getDmTitle());
-		System.out.println(db.getApCode());
-		System.out.println(db.getDmCode());
-		System.out.println(db.getDmDate());
-		
-		mav = new ModelAndView();
-		
-		mav.setViewName("redirect:/");
-		
-		return mav;
+	@ResponseBody
+	public List<DocumentBean> searchText(@RequestBody DocumentBean db) {
+		return doc.mSearchText(db);
 	}
 	
 	//페이지이동 JOB

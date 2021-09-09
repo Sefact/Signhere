@@ -9,4 +9,8 @@ public class AccessBean {
 	private String publicIp;
 	private String privateIp;
 	private String method;
+	private String admin;
+	private String pwInitial;
+	private String cmCode;
+	private String browser;
 }

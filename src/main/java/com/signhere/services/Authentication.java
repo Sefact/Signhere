@@ -1,116 +1,277 @@
 package com.signhere.services;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.AccessBean;
+import com.signhere.beans.CompanyBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
+import com.signhere.mapper.AuthentInter;
 import com.signhere.mapper.FriendsInter;
+import com.signhere.utils.Encryption;
+import com.signhere.utils.Session;
 
 @Service
-public class Authentication implements FriendsInter {
+public class Authentication implements AuthentInter {
 	@Autowired
 	SqlSessionTemplate sqlSession;
+	@Autowired
+	DataSourceTransactionManager tx;
+	@Autowired 
+	Encryption enc;
+	@Autowired
+	Session ssn;
 	ModelAndView mav;
-	
+	private DefaultTransactionDefinition def;
+	private TransactionStatus status;
+
 	@Override
-	public ModelAndView insUser(UserBean ub) {
+	public ModelAndView mLogin(HttpServletRequest req, AccessBean ab) {
+		//세션 만료시 로그아웃 시켜주는거 1) 시간 초과 2) 브라우저 닫을때
+		
+		
 		mav = new ModelAndView();
-		System.out.println(ub.getUserId());
+
+		String message = "네트워크 에러! 로그인 실패";
+		mav.setViewName("login/home");
 		
-		sqlSession.insert("insertUser", ub);
+		//2.여기서 비밀번호, pwInitial, cmCode, 관리자권한 가져옴 (+이름?)
+		List<AccessBean> tmplist;
+		tmplist = sqlSession.selectList("getLogInInfo",ab);
 		
+		try {
+			if(!(ssn.getAttribute("userId")==null)) {
+				 mav.setViewName("login/main");
+			}else {
+				//2.비밀번호체크
+				if(enc.matches(ab.getUserPwd(), tmplist.get(0).getUserPwd())){
+					//브라우저 정도 ab에 담음
+					ab.setCmCode(tmplist.get(0).getCmCode());
+					ab.setBrowser(this.getBrowserInfo(req, "others"));
+					ab.setPwInitial(tmplist.get(0).getPwInitial());
+					//여기선 tomcat run configuration 변경 하였지만 실제 서버에서 설정을 또 바꿔 줘야함  https://admm.tistory.com/80
+					ab.setPrivateIp(req.getRemoteAddr());
+					
+					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
+						//session에 저장 및 main.jsp이동
+						try {
+							ssn.setAttribute("userId", tmplist.get(0).getUserId());
+							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
+							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if(tmplist.get(0).getPwInitial().equals("1")) {
+							mav.setViewName("login/main");
+						}else {
+							//이후에 초기 로그인 이여서 myInfo에서 정보를 다 입력하고 바꿨을때 > mm table에서 pwinitial이랑 로그인 기록 pwinitial update 
+							mav.setViewName("login/myInfo");
+						}	
+					}
+				}else {
+					message = "아이디 비밀번호를 확인해주세요.";
+					mav.setViewName("login/home");
+				}
+				
+			}
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		return mav;
 	}
-	
-	public ModelAndView mLogin(AccessBean ab) {
-		mav = new ModelAndView();
-		
-		mav.setViewName("login/main");
-		//mav.setViewName("myInfo");
-		
-		return mav;
-	}
-	
+
+
+
+
 	public ModelAndView mLogOut() {
 		mav = new ModelAndView();
-		
+
 		mav.setViewName("home");
-		
+
 		return mav;
 	}
-	
+
 	public ModelAndView mJoinRequest(UserBean ub) {
 		mav = new ModelAndView();
-		
-		mav.setViewName("home");
+
+		//1.비밀번호는 복호화 하면 안되기 때문에 enc.encode()로 인코딩
+		ub.setUserPwd(enc.encode(ub.getUserPwd()));
+
+		System.out.println(ub.getUserId());
+		//2.아이디를 제외한 나머지는 enc.aesEncode()로 인코딩 이때 hint는 userId
+		/*
+		 *try {
+			ub.setCmCode(enc.aesEncode(ub.getUserMail(), ub.getUserId()));
+			ub.setCmCode(enc.aesEncode(ub.getCmCode(), ub.getUserId()));
+			ub.setCmCode(enc.aesEncode(ub.getCmName(), ub.getUserId()));
+			ub.setCmCode(enc.aesEncode(ub.getUserName(), ub.getUserId()));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+		 * */
+		//3. insert mm 테이블 + cm 테이블 + gr 테이블 + dp 테이블
+		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
+
+		if(this.convertToBoolean(sqlSession.insert("insNewCompany",ub))) {
+			if(this.convertToBoolean(sqlSession.insert("insTmpDp",ub))){
+				if(this.convertToBoolean(sqlSession.insert("JoinRequest",ub))){
+					this.setTransactionResult(true);
+				}else {
+					this.setTransactionResult(false);
+				}
+			}
+		}
+		//mav.setViewName("myInfo");
+
+		mav.setViewName("login/home");
 		//mav.setViewName("redirect:/");
-		
+
 		return mav;
 	}
-	
+
 	public ModelAndView mUpdateMemberTable(UserBean ub) {
 		mav = new ModelAndView();
-		
+
 		mav.setViewName("main");
 		//mav.setViewName("redirect:/");
-		
+
 		return mav;
 	}
-	
+
 	public ModelAndView mCallFindPwd(UserBean ub) {
 		mav = new ModelAndView();
-		
+
 		mav.setViewName("home");
 		//mav.setViewName("redirect:/");
-		
+
 		return mav;
 	}
-	
+
 	public ModelAndView mConfirmPwd(UserBean ub) {
 		mav = new ModelAndView();
-		
+
 		mav.setViewName("home");
 		//mav.setViewName("redirect:/");
-		
+
 		return mav;
 	}
-	
+
 	public ModelAndView mMyInfoConfirm(UserBean ub) {
 		mav = new ModelAndView();
-		
+
 		mav.setViewName("myInfo");
 		//mav.setViewName("redirect:/");
-		
+
 		return mav;
 	}
-	
+
 	public ModelAndView mMyInfoDup(UserBean ub) {
 		mav = new ModelAndView();
-		
+
 		mav.setViewName("redirect:/");
-		
+
 		return mav;
 	}
-	
+
 	public List<UserBean> mOrgChart(UserBean ub) {
 		List<UserBean> userList;
-		
+
 		userList = null;
-		
+
 		return userList;
 	}
-	
+
 	public List<DocumentBean> mAlarm(DocumentBean db) {
 		List<DocumentBean> docList;
-		
+
 		docList = null;
-		
+
 		return docList;
+	}
+
+	//Transaction configuration 
+	private void setTransactionConf(int propagation, int isolationLevel, boolean isRead) {
+		def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(propagation);
+		def.setIsolationLevel(isolationLevel);
+		def.setReadOnly(isRead);
+		status = tx.getTransaction(def);
+	}
+
+	//Transaction Result
+	private void setTransactionResult(boolean isCheck) {
+		if(isCheck) {
+			tx.commit(status);
+		}else{
+			tx.rollback(status);
+		}
+	}
+
+	private boolean convertToBoolean(int result) {
+		return result==1 ? true: false;  
+	}
+
+	public String mHome() {
+		String page= "login/home";
+
+		try {
+			System.out.println(ssn.getAttribute("userId"));
+			if(ssn.getAttribute("userId") != null) {
+				page = "login/main";
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return page;
+	}
+	
+	protected String getBrowserInfo(HttpServletRequest req, String browser) {
+		try {
+			String browserInfo = req.getHeader("User-Agent"); // 사용자 User-Agent 값 얻기
+
+			if (browserInfo != null) {
+				if (browserInfo.indexOf("Trident") > -1) {
+					browser = "MSIE";
+				} else if (browserInfo.indexOf("Opera") > -1) {
+					browser = "Opera";
+				} else if (browserInfo.indexOf("iPhone") > -1
+						&& browserInfo.indexOf("Mobile") > -1) {
+					browser = "iPhone";
+				} else if (browserInfo.indexOf("Android") > -1
+						&& browserInfo.indexOf("Mobile") > -1){
+					browser = "Android";
+				}else if (browserInfo.indexOf("Edge") > -1) {
+					browser = "Edge";
+				}	
+				else if (browserInfo.indexOf("Chrome") > -1) {
+					browser = "Chrome";
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return browser;
 	}
 }
