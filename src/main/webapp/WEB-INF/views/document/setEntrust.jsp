@@ -21,9 +21,9 @@
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
-<body>
-	<jsp:include page="../utils/navigation.jsp" />
-	
-	<jsp:include page="../utils/entrust.jsp" />
-</body>
+	<body>
+		<jsp:include page="../utils/navigation.jsp" />
+		
+		<jsp:include page="../utils/entrust.jsp" />
+	</body>
 </html>

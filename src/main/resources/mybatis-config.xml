@@ -3,5 +3,6 @@
 <configuration>
 	<typeAliases>
 		<typeAlias type="com.signhere.beans.UserBean" alias="UserBean"/>
+		<typeAlias type="com.signhere.beans.EntrustBean" alias="EntrustBean"/>
 	</typeAliases>
 </configuration>

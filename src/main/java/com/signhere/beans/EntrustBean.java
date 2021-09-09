@@ -1,8 +1,11 @@
 package com.signhere.beans;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class EntrustBean {
 	private String etNum;
 	private String etSender;
