@@ -5,6 +5,7 @@
 
 
 <mapper namespace="com.signhere.mapper.DocumentInter">
+
 	<select id="myDraft" parameterType="DocumentBean" resultType="DocumentBean">
 		SELECT  DISTINCT 
 				DM.DOCUMENT_NUM AS "dmNum",

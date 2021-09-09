@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.AccessBean;
@@ -46,9 +48,9 @@ public class HomeController {
 		return mav;
 	}
 	
-	@PostMapping("/join")
+	@GetMapping("/join")
 	public String join() {
-		return "join";
+		return "login/join";
 	}
 	
 	@PostMapping("/joinRequest")
@@ -117,6 +119,8 @@ public class HomeController {
 	
 	@PostMapping("/orgChart")
 	public List<UserBean> orgChart(@RequestBody List<UserBean> ulist) {
+		System.out.println(ulist);
+		
 		List<UserBean> orgChart;
 		
 		orgChart = null;
