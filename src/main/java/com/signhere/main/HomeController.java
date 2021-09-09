@@ -2,6 +2,8 @@ package com.signhere.main;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +17,7 @@ import com.signhere.beans.AccessBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Authentication;
+import com.signhere.utils.Session;
 
 /**
  * Handles requests for the application home page.
@@ -23,18 +26,19 @@ import com.signhere.services.Authentication;
 public class HomeController {
 	@Autowired
 	private Authentication auth;
+	@Autowired
+	private Session ssn;
 	private ModelAndView mav;
 	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
 	public String home() {
-		return "login/home";
+		return auth.mHome();
 	}
 	
 	@PostMapping("/login")
-	public ModelAndView login(@ModelAttribute AccessBean ab) {
-		//mav = auth.insUser(ub);
-		mav = auth.mLogin(ab);
-		return mav;
+	public ModelAndView login(HttpServletRequest req,@ModelAttribute AccessBean ab) {
+		
+		return auth.mLogin(req,ab);
 	}
 	
 	@PostMapping("/logOut")
@@ -44,21 +48,20 @@ public class HomeController {
 		return mav;
 	}
 	
-	@PostMapping("/join")
+	@RequestMapping(value = "/join", method = {RequestMethod.GET, RequestMethod.POST})
 	public String join() {
-		return "join";
+		return "/login/join";
 	}
 	
-	@PostMapping("/joinRequest")
+	@RequestMapping(value = "/joinRequest", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView joinRequest(@ModelAttribute UserBean ub) {
-		mav = auth.mJoinRequest(ub);
 		
-		return mav;
+		return auth.mJoinRequest(ub);
 	}
 	
 	@PostMapping("/newInfo")
-	public ModelAndView newInfo(@ModelAttribute UserBean ub) {
-		mav = auth.mLogin(null);
+	public ModelAndView newInfo(HttpServletRequest req, @ModelAttribute AccessBean ab) {
+		mav = auth.mLogin(req, ab);
 		
 		return mav;
 	}

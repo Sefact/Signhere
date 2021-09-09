@@ -17,7 +17,6 @@
 </head>
 <body>   
     <div class="login-form">
-    <form action="" method="post">
         <h2 class="text-center">Login</h2>   
         <div class="form-group has-error">
         	<input type="text" class="form-control" name="userId" placeholder="Username" required="required">
@@ -29,7 +28,7 @@
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="sendUserInfo()">Sign in</button>
         </div>
         <p><a href="#">Lost your Password?</a></p>
-    </form>
+        <p onClick="signUpPage()">Sign Up</p>
 	</div>
 </body>
 </html>
