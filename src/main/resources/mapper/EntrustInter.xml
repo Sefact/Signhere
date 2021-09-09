@@ -6,12 +6,10 @@
 <mapper namespace="com.signhere.mapper.EntrustInter">
 	<select id="selEntrustList" resultType="hashmap" parameterType="hashmap">
 		<![CDATA[
-			SELECT *
-			FROM(
-			    SELECT ROWNUM AS RNUM, A.*
-			    FROM ENTRUST A
-			    )
-			WHERE RNUM BETWEEN #{pageStart} AND ${perPageNum}
+			SELECT * FROM(
+        	SELECT SENDER, RECEIVER, SETTING, REASON, ROWNUM AS RNUM
+        	FROM ENTRUST WHERE ROWNUM <= #{page} * #{perPageNum}) 
+			WHERE RNUM > (#{page} -1) * #{perPageNum}
 		]]>
 	</select>
 	<select id="countEntrustList" resultType="Integer">

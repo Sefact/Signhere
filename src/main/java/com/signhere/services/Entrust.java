@@ -24,18 +24,15 @@ public class Entrust {
 	public ModelAndView mSetEntrust(Criteria cri) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("document/setEntrust");
-		
 		Pagination pagination = new Pagination();
 		pagination.setCri(cri);
 		pagination.setTotalCount((Integer) sqlSession.selectOne("countEntrustList"));
 		
 		List<Map<String, Object>> entrustList = sqlSession.selectList("selEntrustList", cri);
 		
+		mav.setViewName("document/setEntrust");
 		mav.addObject("entrustList", entrustList);
 		mav.addObject("pagination", pagination);
-		
-		System.out.println(entrustList);
 		
 		return mav;
 	}

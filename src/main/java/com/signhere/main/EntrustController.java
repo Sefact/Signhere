@@ -22,7 +22,7 @@ public class EntrustController {
 	private Entrust ent;
 	private ModelAndView mav;
 	
-	@RequestMapping(value="/setEntrust", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping("/setEntrust")
 	public ModelAndView setEntrust(Criteria cri) {
 		
 		mav = ent.mSetEntrust(cri);
@@ -50,7 +50,6 @@ public class EntrustController {
 	
 	@PostMapping("/disCheckEntrust")
 	public ModelAndView disCheckEntrust(EntrustBean eb) {
-		System.out.println(eb.getEtNum());
 		
 		mav = ent.mDisCheckEntrust(eb);
 		
