@@ -4,9 +4,9 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
 <mapper namespace="com.signhere.mapper.EntrustInter">
-	<select id="selEntrustList" resultType="EntrustBean" parameterType="EntrustBean">
+	<select id="selEntrustList" resultType="hashmap" parameterType="hashmap">
 		<![CDATA[
-			SELECT * 
+			SELECT *
 			FROM(
 			    SELECT ROWNUM AS RNUM, A.*
 			    FROM ENTRUST A

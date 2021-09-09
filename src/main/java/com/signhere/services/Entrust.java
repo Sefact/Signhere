@@ -31,11 +31,11 @@ public class Entrust {
 		pagination.setTotalCount((Integer) sqlSession.selectOne("countEntrustList"));
 		
 		List<Map<String, Object>> entrustList = sqlSession.selectList("selEntrustList", cri);
-		List<EntrustBean> tbEntrustList = sqlSession.selectList("selEntrust");
 		
 		mav.addObject("entrustList", entrustList);
 		mav.addObject("pagination", pagination);
-		mav.addObject("tableEntrust", tbEntrustList);
+		
+		System.out.println(entrustList);
 		
 		return mav;
 	}

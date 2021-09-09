@@ -38,14 +38,14 @@
 							</tr>
 					</thead>
 					<tbody>
-					<c:forEach var="tableEntrust" items="${tableEntrust}">
+					<c:forEach var="entrustList" items="${entrustList}">
 						<tr>
-							<td><input type="radio" name="etNum" value="${tableEntrust.etNum}"/></td>
-							<td><c:out value="${tableEntrust.etNum}"/></td>
-							<td><c:out value="${tableEntrust.etSender}"/></td>
-							<td><c:out value="${tableEntrust.etReceiver}"/></td>
-							<td><c:out value="${tableEntrust.etSet}"/></td>
-							<td><c:out value="${tableEntrust.etReason}"/></td>
+							<td><input type="radio" name="etNum" value="${entrustList.RNUM}"/></td>
+							<td><c:out value="${entrustList.RNUM}"/></td>
+							<td><c:out value="${entrustList.SENDER}"/></td>
+							<td><c:out value="${entrustList.RECEIVER}"/></td>
+							<td><c:out value="${entrustList.SETTING}"/></td>
+							<td><c:out value="${entrustList.REASON}"/></td>
 						</tr>
 					</c:forEach>
 					</tbody>
@@ -150,6 +150,7 @@
 			$('#entrustSave').click(function() {
 				var etReason = document.getElementsByName("etReason")[0];
 				var etReceiverId = document.getElementsByName("etReceiverId")[0];
+				
 				console.log(etReason.value + " : " + etReceiverId);
 				
 				var data = [{'etReceiverId':etReceiverId.value, 'etReason':etReason.value}];
@@ -191,6 +192,11 @@
 					entrustForm += '</tbody>';
 					entrustForm += '</table>';
 					$('#entrustForm').html(entrustForm);
+					
+					etReason.value ="";
+					etReason.focus();
+					etReceiverId.value ="";
+					etReceiverId.focus();
 				})
 				.fail(function(data) {
 					console.log("Fail");
