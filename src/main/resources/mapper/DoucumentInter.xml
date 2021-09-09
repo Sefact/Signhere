@@ -3,9 +3,134 @@
       PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-	
+
 <mapper namespace="com.signhere.mapper.DocumentInter">
+
+	<select id="myDraft" parameterType="DocumentBean" resultType="DocumentBean">
+		SELECT  DISTINCT 
+				DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+        		APS.APPROVAL_NAME AS "apName",
+        		DOCUMENT_DATE AS "dmDate"
+        		FROM MM
+        		INNER JOIN DM
+        		ON MM.COMPANY_CODE = DM.COMPANY_CODE
+        		INNER JOIN APS
+        		ON DM.APPROVAL_CODE = APS.APPROVAL_CODE
+        		WHERE WRITER = #{dmWriteId} AND DOCUMENT_CODE='D'
+        		
+        	</select> 		
+        		
+      <select id="myEnforceMent" parameterType="DocumentBean" resultType="DocumentBean">
+		SELECT  DISTINCT 
+				DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+        		APS.APPROVAL_NAME AS "apName",
+        		DOCUMENT_DATE AS "dmDate"
+        		FROM MM
+        		INNER JOIN DM
+        		ON MM.COMPANY_CODE = DM.COMPANY_CODE
+        		INNER JOIN APS
+        		ON DM.APPROVAL_CODE = APS.APPROVAL_CODE
+        		WHERE WRITER = #{dmWriteId} AND DOCUMENT_CODE='E'
+
+	  </select>
+	  
+	   <select id="waitApproval" parameterType="DocumentBean" resultType="DocumentBean">
+		
+			SELECT  
+        			DM.DOCUMENT_NUM AS "dmNum",
+        			DM.DOCUMENT_TITLE AS "dmTitle",
+        			DS.DOCUMENT_TITLE AS "dmCode",
+        			MM.NAME AS "dmWriter",
+        			DOCUMENT_DATE AS "dmDate"
+        			FROM DM 
+        			INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+        			INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        			INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+        			WHERE DM.APPROVAL_CODE = 'P' 
+       				AND AL.SIGN_LOCATION IS NULL
+        			AND AL.APPROVAL_SEQ=(SELECT MIN(APPROVAL_SEQ)
+        			FROM AL
+        			WHERE SIGN_LOCATION IS NULL AND APPROVAL_ID='202103003')
+
+	  </select>
+	  
+	  <select id="approvalProcced" parameterType="DocumentBean" resultType="DocumentBean">
+	  	
+	  		SELECT      DM.DOCUMENT_NUM AS "dmNum",
+        				DM.DOCUMENT_TITLE AS "dmTitle",
+       		 			DS.DOCUMENT_TITLE AS "dmCode",
+        				MM.NAME AS "dmWriter",
+        				DOCUMENT_DATE AS "dmDate"
+        				FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+        				INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        				INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        				WHERE DM.APPROVAL_CODE = 'P' AND AL.APPROVAL_ID = '202103002'
+        				AND AL.SIGN_LOCATION IS NOT NULL  
+	  </select>
+	  
+	  
+	  <select id="completeApproval" parameterType="DocumentBean" resultType="DocumentBean">
+	  	
+ 	    SELECT  DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+       		 	DS.DOCUMENT_TITLE AS "dmCode",
+        		MM.NAME AS "dmWriter",
+        		DOCUMENT_DATE AS "dmDate"
+        		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+        		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        		INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        		WHERE DM.APPROVAL_CODE = 'C' AND AL.APPROVAL_ID = '202103001'
+	  </select>
+	  
+	  	   <select id="compaionApproval" parameterType="DocumentBean" resultType="DocumentBean">
+	  	
+ 	  			SELECT DM.DOCUMENT_NUM AS "dmNum",
+        	           DM.DOCUMENT_TITLE AS "dmTitle",
+        			   DS.DOCUMENT_TITLE AS "dmCode",
+                       MM.NAME AS "dmWriter",
+                       DOCUMENT_DATE AS "dmDate"
+                       FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+                       INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+                       INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+                       WHERE DM.APPROVAL_CODE = 'R' AND AL.APPROVAL_ID = '202103001'
+	  		</select>
+	  		
+	  		
+	  		<select id="deferList" parameterType="DocumentBean" resultType="DocumentBean">
+	  		 
+ 				SELECT  DM.DOCUMENT_NUM AS "dmNum",
+       					DM.DOCUMENT_TITLE AS "dmTitle",
+        				DS.DOCUMENT_TITLE AS "dmCode",
+        				MM.NAME AS "dmWriter",
+        				DOCUMENT_DATE AS "dmDate"
+        				FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+        				INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        				INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        				WHERE DM.APPROVAL_CODE = 'D' AND AL.APPROVAL_ID = '202103001'
+        
+           </select>
+        
+        	<select id="referenceApproval" parameterType="DocumentBean" resultType="DocumentBean">
+        	
+        	SELECT
+        			DM.DOCUMENT_NUM AS "dmNum",
+        			DM.DOCUMENT_TITLE AS "dmTitle",
+        			DS.DOCUMENT_TITLE AS "dmCode",
+        			MM.NAME AS "dmWriter",
+        			DOCUMENT_DATE AS "dmDate"
+        			FROM DM 
+        			INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        			INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        			INNER JOIN RF ON DM.DOCUMENT_NUM=RF.DOCUMENT_NUM
+        			INNER JOIN RD ON DM.DOCUMENT_NUM=RD.DOCUMENT_NUM
+        			WHERE RF.REFERENCE_ID='202103002' OR RD.READER_ID='202103002'
+        	
+        	</select>
+
 </mapper>
-	
+
+
 	
 	
