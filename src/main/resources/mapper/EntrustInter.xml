@@ -9,8 +9,9 @@
 			SELECT *
 			FROM(
 			    SELECT ROWNUM AS RNUM, A.*
-			    FROM ENTRUST A
-			    )
+			    FROM ENTRUST 
+			  	ORDER BY ROWNUM
+			    ) A
 			WHERE RNUM BETWEEN #{pageStart} AND ${perPageNum}
 		]]>
 	</select>

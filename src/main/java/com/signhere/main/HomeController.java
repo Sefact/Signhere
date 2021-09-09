@@ -31,7 +31,7 @@ public class HomeController {
 	public String home() {
 
 		
-		return "login/join";
+		return "login/home";
 	}
 	
 	@PostMapping("/login")
