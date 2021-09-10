@@ -24,7 +24,7 @@
 		</form>
 	
 			<h2 class="sub-header">Entrust List</h2>		
-			<input type="button" class="btn btn-primary" onClick="entrustDel()" value="del"/>	
+			<input type="button" class="btn btn-primary" id="entrustDel" value="del"/>	
 			<div id="entrustForm" class="table-responsive">
 				<table class="table table-striped">
 					<thead>
@@ -40,7 +40,7 @@
 					<tbody>
 					<c:forEach var="entrustList" items="${entrustList}">
 						<tr>
-							<td><input type="radio" name="etNum" value="${entrustList.RNUM}"/></td>
+							<td><input type="radio" name="etNum" value="${entrustList.ETNUM}"/></td>
 							<td><c:out value="${entrustList.RNUM}"/></td>
 							<td><c:out value="${entrustList.SENDER}"/></td>
 							<td><c:out value="${entrustList.RECEIVER}"/></td>
@@ -164,34 +164,8 @@
 					contentType: "application/json;charset=UTF-8",
 					dataType: 'json'
 				})
-				.done(function(data) {
-					var elength = Object.keys(data.entrustList).length
-					
-					entrustForm += '<table class="table table-striped">';
-					entrustForm += '<thead>';
-					entrustForm += '<tr>';
-					entrustForm += '<th>#</th>';
-					entrustForm += '<th>NUM</th>';
-					entrustForm += '<th>SENDER</th>';
-					entrustForm += '<th>RECEIVER</th>';
-					entrustForm += '<th>SETTING</th>';
-					entrustForm += '<th>REASON</th>';
-					entrustForm += '</tr>';
-					entrustForm += '</thead>';
-					entrustForm += '<tbody>';
-					for(var i=0;i<elength;i++){
-						entrustForm += '<tr>';
-						entrustForm += '<td>' + '<input type="radio" name="etNum" value=' + data.entrustList[i].etNum +'>' + '</td>';
-						entrustForm += '<td>' + data.entrustList[i].etNum + '</td>';
-						entrustForm += '<td>' + data.entrustList[i].etSender + '</td>';
-						entrustForm += '<td>' + data.entrustList[i].etReceiver + '</td>';
-						entrustForm += '<td>' + data.entrustList[i].etSet + '</td>';
-						entrustForm += '<td>' + data.entrustList[i].etReason + '</td>';
-						entrustForm += '</tr>';
-					}
-					entrustForm += '</tbody>';
-					entrustForm += '</table>';
-					$('#entrustForm').html(entrustForm);
+				.done(function(data) {				
+					window.location.reload();
 					
 					etReason.value ="";
 					etReason.focus();
@@ -225,5 +199,33 @@
 	        $(this).prop("disabled", false);
 	    });
 	
+	});
+	</script>
+	
+	<script type="text/javascript">
+	$('document').ready(function() {			
+		$('#entrustDel').click(function() {
+			var etNum = $(":input:radio[name=etNum]:checked").val();
+			var etData = [{'etNum':etNum}];
+			var json = JSON.stringify(etData);
+			
+			console.log(json);
+			
+			$.ajax({
+				type: 'POST',
+				url : '/disCheckEntrust',
+				data : json,
+				dataType: 'json',
+				contentType: "application/json;charset=UTF-8",
+			})
+			.done(function(data) {
+				console.log(data);
+				window.location.reload();
+				//location.href = "";
+			})
+			.fail(function(data) {
+				console.log("Fail");
+			})
+		});
 	});
 	</script>

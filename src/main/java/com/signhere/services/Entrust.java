@@ -62,16 +62,17 @@ public class Entrust {
 	
 	public ModelAndView mDisCheckEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
+		List<EntrustBean> entrustList = null;
 		
-		System.out.println(eb.getEtNum());
-		
-		String etNum = eb.getEtNum();
+		String etNum = eb.getEtNum();	
 		
 		if(etNum != null) {
 			sqlSession.delete("delEntrust", eb);
+			entrustList = sqlSession.selectList("selEntrust", eb);
 		}
 		
-		mav.setViewName("redirect:/setEntrust");
+		mav.addObject("entrustList", entrustList);
+		mav.setViewName("jsonView");
 		
 		return mav;
 	}

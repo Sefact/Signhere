@@ -49,10 +49,11 @@ public class EntrustController {
 	}
 	
 	@PostMapping("/disCheckEntrust")
-	public ModelAndView disCheckEntrust(EntrustBean eb) {
+	@ResponseBody
+	public ModelAndView disCheckEntrust(@RequestBody List<EntrustBean> eb) {
 		
-		mav = ent.mDisCheckEntrust(eb);
-		
+		mav = ent.mDisCheckEntrust(eb.get(0));
+
 		return mav;
 	}
 }
