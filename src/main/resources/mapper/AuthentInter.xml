@@ -37,9 +37,13 @@
 		INSERT INTO AH VALUES(SYSDATE,#{pwInitial},'1',#{privateIp},#{userId},#{cmCode},#{browser})
 	</insert>
 	
+		<insert id ="updateUserLogOut" parameterType ="AccessBean">
+		INSERT INTO AH VALUES(SYSDATE,#{pwInitial},'0',#{privateIp},#{userId},#{cmCode},#{browser})
+	</insert>
+	
 	<update id="updateNewInfo" parameterType="UserBean">
 	
-		UPDATE MM SET MAIL=#{userMail}, PW=#{userPwd} WHERE ID =#{userId}
+		UPDATE MM SET MAIL=#{userMail}, PW=#{userPwd}, PWINITIAL='1'  WHERE ID =#{userId}
 	
 	</update>
 	

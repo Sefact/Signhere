@@ -53,13 +53,14 @@ public class Authentication implements AuthentInter {
 		String message = "네트워크 에러! 로그인 실패";
 		mav.setViewName("login/home");
 
-		//2.여기서 비밀번호, pwInitial, cmCode, 관리자권한 가져옴 (+이름?)
+		//2.여기서 비밀번호, pwInitial, cmCode,cmName, 부서,직급, 관리자권한, 가져옴 (+이름?)
 		List<AccessBean> tmplist;
 		tmplist = sqlSession.selectList("getLogInInfo",ab);
 
 		try {
 			if(!(ssn.getAttribute("userId")==null)) {
 				mav.setViewName("login/main");
+				System.out.println("세션없지?");
 			}else {
 				//2.비밀번호체크
 				if(enc.matches(ab.getUserPwd(), tmplist.get(0).getUserPwd())){
@@ -70,6 +71,8 @@ public class Authentication implements AuthentInter {
 					//여기선 tomcat run configuration 변경 하였지만 실제 서버에서 설정을 또 바꿔 줘야함  https://admm.tistory.com/80
 					ab.setPrivateIp(req.getRemoteAddr());
 
+
+					//AccessHistory테이블에 로그인 기록 저장
 					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
 						//session에 저장 및 main.jsp이동
 						try {
@@ -78,7 +81,7 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("dpName",tmplist.get(0).getDpName());
 							ssn.setAttribute("grName",tmplist.get(0).getGrName());
 
-							//최초로그인(pwIntial(최초기본설정여부)판단 후 Session 저장.)
+							//최초로그인(pwIntial(최초기본설정여부)판단 후  ID,cmCode,Admin => Session 저장.)
 							if(tmplist.get(0).getPwInitial().equals("1")) {
 								mav.setViewName("login/main");								
 							} else {
@@ -94,25 +97,41 @@ public class Authentication implements AuthentInter {
 						}
 					}
 				}else {
+					System.out.println("설마여기?");
 					message = "아이디 비밀번호를 확인해주세요.";
 					mav.setViewName("login/home");
 				}
-
 			}
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		return mav;
 	}
 
-
-
-
-	public ModelAndView mLogOut() {
+	public ModelAndView mLogOut(HttpServletRequest req, AccessBean ab) {
 		mav = new ModelAndView();
-
-		mav.setViewName("home");
+		String message="";
+		try {
+			if(ssn.getAttribute("userId")!=null) {
+				ab.setBrowser(this.getBrowserInfo(req, "others"));
+				ab.setPrivateIp(req.getRemoteAddr());
+				sqlSession.insert("updateUserLogOut",ab);
+				
+			}else {
+				message="이미 로그아웃 하셨습니다";
+				mav.addObject("message",message);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				ssn.removeAttribute("userId");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		mav.setViewName("login/home");
 
 		return mav;
 	}
@@ -123,7 +142,7 @@ public class Authentication implements AuthentInter {
 		//1.비밀번호는 복호화 하면 안되기 때문에 enc.encode()로 인코딩
 		ub.setUserPwd(enc.encode(ub.getUserPwd()));
 
-		System.out.println(ub.getUserId());
+
 		//2.아이디를 제외한 나머지는 enc.aesEncode()로 인코딩 이때 hint는 userId
 		/*
 		 *try {
@@ -165,12 +184,12 @@ public class Authentication implements AuthentInter {
 		try {
 			//세션을 통해 userId를 ub에 저장
 			ub.setUserId((String)ssn.getAttribute("userId"));
-			
+
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
-		
+
 		//수정한 값들, 메일과 비번이 null이면 ""으로 수정해주는 메소드
 		this.handleNullValues(ub);
 
@@ -193,10 +212,6 @@ public class Authentication implements AuthentInter {
 		}
 
 	}
-
-
-
-
 
 	public ModelAndView mCallFindPwd(UserBean ub) {
 		mav = new ModelAndView();
@@ -275,7 +290,7 @@ public class Authentication implements AuthentInter {
 		String page= "login/home";
 
 		try {
-			System.out.println(ssn.getAttribute("userId"));
+
 			if(ssn.getAttribute("userId") != null) {
 				page = "login/main";
 			}

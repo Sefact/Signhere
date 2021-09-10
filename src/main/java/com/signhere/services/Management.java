@@ -13,6 +13,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 
@@ -39,10 +40,24 @@ public class Management {
 		return mav;
 	}
 
-	public String mEmployeeDup(String userId) {
+	public UserBean mEmployeeDup(UserBean ub) {
 		//default = 중복, db에 dupCheck = 사용가능
-		String dupCheck = "중복";
-		return dupCheck;
+		String dupCheck = "";
+		
+		
+		int dupId = sqlSession.selectOne("userIdDupCheck",ub);
+		System.out.println(dupId);
+	
+		if(dupId==0)
+		{ dupCheck="사용가능";
+		
+		} 	else {
+			dupCheck="중복";
+			
+		}
+		ub.setMessage(dupCheck);
+		System.out.println(ub.getMessage());
+		return ub;
 	}
 
 	public ModelAndView mDelEmployee(String userId) {
@@ -85,7 +100,7 @@ public class Management {
 	public String mApListRemove(DocumentBean db) {
 		// session에 id와 company Code가 있다는 가정하에 진행 
 		db.setCmCode("1234567890");
-		
+
 		String message = db.getDmNumArr().length + "개의 문서가 삭제 완료되었습니다.";
 
 		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
@@ -119,7 +134,7 @@ public class Management {
 		for(int i =0; i< resultArr.length; i++) {
 			counter += resultArr[i];
 		}
-		
+
 		if(counter != 0) {
 			this.setTransactionResult(false);
 			message="네으퉈으 오류! 삭제실패";
@@ -147,5 +162,9 @@ public class Management {
 		}else{
 			tx.rollback(status);
 		}
+	}
+
+	private boolean convertToBoolean(int result) {
+		return result==1 ? true: false;  
 	}
 }

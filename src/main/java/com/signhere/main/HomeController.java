@@ -46,9 +46,9 @@ public class HomeController {
 		return auth.mLogin(req,ab);
 	}
 	
-	@PostMapping("/logOut")
-	public ModelAndView logOut(@ModelAttribute UserBean ub) {
-		mav = auth.mLogOut();
+	@GetMapping("/logOut")
+	public ModelAndView logOut(HttpServletRequest req, @ModelAttribute AccessBean ab) {
+		mav = auth.mLogOut(req, ab);
 		
 		return mav;
 	}
