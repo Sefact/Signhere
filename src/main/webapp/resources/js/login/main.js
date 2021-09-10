@@ -177,6 +177,7 @@ function apListAdmin() {
 	form.submit();
 }
 
+
 function makeForm(action, method, name = null) {
 	let form = document.createElement("form");
 	

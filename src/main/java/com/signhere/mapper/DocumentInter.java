@@ -1,13 +1,11 @@
 package com.signhere.mapper;
 
 import java.util.List;
-
 import org.springframework.web.servlet.ModelAndView;
-
 import com.signhere.beans.DocumentBean;
 
-
 public interface DocumentInter {
+  public List<DocumentBean> selectAllCompletedDocs(DocumentBean db);
 	public ModelAndView myDraft(DocumentBean db); 
 	public ModelAndView myEnforceMent(DocumentBean db); 
 	public ModelAndView apToDoList(DocumentBean db);
