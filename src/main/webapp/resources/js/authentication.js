@@ -37,9 +37,6 @@ function sendUserInfo() {
 	
 	document.body.appendChild(form);
 	
-	alert(userId);
-	alert(userPwd);
-	
 	
 	form.submit();
 }
@@ -71,7 +68,6 @@ function requestSignUp(){
 	
 	document.body.appendChild(form);
 	
-	console.log(form);
 	
 	form.submit();
 		

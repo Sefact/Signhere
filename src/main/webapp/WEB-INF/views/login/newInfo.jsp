@@ -32,7 +32,7 @@
             <input type="text" class="form-control" name="grName" placeholder="직급" value ="${sessionScope.grName}"  disabled>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userMail" placeholder="이메일" required="required">
+            <input type="text" class="form-control" name="userMail" placeholder="이메일" value="${sessionScope.userMail}" required="required">
         </div>
         <div class="form-group">
             <input type="password" class="form-control" name="userPwd" placeholder="비밀번호" required="required">
