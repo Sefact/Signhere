@@ -6,5 +6,7 @@
 		<typeAlias type="com.signhere.beans.DocumentBean" alias="DocumentBean"/>
 		<typeAlias type="com.signhere.beans.CompanyBean" alias="CompanyBean"/>
 		<typeAlias type="com.signhere.beans.AccessBean" alias="AccessBean"/>
+		<typeAlias type="com.signhere.beans.EntrustBean" alias="EntrustBean"/>
 	</typeAliases>
+	
 </configuration>
