@@ -14,15 +14,25 @@ function changePage(pageName,method){
 
 // 내가보낸기안
 function myDraft() {
-	//const userId = document.getElementsByName("userId")[0];
+
 	
 	let form = makeForm("myDraft", "post");
 	
-	//form.appendChild(userId);
-	
 	document.body.appendChild(form);
 	form.submit();
-}
+
+	}
+	
+	
+	
+function clicktest(data){
+	alert(data);
+	
+	
+	
+}	
+	
+
 
 // 내가보낸시행
 function myEnforceMent() {
@@ -166,6 +176,7 @@ function apListAdmin() {
 	document.body.appendChild(form);
 	form.submit();
 }
+
 
 function makeForm(action, method, name = null) {
 	let form = document.createElement("form");

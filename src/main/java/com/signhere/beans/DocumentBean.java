@@ -1,6 +1,8 @@
 package com.signhere.beans;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -18,4 +20,6 @@ public class DocumentBean {
 	private String dmDate2;
 	private String dmCode;
 	private String dmName;
+	private char searchCode;
+	private String[] dmNumArr;
 }
