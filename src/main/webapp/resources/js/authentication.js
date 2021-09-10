@@ -65,3 +65,33 @@ function makeForm(action, method, name = null) {
 	
 	return form;
 }
+
+
+
+function requestNewInfo(){
+	
+	const cmName=document.getElementsByName("cmName")[0];
+	const userName=document.getElementsByName("userName")[0];
+	const dpName=document.getElementsByName("dpName")[0];
+	const grName=document.getElementsByName("grName")[0];	
+	const userMail=document.getElementsByName("userMail")[0];
+	const userPwd=document.getElementsByName("userPwd")[0];
+	const checkUserPwd = document.getElementsByName("checkUserPwd")[0];
+	
+	
+	let form = makeForm("newInfoAccess","post");
+	
+	form.appendChild(cmName);
+	form.appendChild(userName);
+	form.appendChild(dpName);
+	form.appendChild(grName);
+	form.appendChild(userMail);
+	form.appendChild(userPwd);
+	
+	document.body.appendChild(form);
+	
+	form.submit();
+	
+	
+	
+}

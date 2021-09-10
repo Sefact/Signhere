@@ -46,20 +46,20 @@ public class Authentication implements AuthentInter {
 	@Override
 	public ModelAndView mLogin(HttpServletRequest req, AccessBean ab) {
 		//세션 만료시 로그아웃 시켜주는거 1) 시간 초과 2) 브라우저 닫을때
-		
-		
+
+
 		mav = new ModelAndView();
 
 		String message = "네트워크 에러! 로그인 실패";
 		mav.setViewName("login/home");
-		
+
 		//2.여기서 비밀번호, pwInitial, cmCode, 관리자권한 가져옴 (+이름?)
 		List<AccessBean> tmplist;
 		tmplist = sqlSession.selectList("getLogInInfo",ab);
-		
+
 		try {
 			if(!(ssn.getAttribute("userId")==null)) {
-				 mav.setViewName("login/main");
+				mav.setViewName("login/main");
 			}else {
 				//2.비밀번호체크
 				if(enc.matches(ab.getUserPwd(), tmplist.get(0).getUserPwd())){
@@ -69,29 +69,35 @@ public class Authentication implements AuthentInter {
 					ab.setPwInitial(tmplist.get(0).getPwInitial());
 					//여기선 tomcat run configuration 변경 하였지만 실제 서버에서 설정을 또 바꿔 줘야함  https://admm.tistory.com/80
 					ab.setPrivateIp(req.getRemoteAddr());
-					
+
 					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
 						//session에 저장 및 main.jsp이동
 						try {
+							ssn.setAttribute("cmName",tmplist.get(0).getCmName());
+							ssn.setAttribute("userName",tmplist.get(0).getUserName());
+							ssn.setAttribute("dpName",tmplist.get(0).getDpName());
+							ssn.setAttribute("grName",tmplist.get(0).getGrName());
+
+							//최초로그인(pwIntial(최초기본설정여부)판단 후 Session 저장.)
+							if(tmplist.get(0).getPwInitial().equals("1")) {
+								mav.setViewName("login/main");								
+							} else {
+								mav.setViewName("login/newInfo");
+							}
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
+
 							e.printStackTrace();
 						}
-						if(tmplist.get(0).getPwInitial().equals("1")) {
-							mav.setViewName("login/main");
-						}else {
-							//이후에 초기 로그인 이여서 myInfo에서 정보를 다 입력하고 바꿨을때 > mm table에서 pwinitial이랑 로그인 기록 pwinitial update 
-							mav.setViewName("login/myInfo");
-						}	
 					}
 				}else {
 					message = "아이디 비밀번호를 확인해주세요.";
 					mav.setViewName("login/home");
 				}
-				
+
 			}
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -153,11 +159,44 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mUpdateMemberTable(UserBean ub) {
 		mav = new ModelAndView();
 
-		mav.setViewName("main");
-		//mav.setViewName("redirect:/");
+		//바꿀 비밀번호 암호화
+		ub.setUserPwd(enc.encode(ub.getUserPwd()));
 
+		try {
+			//세션을 통해 userId를 ub에 저장
+			ub.setUserId((String)ssn.getAttribute("userId"));
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+		//수정한 값들, 메일과 비번이 null이면 ""으로 수정해주는 메소드
+		this.handleNullValues(ub);
+
+		if(this.convertToBoolean(sqlSession.update("updateNewInfo", ub))) {				
+			mav.setViewName("login/main");		
+		}else {
+
+			mav.setViewName("redirect:/");				
+		}
 		return mav;
 	}
+
+	//null값들을 ""으로 수정해주는메소드
+	private void handleNullValues(UserBean ub) {
+		if(ub.getUserMail().isEmpty()) {
+			ub.setUserMail("");
+		}
+		if(ub.getUserPwd().isEmpty()) {
+			ub.setUserPwd("");
+		}
+
+	}
+
+
+
+
 
 	public ModelAndView mCallFindPwd(UserBean ub) {
 		mav = new ModelAndView();
@@ -246,7 +285,7 @@ public class Authentication implements AuthentInter {
 		}
 		return page;
 	}
-	
+
 	protected String getBrowserInfo(HttpServletRequest req, String browser) {
 		try {
 			String browserInfo = req.getHeader("User-Agent"); // 사용자 User-Agent 값 얻기

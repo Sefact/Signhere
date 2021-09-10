@@ -17,11 +17,31 @@
 	</insert>
 	
 	<select id="getLogInInfo" parameterType="AccessBean" resultType="AccessBean"> 
-		SELECT ID AS userId, PW AS userPwd, PWINITIAL as pwInitial, COMPANY_CODE AS cmCode, ADMIN as admin FROM MM WHERE ID=#{userId}
+		SELECT MM.ID AS userId, 
+       MM.PW AS userPwd, 
+       MM.NAME AS userName,
+       MM.PWINITIAL as pwInitial, 
+       MM.COMPANY_CODE AS cmCode,
+       CM.COMPANY_NAME AS cmName,
+       GR.GRADE_NAME AS grName,
+       DP.DEPARTMENT_NAME AS dpName,
+       MM.ADMIN as admin      
+       FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
+       INNER JOIN GR ON GR.GRADE_CODE=MM.GRADE_CODE
+       INNER JOIN DP ON DP.COMPANY_CODE=MM.COMPANY_CODE 
+       AND DP.DEPARTMENT_CODE = MM.DEPARTMENT_CODE
+       WHERE ID=#{userId}
 	</select>
 	
 	<insert id ="updateUserLog" parameterType ="AccessBean">
 		INSERT INTO AH VALUES(SYSDATE,#{pwInitial},'1',#{privateIp},#{userId},#{cmCode},#{browser})
 	</insert>
+	
+	<update id="updateNewInfo" parameterType="UserBean">
+	
+		UPDATE MM SET MAIL=#{userMail}, PW=#{userPwd} WHERE ID =#{userId}
+	
+	</update>
+	
 	
 </mapper>

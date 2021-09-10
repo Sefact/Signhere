@@ -67,7 +67,7 @@ public class HomeController {
 	
 	@PostMapping("/newInfo")
 	public ModelAndView newInfo(HttpServletRequest req, @ModelAttribute AccessBean ab) {
-		mav = auth.mLogin(req, ab);
+		mav.setViewName("login/newInfo");
 		
 		return mav;
 	}
@@ -101,6 +101,7 @@ public class HomeController {
 		return "myInfoAccess";
 	}
 	
+	//비밀번호 2차확인
 	@PostMapping("/myInfoConfirm")
 	public ModelAndView myInfoConfirm(@ModelAttribute UserBean ub) {
 		mav = auth.mMyInfoConfirm(ub);
