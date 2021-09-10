@@ -148,6 +148,7 @@
 	});
 	</script>
 	
+	<!-- Selected MyApprovalLine -->
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#mApLineDel').click(function() {
