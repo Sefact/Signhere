@@ -74,24 +74,16 @@
 							</div>
 							<div class="form-row">
 								<div class="form-group col-md-5">
-									<select class="form-control" size="4">
-										<option selected>Open this select menu</option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
+									<select id="myApprovalLine" class="form-control" size="4">
 									</select>
 								</div>
 								<div class="form-group col-md-2">
-									<button type="button" id="save" class="btn btn-primary btn-block">저장</button>
+									<button type="button" id="mApLineSave" class="btn btn-primary btn-block">저장</button>
 									<br>
-									<button type="button" id="del" class="btn btn-primary btn-block">저장</button>
+									<button type="button" id="mApLineDel" class="btn btn-primary btn-block">삭제</button>
 								</div>
 								<div class="form-group col-md-5">
-									<select class="form-control" size="4">
-										<option selected>Open this select menu</option>
-										<option value="1">One</option>
-										<option value="2">Two</option>
-										<option value="3">Three</option>
+									<select id="selMyApprovalLine" class="form-control" size="4">
 									</select>
 								</div>
 							</div>
@@ -107,13 +99,13 @@
 		</div>
 	</div>
 	
-<!-- JQuery -->
+	<!-- JQuery -->
 	<script type="text/javascript">
 		$('document').ready(function() {
 			$('#approvalModal').click(function() {
 				var data = [{'company':[{ 'cmCode' : '1234567890' }]}];
 				var json = JSON.stringify(data);
-				var outHtml = '';
+				var modalHtml = '';
 				
 				$.ajax({
 					type: 'POST',
@@ -123,8 +115,15 @@
 					dataType: 'json'
 				})
 				.done(function(data) {
-					/* $.each(data, function(index, value) {
-					}); */
+					var orgLength = Object.keys(data).length;
+
+					$.each(data, function(index, value) {
+						modalHtml += '<option value=' + value.userName + '>';
+						modalHtml += value.userName;
+						modalHtml += '</option>';
+					});
+					//$('#myApprovalLine').append(modalHtml);
+					$('#myApprovalLine').html(modalHtml);
 					$('#dummyModal').modal('show');
 				})
 				.fail(function(data) {
@@ -132,4 +131,31 @@
 				})
 			});
 		});
+	</script>
+	
+	<script type="text/javascript">
+	$('document').ready(function() {
+		$('#mApLineSave').click(function() {
+			var myApCheck = $("select[id=myApprovalLine]").val();
+			var selMyAplHtml = '';
+			selMyAplHtml += '<option value=' + myApCheck + '>';
+			selMyAplHtml += myApCheck;
+			selMyAplHtml += '</option>';
+			
+			//selMyApprovalLine
+			$('#selMyApprovalLine').append(selMyAplHtml);
+		})
+	});
+	</script>
+	
+	<script type="text/javascript">
+	$('document').ready(function() {
+		$('#mApLineDel').click(function() {
+			var selMyApCheck = $("#selMyApprovalLine option:selected").val();
+			
+			alert(selMyApCheck);
+
+			$("#selMyApprovalLine option[value="+ selMyApCheck +"]").remove();
+		})
+	});
 	</script>

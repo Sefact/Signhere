@@ -101,7 +101,11 @@ public class Authentication implements FriendsInter {
 	public List<UserBean> mOrgChart(UserBean ub) {
 		List<UserBean> userList;
 		
-		userList = null;
+		ub.setDpCode(ub.getCompany().get(0).getCmCode());
+		
+		userList = sqlSession.selectList("selOrgChart", ub);
+		
+		System.out.println(userList);
 		
 		return userList;
 	}

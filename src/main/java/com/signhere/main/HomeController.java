@@ -116,12 +116,11 @@ public class HomeController {
 	}
 	
 	@PostMapping("/orgChart")
+	@ResponseBody
 	public List<UserBean> orgChart(@RequestBody List<UserBean> ulist) {
-		System.out.println(ulist);
-		
 		List<UserBean> orgChart;
 		
-		orgChart = null;
+		orgChart = auth.mOrgChart(ulist.get(0));
 		
 		return orgChart;
 	}
