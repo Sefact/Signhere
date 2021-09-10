@@ -23,7 +23,7 @@
         </div>
 		<div class="form-group">
             <input type="password" class="form-control" name="userPwd" placeholder="Password" required="required">
-        </div>        
+        </div>
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="sendUserInfo()">Sign in</button>
         </div>
