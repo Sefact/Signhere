@@ -16,16 +16,12 @@ fetch(action,{
 			console.error(`HTTP error status: ${res.status}`)
 		}
 	}) 
-	.then(jsonData =>{
-		console.log(jsonData)
-		afterDupCheck(jsonData)
-		console.log(jsonData)
+	.then(jsonData => {
+		afterfunction(JSON.stringify(jsonData));
 	}).catch(err=>{
 		console.log(err)
 	});
 }
-
-
 
 
 
@@ -172,7 +168,7 @@ function dupCheck(obj){
 			userId.focus();		
 			return;					
 		}
-			fetchAjax('/employeeDup','post',jsonData,'afterDupCheck(jsonData)');
+			fetchAjax('/employeeDup','post',jsonData,afterDupCheck);
 							
 		}else{
 			userId.value="";
@@ -183,7 +179,8 @@ function dupCheck(obj){
 	}
 	
 function afterDupCheck(jsonData){
-	console.log(jsonData);
+	jsonData = JSON.parse(jsonData);
+	
 	let btn = document.getElementById("dupBtn");
 	let userId = document.getElementsByName("userId")[0];
 	let msg = document.getElementById("message");
