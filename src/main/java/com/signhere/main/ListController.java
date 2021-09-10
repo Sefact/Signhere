@@ -102,7 +102,6 @@ public class ListController implements DocumentInter {
 		//APPROVAL_ID=로그인 한 아이디 =>'202103003' / xml에서 where절에 입력.
 		mav.addObject("docList",docList);
 		
-
 		
 		return mav;
 	}
@@ -127,6 +126,7 @@ public class ListController implements DocumentInter {
 	//결재완료함
 	@PostMapping("/apCompleteList")
 	public ModelAndView apCompleteList(DocumentBean db) {
+		
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/completeApproval");
@@ -198,11 +198,7 @@ public class ListController implements DocumentInter {
 		
     	mav.setViewName("document/myList");
    
-    
     	
-    	
-    	
-		
     	return mav;
 	}
 	
