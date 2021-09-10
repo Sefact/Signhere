@@ -6,12 +6,10 @@
 <mapper namespace="com.signhere.mapper.EntrustInter">
 	<select id="selEntrustList" resultType="hashmap" parameterType="hashmap">
 		<![CDATA[
-			SELECT *
-			FROM(
-			    SELECT ROWNUM AS RNUM, A.*
-			    FROM ENTRUST A
-			    )
-			WHERE RNUM BETWEEN #{pageStart} AND ${perPageNum}
+			SELECT * FROM(
+        	SELECT ENTRUST_NUM AS ETNUM, SENDER, RECEIVER, SETTING, REASON, ROWNUM AS RNUM
+        	FROM ENTRUST WHERE ROWNUM <= #{page} * #{perPageNum}) 
+			WHERE RNUM > (#{page} -1) * #{perPageNum}
 		]]>
 	</select>
 	<select id="countEntrustList" resultType="Integer">
@@ -29,7 +27,7 @@
 		INSERT INTO ENTRUST VALUES (SEQ_ENTRUST.NEXTVAL, '202103001', #{etReceiverId}, '1', #{etReason})
 	</insert>
 	<select id="selEntrust" resultType="EntrustBean" parameterType="EntrustBean">
-		SELECT ENTRUST_NUM AS "ETNUM", SENDER AS "ETSENDER", RECEIVER AS "ETRECEIVER", SETTING AS "ETSET", REASON AS "ETREASON" FROM ENTRUST WHERE SENDER = '202103001'
+		SELECT ENTRUST_NUM AS "ETNUM", ROWNUM AS "ETRECEIVERID", SENDER AS "ETSENDER", RECEIVER AS "ETRECEIVER", SETTING AS "ETSET", REASON AS "ETREASON" FROM ENTRUST WHERE SENDER = '202103001'
 	</select>
 	<delete id="delEntrust">
 		DELETE FROM ENTRUST WHERE ENTRUST_NUM = #{etNum}

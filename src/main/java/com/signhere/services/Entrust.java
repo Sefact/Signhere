@@ -24,18 +24,15 @@ public class Entrust {
 	public ModelAndView mSetEntrust(Criteria cri) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("document/setEntrust");
-		
 		Pagination pagination = new Pagination();
 		pagination.setCri(cri);
 		pagination.setTotalCount((Integer) sqlSession.selectOne("countEntrustList"));
 		
 		List<Map<String, Object>> entrustList = sqlSession.selectList("selEntrustList", cri);
 		
+		mav.setViewName("document/setEntrust");
 		mav.addObject("entrustList", entrustList);
 		mav.addObject("pagination", pagination);
-		
-		System.out.println(entrustList);
 		
 		return mav;
 	}
@@ -65,16 +62,17 @@ public class Entrust {
 	
 	public ModelAndView mDisCheckEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
+		List<EntrustBean> entrustList = null;
 		
-		System.out.println(eb.getEtNum());
-		
-		String etNum = eb.getEtNum();
+		String etNum = eb.getEtNum();	
 		
 		if(etNum != null) {
 			sqlSession.delete("delEntrust", eb);
+			entrustList = sqlSession.selectList("selEntrust", eb);
 		}
 		
-		mav.setViewName("redirect:/setEntrust");
+		mav.addObject("entrustList", entrustList);
+		mav.setViewName("jsonView");
 		
 		return mav;
 	}
