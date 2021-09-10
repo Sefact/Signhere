@@ -37,6 +37,7 @@ public class HomeController {
     
 		return auth.mHome();
 
+
 	}
 	
 	@PostMapping("/login")
@@ -45,9 +46,9 @@ public class HomeController {
 		return auth.mLogin(req,ab);
 	}
 	
-	@PostMapping("/logOut")
-	public ModelAndView logOut(@ModelAttribute UserBean ub) {
-		mav = auth.mLogOut();
+	@GetMapping("/logOut")
+	public ModelAndView logOut(HttpServletRequest req, @ModelAttribute AccessBean ab) {
+		mav = auth.mLogOut(req, ab);
 		
 		return mav;
 	}
@@ -66,7 +67,7 @@ public class HomeController {
 	
 	@PostMapping("/newInfo")
 	public ModelAndView newInfo(HttpServletRequest req, @ModelAttribute AccessBean ab) {
-		mav = auth.mLogin(req, ab);
+		mav.setViewName("login/newInfo");
 		
 		return mav;
 	}
@@ -100,6 +101,7 @@ public class HomeController {
 		return "myInfoAccess";
 	}
 	
+	//비밀번호 2차확인
 	@PostMapping("/myInfoConfirm")
 	public ModelAndView myInfoConfirm(@ModelAttribute UserBean ub) {
 		mav = auth.mMyInfoConfirm(ub);

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,9 @@ public class AdminController {
 	private Management mag;
 	private ModelAndView mav;
 	
+	@Autowired
+	SqlSessionTemplate sqlSession;
+	
 	//직원 관리 페이지로 이동 
 	@PostMapping("/admin")
 	public ModelAndView admin() {
@@ -43,9 +47,13 @@ public class AdminController {
 	}
 	
 	//새로운 직원 추가시 id 중복 체크 
+	//최초 회원가입시에도 사용.(Authentication.class join 메소드
 	@PostMapping("/employeeDup")
-	public String employeeDup(@RequestParam String userId) {
-		return mag.mEmployeeDup(userId);
+	@ResponseBody
+	public UserBean employeeDup(@RequestBody UserBean ub) {
+		
+		
+		return mag.mEmployeeDup(ub);
 	}
 	
 	//기존 직원 삭제 메소드 
