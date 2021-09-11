@@ -1,7 +1,7 @@
 /**
  * 
  */
-function fetchAjax(action,method,data,afterfunction){
+function fetchAjax(action,method,data,afterFunction){
 fetch(action,{
 		method:method,
 		headers:{
@@ -17,11 +17,12 @@ fetch(action,{
 		}
 	}) 
 	.then(jsonData =>{
-		console.log(jsonData)
-		afterDupCheck(jsonData)
-		console.log(jsonData)
+		
+		//parameter에 JSON화 시켜줘야함! 안그럼 object로 인식한다.
+		afterFunction(JSON.stringify(jsonData));
+		console.log(jsonData);
 	}).catch(err=>{
-		console.log(err)
+		console.log(err);
 	});
 }
 
@@ -136,15 +137,25 @@ function logOut(){
 function isValidateCheck(type, word){
 	
 	let result;
-	const codeComp = /^[a-z]{1}[a-z|0-9]{3,11}$/g;
-		
+	//회사코드 유효성체크 type을 0으로
+	const cmCodeComp=/^[0-9]{10}/g;
+	
+	//아이디 유효성체크
+	const userIdComp = /^[a-z]{1}[a-z|0-9]{3,11}$/g;
+	//const codeComp = /^[a-z]{1}[a-z|0-9]{3,11}$/g;
+	
+	//비밀번호 유효성체크	
 	const pwdComp1 = /[a-z]/g;
 	const pwdComp2 = /[A-Z]/g;
 	const pwdComp3 = /[0-9]/g;
 	const pwdComp4 = /[!@#$%^&*]/g;
 	
-	if(type ==1){
-		result= codeComp.test(word);
+	if(type==0){
+		result= cmCodeComp.test(word);
+		console.log("여기오니?");
+	}
+	if(type==1){
+		result= userIdComp.test(word);
 		} else if(type ==2){
 			let count=0;
 			
@@ -157,47 +168,95 @@ function isValidateCheck(type, word){
 		return result;			
 }
 
+function dupCmCodeCheck(){
+	
+	let cmCode=document.getElementsByName("cmCode")[0];
+	
+	let jsonData={cmCode:cmCode.value};
+	
+	if(!isValidateCheck(0,cmCode.value)){
+		cmCode.value="";
+		cmCode.focus();
+		alert("회사코드가 사업자번호양식에 맞지 않습니다");
+		return;					
+	}
+		fetchAjax('/employerDup','post',jsonData,dupCheckCmCode2)
+	
+}
+
+
+function dupCheckCmCode2(jsonData){
+	jsonData=JSON.parse(jsonData);
+	
+	let cmCode = document.getElementsByName("cmCode")[0];
+	
+	BtnCmCode2 = document.getElementById("dupBtnCmCode2");
+	
+	if(jsonData.message=="사용가능"){
+		alert("사용가능한 회사코드 입니다.");
+		cmCode.readOnly=true;
+		BtnCmCode2.innerHTML="<input type='button' value='재입력' onClick='reDupBtnCmCode()'>";
+	} else{
+		
+	}
+}
+
+function reDupBtnCmCode(){
+	alert("사업자코드를 다시 입력해주세요.");
+	let cmCode = document.getElementsByName("cmCode")[0];
+	cmCode.readOnly=false;
+	
+	
+	
+}
+
+
 
 //아이디중복체크. 유효성 = 영문으로 시작 12자 이상//
-function dupCheck(obj){
+function dupUserIdCheck(){
 	
 	let userId = document.getElementsByName("userId")[0];
 	
 	let jsonData={userId:userId.value};
-	
-	if(obj.value != "재입력"){		
+
 		//아이디 유효성 검사
-		if(!isValidateCheck(1, userId.value)){			
+		if(!isValidateCheck(1,userId.value)){			
 			userId.value="";
-			userId.focus();		
+			userId.focus();
+			alert("ID가 조건에 맞지 않습니다.");
 			return;					
 		}
-			fetchAjax('/employeeDup','post',jsonData,'afterDupCheck(jsonData)');
+			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 							
-		}else{
-			userId.value="";
-			userId.readOnly = false;
-			userId.focus();
-			obj.value = "중복검사";
-		} 	
+			
 	}
 	
-function afterDupCheck(jsonData){
-	console.log(jsonData);
-	let btn = document.getElementById("dupBtn");
-	let userId = document.getElementsByName("userId")[0];
-	let msg = document.getElementById("message");
+function dupUserIdCheck2(jsonData){
+	jsonData = JSON.parse(jsonData);
 	
+	let dupBtnUserId2 = document.getElementById("dupBtnUserId2");
+	let userId = document.getElementsByName("userId")[0];
+
 	if(jsonData.message=="사용가능"){
 	userId.setAttribute("readOnly",true);
-	btn.setAttribute("value", "재입력");
-	msg.innerText = "사용 가능한 아이디";
-	 
-}else{
-		userId.value="";
-		msg.innerText = "사용 불가능한 아이디";
-		userId.focus();
+
+	dupBtnUserId2.innerHTML="<input type='button' value='재입력' onClick='reDupUserIdCheck()'>";
+
+	alert("사용가능한 ID입니다.");
+	 }
+	   else
+		{
+			userId.value="";
+			alert("이미 존재하는 ID입니다");
+			userId.focus();
 }
+}
+
+function reDupUserIdCheck(){
+	let userId = document.getElementsByName("userId")[0];
+	userId.readOnly=false;
+	userId.value="";
+	userId.focus();
 }
 
 function pwdValidate(obj){
@@ -236,15 +295,29 @@ function pwdConfirm(obj){
 function nameCheck(obj){
 	
 	if(charCount(obj.value,2,5)){
-		if(!krCheck(obj.value))	{
-			
-			alert("한글쓰셈");
-			
+		if(!krCheck(obj.value))	{			
+			alert("한글쓰셈");		
 		}
 	}else{
 		alert("이름은 2-5글자로 입력해주세요");
-	}
-		
+	}	
 }
+
+function krCheck(obj){	
+	const pattern =/^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+$/;
+
+	return pattern.test(obj);
+}
+
+
+function charCount(word, min, max){
+	
+return word.length>=min && word.length<max;
+	
+	
+	
+}
+
+
 
 

@@ -53,14 +53,13 @@ public class Authentication implements AuthentInter {
 		String message = "네트워크 에러! 로그인 실패";
 		mav.setViewName("login/home");
 
-		//2.여기서 비밀번호, pwInitial, cmCode,cmName, 부서,직급, 관리자권한, 가져옴 (+이름?)
+		//2.여기서 userId를 통해 비밀번호, pwInitial, cmCode,cmName, 부서,직급, 관리자권한, 가져옴 (+이름?)
 		List<AccessBean> tmplist;
 		tmplist = sqlSession.selectList("getLogInInfo",ab);
 
 		try {
 			if(!(ssn.getAttribute("userId")==null)) {
 				mav.setViewName("login/main");
-				System.out.println("세션없지?");
 			}else {
 				//2.비밀번호체크
 				if(enc.matches(ab.getUserPwd(), tmplist.get(0).getUserPwd())){
@@ -70,8 +69,6 @@ public class Authentication implements AuthentInter {
 					ab.setPwInitial(tmplist.get(0).getPwInitial());
 					//여기선 tomcat run configuration 변경 하였지만 실제 서버에서 설정을 또 바꿔 줘야함  https://admm.tistory.com/80
 					ab.setPrivateIp(req.getRemoteAddr());
-
-
 					//AccessHistory테이블에 로그인 기록 저장
 					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
 						//session에 저장 및 main.jsp이동
@@ -90,9 +87,11 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+							
+							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
+							ab.setUserId((String)ssn.getAttribute("userId"));
 
 						} catch (Exception e) {
-
 							e.printStackTrace();
 						}
 					}
@@ -117,7 +116,7 @@ public class Authentication implements AuthentInter {
 				ab.setBrowser(this.getBrowserInfo(req, "others"));
 				ab.setPrivateIp(req.getRemoteAddr());
 				sqlSession.insert("updateUserLogOut",ab);
-				
+
 			}else {
 				message="이미 로그아웃 하셨습니다";
 				mav.addObject("message",message);

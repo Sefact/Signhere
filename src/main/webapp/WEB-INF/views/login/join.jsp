@@ -19,15 +19,18 @@
     <div class="login-form">
         <h2 class="text-center">Sign Here</h2>   
         <div class="form-group has-error">
-        	<input type="text" class="form-control" name="cmCode" placeholder="회사코드" required="required">
+        	<input type="text" class="form-control" name="cmCode" placeholder="회사코드:사업자번호 10자리 (하이픈제외)" required="required">
         </div>
+        	<input id="dupBtnCmCode" type="button" value="중복체크" onClick="dupCmCodeCheck()" />
+        	<div id="dupBtnCmCode2"></div>
 		<div class="form-group">
             <input type="text" class="form-control" name="cmName" placeholder="회사이름" required="required">
         </div>
         <div class="form-group">
             <input type="text" class="form-control" name="userId" placeholder="아이디" required="required">
-            <input id= "dupBtn" type="button" value="중복검사" onClick="dupCheck(this)" />
-            <div id="message"></div>
+            <div id="conditionId">ID는 영소문자로 시작하여 12자 이하여야 합니다.</div>
+            <input id= "dupBtnUserId" type="button" value="중복체크" onClick="dupUserIdCheck()" />
+            <div id="dupBtnUserId2"></div>
         </div>
         <div class="form-group">
             <input type="text" class="form-control" name="userName" placeholder="이름" required="required">
@@ -35,6 +38,7 @@
         <div class="form-group">
             <input type="password" class="form-control" name="userPwd" placeholder="Password" required="required">
         </div>
+       <div id="pwdMsg"></div>
         <div class="form-group">
             <input type="password" class="form-control" name="checkUserPwd" placeholder="Password" required="required">
         </div>
