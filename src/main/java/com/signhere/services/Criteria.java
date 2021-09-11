@@ -4,10 +4,6 @@ public class Criteria {
     private int page;
     private int perPageNum;
     
-    public int getPageStart() {
-        return (this.page-1) * perPageNum;
-    }
-    
     public Criteria() {
         this.page = 1;
         this.perPageNum = 10;
@@ -34,5 +30,4 @@ public class Criteria {
             this.perPageNum = pageCount;
         }
     }
-    
 }

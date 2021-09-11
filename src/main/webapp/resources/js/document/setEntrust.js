@@ -22,17 +22,19 @@ function entrustSave() {
 }
 */
 
-function entrustDel() {
-	var etNum = document.getElementsByName("etNum")[0];
+/*function entrustDel() {
+	var etNum = document.querySelector('input[name="etNum"]:checked').value;
+	
+	console.log(etNum);
 	
 	let form = makeForm("disCheckEntrust", "post");
 
-	form.appendChild(etNum);
+	form.append(etNum);
 	
-	document.body.appendChild(form);
+	document.body.append(form);
 	
 	form.submit();
-}
+}*/
 
 function makeForm(action, method, name = null) {
 	let form = document.createElement("form");
