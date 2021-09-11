@@ -25,6 +25,7 @@
 		FROM CM 
 		WHERE COMPANY_CODE=#{cmCode} 		
 	</select>
+	
 	<select id="userIdDupCheck" parameterType="UserBean" resultType="int">
 		SELECT COUNT(*) 
 		FROM MM 
