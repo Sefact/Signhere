@@ -93,7 +93,7 @@
 	<script type="text/javascript">
 		$('document').ready(function() {
 			$('#modalReceiver').click(function() {
-				var data = [{'company':[{ 'cmCode' : '1234567890' }]}];
+				var data = [{'company':[{ 'cmCode' : ${sessionScope.cmCode} }]}];
 				var json = JSON.stringify(data);
 				var outHtml = '';
 				

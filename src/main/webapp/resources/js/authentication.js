@@ -41,8 +41,8 @@ function sendUserInfo() {
 	
 	document.body.appendChild(form);
 	
-	alert(userId);
-	alert(userPwd);
+	alert(userId.value);
+	alert(userPwd.value);
 	
 	
 	form.submit();

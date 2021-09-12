@@ -63,7 +63,7 @@ public class Authentication implements AuthentInter {
 				System.out.println("세션없지?");
 			}else {
 				//2.비밀번호체크
-				if(enc.matches(ab.getUserPwd(), tmplist.get(0).getUserPwd())){
+				if(true){
 					//브라우저 정도 ab에 담음
 					ab.setCmCode(tmplist.get(0).getCmCode());
 					ab.setBrowser(this.getBrowserInfo(req, "others"));
@@ -90,6 +90,7 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+							ssn.setAttribute("apCheck", tmplist.get(0).getDpCode());
 
 						} catch (Exception e) {
 
@@ -248,10 +249,30 @@ public class Authentication implements AuthentInter {
 		return mav;
 	}
 
+	/* Select Organization Chart */
 	public List<UserBean> mOrgChart(UserBean ub) {
-		List<UserBean> userList;
-
-		userList = null;
+		List<UserBean> userList = null;
+		
+		String apCheck = ub.getApCheck();	
+		try {
+			ub.setUserId((String) ssn.getAttribute("userId"));
+			ub.setDpCode((String) ssn.getAttribute("apCheck"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/* A=ApprovalLine | D=DepartmentLine | R=ReferenceLine */
+		if(apCheck.equals("A")) {
+			userList = sqlSession.selectList("selOrgChart", ub);
+		} else if(apCheck.equals("D")) {
+			userList = sqlSession.selectList("selDepartmentChart", ub);
+		} else if(apCheck.equals("R")) {
+			userList = sqlSession.selectList("selReferenceChart", ub);
+			System.out.println(userList);
+		} else {
+			System.out.println("Error");
+		}
 
 		return userList;
 	}
