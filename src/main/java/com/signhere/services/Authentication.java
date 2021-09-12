@@ -260,27 +260,6 @@ public class Authentication implements AuthentInter {
 	/* Select Organization Chart */
 	public List<UserBean> mOrgChart(UserBean ub) {
 		List<UserBean> userList = null;
-		
-		String apCheck = ub.getApCheck();	
-		try {
-			ub.setUserId((String) ssn.getAttribute("userId"));
-			ub.setDpCode((String) ssn.getAttribute("apCheck"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		/* A=ApprovalLine | D=DepartmentLine | R=ReferenceLine */
-		if(apCheck.equals("A")) {
-			userList = sqlSession.selectList("selOrgChart", ub);
-		} else if(apCheck.equals("D")) {
-			userList = sqlSession.selectList("selDepartmentChart", ub);
-		} else if(apCheck.equals("R")) {
-			userList = sqlSession.selectList("selReferenceChart", ub);
-			System.out.println(userList);
-		} else {
-			System.out.println("Error");
-		}
 
 		return userList;
 	}

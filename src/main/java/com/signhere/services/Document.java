@@ -11,12 +11,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
+import com.signhere.utils.Session;
 
 @Service
 public class Document {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	ModelAndView mav;
+	@Autowired
+	Session ssn;
 
 
 	public List<DocumentBean> mSearchText(DocumentBean db){
@@ -45,17 +48,38 @@ public class Document {
 	
 
 	public List<UserBean> mWriteDraft(UserBean ub) {
-		List<UserBean> userList;
-
-		userList = null;
+		List<UserBean> userList = null;
+		
+		String apCheck = ub.getApCheck();	
+		try {
+			ub.setUserId((String) ssn.getAttribute("userId"));
+			ub.setDpCode((String) ssn.getAttribute("apCheck"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/* A=ApprovalLine | D=DepartmentLine | R=ReferenceLine */
+		if(apCheck.equals("A")) {
+			userList = sqlSession.selectList("selOrgChart", ub);
+		} else if(apCheck.equals("D")) {
+			userList = sqlSession.selectList("selDepartmentChart", ub);
+		} else if(apCheck.equals("R")) {
+			userList = sqlSession.selectList("selReferenceChart", ub);
+			System.out.println(userList);
+		} else {
+			System.out.println("Error");
+		}
 
 		return userList;
 	}
 
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();
+		
+		System.out.println("Document!!");
 
-		mav.setViewName("writeDraft");
+		mav.setViewName("login/main");
 
 		return mav;
 	}
