@@ -1,9 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    <!DOCTYPE html>
 <html>
 <head>
-	<title>Home</title>
+	<title>Join</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	
 	<script src="/resources/js/authentication.js"></script>
@@ -16,22 +15,25 @@
 	<link href="/resources/css/login/login.css" rel="stylesheet">
 	
 </head>
-<body>  
-<div id="findMessage"> ${message}</div> 
+<body>   
+<form action="/callFindPwd" method="post" name="all">  
     <div class="login-form">
-        <h2 class="text-center">Login</h2>   
+        <h2 class="text-center">Find Password</h2>   
         <div class="form-group has-error">
-        	<input type="text" class="form-control" name="userId" placeholder="Username" required="required">
+        	<input type="text" class="form-control" name="userId" placeholder="아이디" required="required">
         </div>
 		<div class="form-group">
-            <input type="password" class="form-control" name="userPwd" placeholder="Password" required="required">
-        </div>        
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="sendUserInfo()">Sign in</button>
+            <input type="text" class="form-control" name="userMail" placeholder="이메일" required="required">
         </div>
-        <p><a href="#">Lost your Password?</a></p>
-        <p onClick="signUpPage()">Sign Up</p>
-         <p onClick="findPwdPage()">Find Password</p>
+        </div>
+        <div class="form-group">      
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="confirmPassword(${message})">비밀번호 찾기</button>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="cancelPassword()">메인으로</button>
+        </div>
 	</div>
+	</form>
 </body>
 </html>

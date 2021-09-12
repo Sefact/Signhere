@@ -1,7 +1,14 @@
 package com.signhere.main;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,7 +88,8 @@ public class HomeController {
 	
 	@PostMapping("/findPwd")
 	public String findPwd() {
-		return "findPwd";
+		
+		return "login/findPwd";
 	}
 	
 	@PostMapping("/callFindPwd")
@@ -91,9 +99,17 @@ public class HomeController {
 		return mav;
 	}
 	
-	@PostMapping("/confirmPwd")
-	public String confirmPwd(@ModelAttribute String userId) {
-		return "confirmPwd";
+	@GetMapping("/confirmPwd")
+	public String confirmPwd(@ModelAttribute UserBean ub) {
+		
+		return "login/confirmPwd";
+	}
+	
+	@PostMapping("/callConfirmPwd")
+	public ModelAndView callConfirmPwd(@ModelAttribute UserBean ub) throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+		mav = auth.mConfirmPwd(ub);
+		
+		return mav;
 	}
 	
 	@PostMapping("/myInfo")

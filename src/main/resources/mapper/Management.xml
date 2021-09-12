@@ -21,9 +21,9 @@
 	</select>
 	
 	<select id="cmCodeDupCheck" parameterType="CompanyBean" resultType="int">
-		SELECT COUNT(*) 
-		FROM CM 
-		WHERE COMPANY_CODE=#{cmCode} 		
+		SELECT COUNT(*)
+		FROM CM
+		WHERE COMPANY_CODE=#{cmCode}		
 	</select>
 	
 	<select id="userIdDupCheck" parameterType="UserBean" resultType="int">

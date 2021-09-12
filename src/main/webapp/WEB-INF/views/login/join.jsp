@@ -33,15 +33,16 @@
             <div id="dupBtnUserId2"></div>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userName" placeholder="이름" required="required">
+            <input type="text" class="form-control" name="userName" placeholder="이름" onBlur="nameCheck(this)">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" name="userPwd" placeholder="Password" required="required">
+            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호"  onBlur="pwdValidate(this)">
         </div>
        <div id="pwdMsg"></div>
         <div class="form-group">
-            <input type="password" class="form-control" name="checkUserPwd" placeholder="Password" required="required">
+            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호 확인" onBlur="pwdConfirm()">
         </div>
+         <div id="pwdMsg2"></div>
         <div class="form-group">
             <input type="text" class="form-control" name="userMail" placeholder="이메일" required="required">
         </div>       

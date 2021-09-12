@@ -55,13 +55,18 @@ function signUpPage(){
 	form.submit();
 }
 
+function findPwdPage(){
+	let form = makeForm("findPwd","Post");
+	document.body.appendChild(form);
+	form.submit();
+}
+
 function requestSignUp(){
 	const cmCode = document.getElementsByName("cmCode")[0];
 	const cmName = document.getElementsByName("cmName")[0];
 	const userId = document.getElementsByName("userId")[0];
 	const userName = document.getElementsByName("userName")[0];	
 	const userPwd = document.getElementsByName("userPwd")[0];
-	const checkUserPwd = document.getElementsByName("checkUserPwd")[0];
 	const userMail = document.getElementsByName("userMail")[0];
 
 	let form = makeForm("joinRequest","post");
@@ -71,7 +76,6 @@ function requestSignUp(){
 	form.appendChild(userId);
 	form.appendChild(userName);
 	form.appendChild(userPwd);
-	form.appendChild(checkUserPwd);
 	form.appendChild(userMail);
 	
 	document.body.appendChild(form);
@@ -137,12 +141,12 @@ function logOut(){
 function isValidateCheck(type, word){
 	
 	let result;
+	
 	//회사코드 유효성체크 type을 0으로
 	const cmCodeComp=/^[0-9]{10}/g;
 	
 	//아이디 유효성체크
 	const userIdComp = /^[a-z]{1}[a-z|0-9]{3,11}$/g;
-	//const codeComp = /^[a-z]{1}[a-z|0-9]{3,11}$/g;
 	
 	//비밀번호 유효성체크	
 	const pwdComp1 = /[a-z]/g;
@@ -152,18 +156,18 @@ function isValidateCheck(type, word){
 	
 	if(type==0){
 		result= cmCodeComp.test(word);
-		console.log("여기오니?");
 	}
 	if(type==1){
 		result= userIdComp.test(word);
-		} else if(type ==2){
+		} else if(type==2){
 			let count=0;
-			
 			count += pwdComp1.test(word)? 1: 0;
 			count += pwdComp2.test(word)? 1: 0;
 			count += pwdComp3.test(word)? 1: 0;
 			count += pwdComp4.test(word)? 1: 0;
-			result = (count>=3)? true: false;				
+			result = (count>=3)? true: false;
+			console.log(count);
+			console.log(result);				
 			}			
 		return result;			
 }
@@ -205,8 +209,8 @@ function reDupBtnCmCode(){
 	alert("사업자코드를 다시 입력해주세요.");
 	let cmCode = document.getElementsByName("cmCode")[0];
 	cmCode.readOnly=false;
-	
-	
+	cmCode.value="";
+	cmCode.focus();
 	
 }
 
@@ -260,36 +264,33 @@ function reDupUserIdCheck(){
 }
 
 function pwdValidate(obj){
-	let pwdMsg=document.getElementById("pwdMsg");
-	
+
+	let pwdMsg=document.getElementById("pwdMsg");	
 	if(charCount(obj.value,8,12)){
 		if(!isValidateCheck(2,obj.value)){
 			obj.value="";
 			obj.focus();
-			pwdMsg.innerText = "비밀번호는 영소문자,대문자,숫자,특수문자를 3가지 이상 혼합하여야 합니다.";			
+			//pwdMsg.innerText = "비밀번호는 영소문자,대문자,숫자,특수문자를 3가지 이상 혼합하여야 합니다.";	
+			alert("비밀번호는 영소문자,대문자,숫자,특수문자를 3가지 이상 혼합해주세요.");		
 		}else{
-			pwdMsg.innerText="비밀번호가 .. 맞..습니다..";
+			pwdMsg.innerText="사용가능한 비밀번호입니다";
 		}	
-	}else{
-		pwdMsg.innerText = "비밀번호 글자수를 8~12이내로 입력하세요.";
+		}if (!charCount(obj.value,8,12)){
+			pwdMsg.innerText="비밀번호는 8~12자 이내로 입력해주세요.";
+			obj.value="";
+			obj.focus();
 	}	
 }
-
-function pwdConfirm(obj){
+function pwdConfirm(){
 	let pwdMsg2=document.getElementById("pwdMsg2");
-	
-	let aCode=document.getElementsByName("aCode");
-	if(!(aCode[0].value==aCode[1].value)){
+	let userPwd=document.getElementsByName("userPwd");
+	if(!(userPwd[0].value==userPwd[1].value)){
 		pwdMsg2.innerText="비번이 일치하지 않습니다.";
-		aCode[1].value="";
-		aCode[1].focus();
-		
+		userPwd[1].value="";
+		userPwd[1].focus();	
 	}else{
-		
-		pwdMsg2.innerText="비밀번호가 맞... 습ㄴ..니다";
-		
-	}
-	
+		pwdMsg2.innerText="비밀번호가 맞... 습ㄴ..니다";	
+	}	
 }
 
 function nameCheck(obj){
@@ -315,9 +316,29 @@ function charCount(word, min, max){
 return word.length>=min && word.length<max;
 	
 	
+}
+
+function confirmPassword(message){
+
+	let all = document.getElementsByName("all");	
+	all.submit();
+	
+	alert(message);
+	
+	
 	
 }
 
+function reConfirmPassword(message){
+
+	let all = document.getElementsByName("all");	
+	all.submit();
+	
+	alert(message);
+	
+	
+	
+}
 
 
 
