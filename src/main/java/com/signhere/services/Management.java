@@ -14,8 +14,11 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.signhere.beans.DepartmentBean;
 import com.signhere.beans.DocumentBean;
+import com.signhere.beans.GradeBean;
 import com.signhere.beans.UserBean;
+import com.signhere.utils.Session;
 
 @Service
 public class Management {
@@ -23,7 +26,9 @@ public class Management {
 	SqlSessionTemplate sqlSession;
 	@Autowired
 	DataSourceTransactionManager tx;
-
+	@Autowired
+	Session ssn;
+	
 	ModelAndView mav;
 	private DefaultTransactionDefinition def;
 	private TransactionStatus status;
@@ -31,6 +36,52 @@ public class Management {
 	Management(){
 		//mav 초기화 
 		mav = new ModelAndView();
+	}
+	
+	public ModelAndView mAdmin() {
+		
+		UserBean ub = new UserBean();
+		DepartmentBean dp = new DepartmentBean();
+		GradeBean gr = new GradeBean();
+		
+		try {
+			ub.setCmCode((String)ssn.getAttribute("cmCode"));
+			dp.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//사원리스트
+		List<UserBean> empList;
+		empList = sqlSession.selectList("getAllEmp",ub);
+		//부서리스트
+		
+		List<DepartmentBean> dpList;
+		dpList = sqlSession.selectList("getAllDp",dp);
+		//직급리스트
+		List<GradeBean> grList;
+		grList = sqlSession.selectList("getAllGr",gr);
+		
+		
+		
+		for(int i =0; i < empList.size();i++) {
+			System.out.println(i+"번"+empList.get(i).getUserId());
+		}
+		
+		for(int i =0; i< dpList.size(); i++) {
+			System.out.println(i+"번"+dpList.get(i).getDpName());
+		} 
+		
+		for(int i =0; i < grList.size(); i++) {
+			System.out.println(i+"번"+grList.get(i).getGdName());
+		}
+		
+		mav.addObject("grList",grList);
+		mav.addObject("dpList",dpList);
+		mav.addObject("empList",empList);
+		mav.setViewName("admin/admin");
+		
+		return mav;
 	}
 
 	public ModelAndView mAddEmployee(UserBean ub) {
@@ -167,4 +218,5 @@ public class Management {
 	private boolean convertToBoolean(int result) {
 		return result==1 ? true: false;  
 	}
+
 }

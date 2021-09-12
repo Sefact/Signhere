@@ -4,6 +4,35 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.signhere.mapper.ManagementInter">
+	
+	<select id = "getAllDp" parameterType = "DepartmentBean" resultType="DepartmentBean">
+		SELECT 
+		DEPARTMENT_CODE AS dpCode,
+		COMPANY_CODE AS cmCode,
+		DEPARTMENT_NAME AS dpName 
+		FROM DP WHERE COMPANY_CODE = #{cmCode}
+	</select>
+	
+	<select id="getAllGr" parameterType="GradeBean" resultType ="GradeBean">
+		SELECT GRADE_CODE AS gdCode, GRADE_NAME AS gdName FROM GR
+	</select>
+	
+	<select id ="getAllEmp" parameterType = "UserBean" resultType="UserBean">
+		SELECT 
+		MM.COMPANY_CODE AS cmCode,
+		MM.ID AS userId,
+		MM.NAME AS userName,
+		MM.GRADE_CODE AS grCode,
+		GR.GRADE_NAME AS grName,
+		MM.DEPARTMENT_CODE AS dpCode,
+		DP.DEPARTMENT_NAME AS dpName 
+		FROM 
+		MM 
+		INNER JOIN DP ON MM.COMPANY_CODE = DP.COMPANY_CODE 
+		INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
+		WHERE MM.COMPANY_CODE = ${cmCode}
+	</select>
+
 	<select id="getAllApListAdmin" parameterType="DocumentBean" resultType="DocumentBean">
 		SELECT DM.DOCUMENT_NUM AS dmNum,
 		DM.DOCUMENT_TITLE AS dmTitle,

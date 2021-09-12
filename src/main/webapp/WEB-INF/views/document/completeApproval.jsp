@@ -8,6 +8,7 @@
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
+	<script src="/resources/js/admin/aplistAdmin.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
 	<!-- JQuery -->

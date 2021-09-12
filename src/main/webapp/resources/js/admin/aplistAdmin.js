@@ -38,6 +38,10 @@ fetch('/searchText',{
 	
 }
 
+function searchEmployee(){
+	
+}
+
 
 function deleteDoc(){
 	const docListItems = document.querySelectorAll(".docListRow");

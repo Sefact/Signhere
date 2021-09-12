@@ -33,11 +33,7 @@ public class AdminController {
 	//직원 관리 페이지로 이동 
 	@PostMapping("/admin")
 	public ModelAndView admin() {
-		mav = new ModelAndView();
-		
-		mav.setViewName("admin/admin");
-		
-		return mav;
+		return mag.mAdmin();
 	}
 	
 	//직원 관리 페이지에서 새로운 직원 추가
