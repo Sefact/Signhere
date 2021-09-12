@@ -35,10 +35,10 @@
             <input type="text" class="form-control" name="userMail" placeholder="이메일" required="required">
         </div>
         <div class="form-group">
-            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호" required="required">
+            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호" onBlur="pwdValidate(this)" >
         </div>
                 <div class="form-group">
-            <input type="password" class="form-control" name="checkUserPwd" placeholder="비밀번호확인" required="required">
+            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호확인" onBlur="pwdConfirm()">
         </div>        
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="requestNewInfo()">확인</button>
