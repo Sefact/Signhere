@@ -248,11 +248,10 @@ public class Authentication implements AuthentInter {
 
 	}
 	//메일을 정상적으로 받고 사용자에게 제공되는 비밀번호 바꾸는 페이지에서 컨펌을 누르면 비밀번호 체인지~
-	public ModelAndView mConfirmPwd(UserBean ub) throws InvalidKeyException, UnsupportedEncodingException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public ModelAndView mConfirmPwd(UserBean ub)  {
 		ModelAndView mav = new ModelAndView();
 		//비빌번호 바꾸기 MM테이블에 접근에서 일치하는 아이디의 비밀번호를 사용자가 입력한번호로 바꿔준다
 		System.out.println(enc.encode(ub.getUserPwd()));	
-		ub.setUserPwd(enc.encode(ub.getUserPwd()));
 		sqlSession.update("changePwd",ub);	
 		mav.setViewName("login/home");
 		return mav;
