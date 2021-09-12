@@ -377,8 +377,6 @@ function confirmPassword(message){
 	
 	alert(message);
 	
-	
-	
 }
 
 //confirmPwd.jsp에서 비밀번호 변경을 하는 function. (button)
