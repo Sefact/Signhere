@@ -142,13 +142,13 @@ function isValidateCheck(type, word){
 	
 	let result;
 	
-	//회사코드 유효성체크 type을 0으로
-	const cmCodeComp=/^[0-9]{10}/g;
+	//회사코드(cmCode) 유효성체크 type을 0으로
+	const cmCodeComp=/^[0-9]{10}$/;
 	
-	//아이디 유효성체크
+	//아이디(userId) 유효성체크
 	const userIdComp = /^[a-z]{1}[a-z|0-9]{3,11}$/g;
 	
-	//비밀번호 유효성체크	
+	//비밀번호(userPwd) 유효성체크	
 	const pwdComp1 = /[a-z]/g;
 	const pwdComp2 = /[A-Z]/g;
 	const pwdComp3 = /[0-9]/g;
@@ -171,6 +171,7 @@ function isValidateCheck(type, word){
 			}			
 		return result;			
 }
+
 
 function dupCmCodeCheck(){
 	
@@ -206,8 +207,8 @@ function dupCheckCmCode2(jsonData){
 }
 
 function reDupBtnCmCode(){
-	alert("사업자코드를 다시 입력해주세요.");
 	let cmCode = document.getElementsByName("cmCode")[0];
+	alert("사업자코드를 다시 입력해주세요.");
 	cmCode.readOnly=false;
 	cmCode.value="";
 	cmCode.focus();
