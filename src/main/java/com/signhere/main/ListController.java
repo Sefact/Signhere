@@ -21,6 +21,7 @@ import com.signhere.beans.DocumentBean;
 import com.signhere.mapper.DocumentInter;
 import com.signhere.services.Document;
 import com.signhere.services.Management;
+import com.signhere.utils.Session;
 
 @Controller
 public class ListController implements DocumentInter {
@@ -31,6 +32,10 @@ public class ListController implements DocumentInter {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	
+	@Autowired
+	Session ssn;
+	
+		
   
 	//내가 보낸 기안
 	@PostMapping("/myDraft")
@@ -38,7 +43,6 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
 		// 항목들 get해서 myDraft 페이지로 이동
-		
 		//page 이동
 		mav.setViewName("document/myDraft");
 		
@@ -46,8 +50,13 @@ public class ListController implements DocumentInter {
 		List<DocumentBean> docList;
 		
 		//작성자ID(로그인한 사용자) 임의저장
-		db.setDmWriteId("202103001");
+		//Autowired가 제대로 안되서 세션값이 안넘어오는 실수를 저지름! (09.11)
+		try {
+			db.setDmWriteId((String)ssn.getAttribute("userId"));
 		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		//DoucmentInter.xml, query 참조
 		docList=sqlSession.selectList("myDraft", db);
 				
@@ -77,8 +86,15 @@ public class ListController implements DocumentInter {
 		//DocumentBean을 List에 생성
 		List<DocumentBean> docList;
 		
+		try {
+			db.setDmWriteId((String)ssn.getAttribute("userId"));
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
 		//작성자ID(로그인한 사용자) 임의저장
-		db.setDmWriteId("202103001");
+		//db.setDmWriteId("202103001");
 		
 		docList=sqlSession.selectList("myEnforceMent", db);
 		
@@ -95,6 +111,13 @@ public class ListController implements DocumentInter {
 		mav.setViewName("document/waitApproval");
 		
 		List <DocumentBean> docList;
+		
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		
 		docList=sqlSession.selectList("waitApproval",db);
 		
@@ -113,8 +136,18 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/approvalProcced");
-		List <DocumentBean> docList;		
+		List <DocumentBean> docList;
+
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		docList=sqlSession.selectList("approvalProcced",db);
+		
+		
 		
 		//APPROVAL_ID=로그인한아이디 =>'202103002' / xml에서 where절에 입력.		
 		mav.addObject("docList",docList);
@@ -133,6 +166,14 @@ public class ListController implements DocumentInter {
 		
 		List <DocumentBean> docList;
 		
+
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		docList=sqlSession.selectList("completeApproval",db);
 		
 		//APPROVAL_ID=로그인한아이디 =>'202103001'xml에서 where절에 입력.
@@ -148,6 +189,13 @@ public class ListController implements DocumentInter {
 		mav.setViewName("document/companionApproval");
 		
 		List <DocumentBean> docList;
+
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		docList=sqlSession.selectList("compaionApproval", db);
 		
@@ -164,6 +212,15 @@ public class ListController implements DocumentInter {
 		mav.setViewName("document/deferList");
 		
 		List <DocumentBean> docList;
+		
+
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		docList=sqlSession.selectList("deferList",db);
 		
 		
@@ -182,6 +239,14 @@ public class ListController implements DocumentInter {
 		mav.setViewName("document/referenceApproval");
 		
 		List <DocumentBean> docList;
+		
+		try {
+			db.setReadingId((String)ssn.getAttribute("userId"));
+			db.setRefId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		docList=sqlSession.selectList("referenceApproval", db);
 		
 		//APPROVAL_ID=로그인한아이디 =>'202103002'xml에서 where절에 입력.

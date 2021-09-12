@@ -8,5 +8,4 @@
 		<typeAlias type="com.signhere.beans.AccessBean" alias="AccessBean"/>
 		<typeAlias type="com.signhere.beans.EntrustBean" alias="EntrustBean"/>
 	</typeAliases>
-	
 </configuration>
