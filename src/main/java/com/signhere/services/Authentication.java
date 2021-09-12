@@ -76,17 +76,20 @@ public class Authentication implements AuthentInter {
 					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
 						//session에 저장 및 main.jsp이동
 						try {
-							ssn.setAttribute("cmName",tmplist.get(0).getCmName());
-							ssn.setAttribute("userName",tmplist.get(0).getUserName());
-							ssn.setAttribute("dpName",tmplist.get(0).getDpName());
-							ssn.setAttribute("grName",tmplist.get(0).getGrName());
-
 							//최초로그인(pwIntial(최초기본설정여부)판단 후  ID,cmCode,Admin => Session 저장.)
 							if(tmplist.get(0).getPwInitial().equals("1")) {
 								mav.setViewName("login/main");								
 							} else {
+								ssn.setAttribute("cmName",tmplist.get(0).getCmName());
+								ssn.setAttribute("userName",tmplist.get(0).getUserName());
+								ssn.setAttribute("dpName",tmplist.get(0).getDpName());
+								ssn.setAttribute("grName",tmplist.get(0).getGrName());
+								if(tmplist.get(0).getUserMail() != null) {
+									ssn.setAttribute("userMail", tmplist.get(0).getUserMail());
+								}
 								mav.setViewName("login/newInfo");
 							}
+							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
@@ -113,12 +116,17 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mLogOut(HttpServletRequest req, AccessBean ab) {
 		mav = new ModelAndView();
 		String message="";
+		
+		
+		
 		try {
 			if(ssn.getAttribute("userId")!=null) {
+				ab.setPwInitial((String)ssn.getAttribute("pwInitial"));
+				ab.setUserId((String)ssn.getAttribute("userId"));
+				ab.setCmCode((String)ssn.getAttribute("cmCode"));
 				ab.setBrowser(this.getBrowserInfo(req, "others"));
 				ab.setPrivateIp(req.getRemoteAddr());
 				sqlSession.insert("updateUserLogOut",ab);
-				
 			}else {
 				message="이미 로그아웃 하셨습니다";
 				mav.addObject("message",message);
