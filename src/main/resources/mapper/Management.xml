@@ -20,6 +20,13 @@
 		WHERE DM.COMPANY_CODE=#{cmCode} AND DM.APPROVAL_CODE='C' ORDER BY DM.document_date DESC
 	</select>
 	
+	<select id="userIdDupCheck" parameterType="UserBean" resultType="int">
+		SELECT COUNT(*) 
+		FROM MM 
+		WHERE ID=#{userId} 
+	
+	</select>
+	
 	<select id="selectALList" parameterType="DocumentBean" resultType="int">
 		SELECT COUNT(*) FROM AL WHERE DOCUMENT_NUM = #{dmNum}
 	</select>
