@@ -178,7 +178,25 @@ function isValidateCheck(type, word){
 		return result;			
 }
 
+//회사코드가 양식에 맞지않고 다른 곳을 클릭했을 때 나오는 function
+function dupCmCodeCheckblur(){
+	
+	let cmCode=document.getElementsByName("cmCode")[0];
+	
+	let jsonData={cmCode:cmCode.value};
+	
+	if(!isValidateCheck(0,cmCode.value)){
+		cmCode.value="";
+		cmCode.focus();
+		alert("회사코드가 사업자번호양식에 맞지 않습니다");
+		return;					
+	}
+		fetchAjax('/employerDup','post',jsonData,dupCheckCmCode2)
+	
+}
 
+
+//회사코드 중복체크. 유효성 = 숫자 10자리
 function dupCmCodeCheck(){
 	
 	let cmCode=document.getElementsByName("cmCode")[0];
@@ -195,6 +213,7 @@ function dupCmCodeCheck(){
 	
 }
 
+//innerHTML. 아이디 중복체크하여 이상없을시 input type을 readOnly로 바꿔줌. 사용가능 alert창 띄워줌.
 
 function dupCheckCmCode2(jsonData){
 	jsonData=JSON.parse(jsonData);
@@ -212,6 +231,7 @@ function dupCheckCmCode2(jsonData){
 	}
 }
 
+//회사코드 재입력 button.
 function reDupBtnCmCode(){
 	let cmCode = document.getElementsByName("cmCode")[0];
 	alert("사업자코드를 다시 입력해주세요.");
@@ -220,6 +240,26 @@ function reDupBtnCmCode(){
 	cmCode.focus();
 	
 }
+
+//아이디가 양식에 맞지않고 다른 곳을 클릭했을 때 나오는 function
+function dupUserIdCheckBlur(){
+	
+	let userId = document.getElementsByName("userId")[0];
+	
+	let jsonData={userId:userId.value};
+
+		//아이디 유효성 검사
+		if(!isValidateCheck(1,userId.value)){			
+			userId.value="";
+			userId.focus();
+			alert("ID가 조건에 맞지 않습니다.");
+			return;					
+		}
+			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
+	}
+
+
+
 
 
 
@@ -238,10 +278,9 @@ function dupUserIdCheck(){
 			return;					
 		}
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
-							
-			
 	}
 	
+//innerHTML. 아이디 중복체크하여 이상없을시 input type을 readOnly로 바꿔줌. 사용가능 alert창 띄워 줌.
 function dupUserIdCheck2(jsonData){
 	jsonData = JSON.parse(jsonData);
 	
@@ -263,6 +302,7 @@ function dupUserIdCheck2(jsonData){
 }
 }
 
+//아이디 재입력 button
 function reDupUserIdCheck(){
 	let userId = document.getElementsByName("userId")[0];
 	userId.readOnly=false;
@@ -270,6 +310,8 @@ function reDupUserIdCheck(){
 	userId.focus();
 }
 
+
+//비밀번호  첫번째칸  name=userPwd[0]
 function pwdValidate(obj){
 
 	let pwdMsg=document.getElementById("pwdMsg");	
@@ -288,6 +330,9 @@ function pwdValidate(obj){
 			obj.focus();
 	}	
 }
+
+
+//비밀번호 두번째칸  name=userPwd[1]
 function pwdConfirm(){
 	let pwdMsg2=document.getElementById("pwdMsg2");
 	let userPwd=document.getElementsByName("userPwd");
@@ -300,6 +345,7 @@ function pwdConfirm(){
 	}	
 }
 
+//이름 글자수 유효성체크
 function nameCheck(obj){
 	
 	if(charCount(obj.value,2,5)){
@@ -310,7 +356,7 @@ function nameCheck(obj){
 		alert("이름은 2-5글자로 입력해주세요");
 	}	
 }
-
+//한글 유효성체크
 function krCheck(obj){	
 	const pattern =/^[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]+$/;
 
@@ -324,7 +370,7 @@ return word.length>=min && word.length<max;
 	
 	
 }
-
+//비밀번호 찾기 페이지(findPwd.jsp) 아래 function을 누르면 비밀번호 변경 페이지(confirmPwd.jsp)를 메일로 전송.
 function confirmPassword(message){
 
 	let all = document.getElementsByName("all");	
@@ -336,6 +382,7 @@ function confirmPassword(message){
 	
 }
 
+//confirmPwd.jsp에서 비밀번호 변경을 하는 function. (button)
 function reConfirmPassword(message){
 
 	let all = document.getElementsByName("all");	

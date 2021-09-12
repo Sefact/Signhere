@@ -19,7 +19,7 @@
     <div class="login-form">
         <h2 class="text-center">Sign Here</h2>   
         <div class="form-group has-error">
-        	<input type="text" class="form-control" name="cmCode" placeholder="회사코드:사업자번호 10자리 (하이픈제외)" required="required">
+        	<input type="text" class="form-control" name="cmCode" placeholder="회사코드:사업자번호 10자리 (하이픈제외)" required="required" onBlur="dupCmCodeCheckblur()">
         </div>
         	<input id="dupBtnCmCode" type="button" value="중복체크" onClick="dupCmCodeCheck()" />
         	<div id="dupBtnCmCode2"></div>
@@ -27,7 +27,7 @@
             <input type="text" class="form-control" name="cmName" placeholder="회사이름" required="required">
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userId" placeholder="아이디" required="required">
+            <input type="text" class="form-control" name="userId" placeholder="아이디" required="required" onBlur="dupUserIdCheckBlur()">
             <div id="conditionId">ID는 영소문자로 시작하여 12자 이하여야 합니다.</div>
             <input id= "dupBtnUserId" type="button" value="중복체크" onClick="dupUserIdCheck()" />
             <div id="dupBtnUserId2"></div>
