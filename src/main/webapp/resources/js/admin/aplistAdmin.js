@@ -38,6 +38,35 @@ fetch('/searchText',{
 	
 }
 
+function showAddModal(){
+	$('#addModal').modal('show');
+}
+
+function requestAddNewEmp(){
+	const userId = document.querySelector("#userIdNewBox").value;
+	const userName = document.querySelector("#userNameNewBox").value;
+	const grCode = document.querySelector("#grGradeNewBox").value;
+	const dpCode = document.querySelector("#dpCodeNewBox").value;
+	
+	const jsonData = {userId:userId,userName:userName,grCode:grCode,dpCode:dpCode};
+	
+	fetchAjax('/addEmployee','post',jsonData,afterAddEmp);
+}
+
+function afterAddEmp(data){
+	let result = JSON.parse(data);
+	if(result ===1){
+		alert("직원추가 성공");
+	}else{
+		alert("네트워크오류 다시시도해주세요.");
+	}
+	location.reload();
+}
+
+function showDelModal(){
+	$('#delModal').modal('show');
+}
+
 function searchEmployee(){
 	
 }
@@ -75,5 +104,26 @@ function deleteDoc(){
 	}).catch(err=>{
 		console.log(err)
 	});
+}
 
+function fetchAjax(action,method,data,afterfunction){
+fetch(action,{
+		method:method,
+		headers:{
+			'Accept': 'application/json, text/plain, */*',
+			'Content-Type':'application/json'
+		},
+		body: JSON.stringify(data)
+	}).then(res =>{
+		if(res.ok){
+		return res.json()	
+		}else{
+			console.error(`HTTP error status: ${res.status}`)
+		}
+	}) 
+	.then(jsonData => {
+		afterfunction(JSON.stringify(jsonData));
+	}).catch(err=>{
+		console.log(err)
+	});
 }

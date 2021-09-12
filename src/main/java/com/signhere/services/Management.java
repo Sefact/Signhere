@@ -3,6 +3,7 @@ package com.signhere.services;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,11 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.signhere.beans.DepartmentBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.GradeBean;
 import com.signhere.beans.UserBean;
+import com.signhere.utils.Encryption;
 import com.signhere.utils.Session;
 
 @Service
@@ -28,6 +29,8 @@ public class Management {
 	DataSourceTransactionManager tx;
 	@Autowired
 	Session ssn;
+	@Autowired
+	Encryption enc;
 	
 	ModelAndView mav;
 	private DefaultTransactionDefinition def;
@@ -62,10 +65,6 @@ public class Management {
 		List<GradeBean> grList;
 		grList = sqlSession.selectList("getAllGr",gr);
 		
-		for(int i = 0; i<dpList.size(); i++) {
-			System.out.println(dpList.get(i).getDpName());
-		}
-		
 		mav.addObject("grList",grList);
 		mav.addObject("dpList",dpList);
 		mav.addObject("empList",empList);
@@ -74,11 +73,19 @@ public class Management {
 		return mav;
 	}
 
-	public ModelAndView mAddEmployee(UserBean ub) {
-
-		//default = 실패, 성공시 message = 성공 
-		mav.addObject("message","네트워크 오류! 직원추가 실패");
-		return mav;
+	public String mAddEmployee(UserBean ub) {
+		
+		try {
+			ub.setCmCode((String)ssn.getAttribute("cmCode"));
+			ub.setUserPwd(enc.encode(ub.getCmCode()+ub.getUserId()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		int result = sqlSession.insert("addNewEmp",ub);
+		
+		return result+"";
 	}
 
 	public UserBean mEmployeeDup(UserBean ub) {
@@ -178,7 +185,7 @@ public class Management {
 
 		if(counter != 0) {
 			this.setTransactionResult(false);
-			message="네으퉈으 오류! 삭제실패";
+			message="네트워크 오류! 삭제실패";
 
 		}
 		System.out.println(counter);
@@ -207,6 +214,46 @@ public class Management {
 
 	private boolean convertToBoolean(int result) {
 		return result==1 ? true: false;  
+	}
+	
+	private String generatePw() {
+		char[] specialChar = {'!','@','#','$','%','^','&','*'};
+		
+		Random r = new Random();
+		int randomLower = r.nextInt(2)+3;
+		int randomUpper = r.nextInt(2)+3;
+		int randomChar = r.nextInt(2)+1;
+		int randomNum = r.nextInt(2)+3;
+		int randomIndex=0;
+		char tmpChar = ' ';
+		char[] tmpPwArr = new char[randomLower+randomUpper+randomChar+randomNum];
+		StringBuffer randomPw = new StringBuffer();
+		
+		for(int i = 0; i<randomLower; i++) {
+			tmpPwArr[i] = (char)(r.nextInt(26)+'a');
+		}
+		for(int i = 0; i<randomUpper; i++) {
+			tmpPwArr[i+randomLower] = (char)(r.nextInt(26)+'A');
+		}
+		for(int i=0; i<randomNum; i++) {
+			tmpPwArr[i+randomLower+randomUpper] = (char)r.nextInt(9);
+		}
+		for(int i=0; i<randomChar; i++) {
+			tmpPwArr[i+randomLower+randomUpper+randomNum] = specialChar[r.nextInt(7)];
+		}
+		
+		for(int i=0; i<tmpPwArr.length; i++) {
+			randomIndex = r.nextInt(tmpPwArr.length);
+			tmpChar = tmpPwArr[i];
+			tmpPwArr[i] = tmpPwArr[randomIndex];
+			tmpPwArr[randomIndex] = tmpChar;
+		}
+		
+		for(int i = 0; i<tmpPwArr.length; i++) {
+			randomPw.append(tmpPwArr[i]);
+		}
+		
+		return randomPw.toString();
 	}
 
 }

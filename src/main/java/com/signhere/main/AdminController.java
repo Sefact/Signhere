@@ -38,7 +38,8 @@ public class AdminController {
 	
 	//직원 관리 페이지에서 새로운 직원 추가
 	@PostMapping("/addEmployee")
-	public ModelAndView addEmployee(@ModelAttribute UserBean ub) {
+	@ResponseBody
+	public String addEmployee(@RequestBody UserBean ub) {
 		return mag.mAddEmployee(ub);
 	}
 	

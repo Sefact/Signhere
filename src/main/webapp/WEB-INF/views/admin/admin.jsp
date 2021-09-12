@@ -5,9 +5,6 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Admin</title>
-	
-	<!-- Resources JS -->
-	<script src="/resources/js/login/main.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
 	<!-- JQuery -->
@@ -23,4 +20,9 @@
 	<jsp:include page="../utils/navigation.jsp" />
 	<jsp:include page="../utils/adminList.jsp"/>
 </body>
+<!-- Resources JS -->
+	<script src="/resources/js/login/main.js"></script>
+	<script src="/resources/js/admin/aplistAdmin.js"></script>
+	<!-- Bootstrap Core JS -->
+	<script src="/webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </html>
