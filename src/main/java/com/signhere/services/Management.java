@@ -62,18 +62,8 @@ public class Management {
 		List<GradeBean> grList;
 		grList = sqlSession.selectList("getAllGr",gr);
 		
-		
-		
-		for(int i =0; i < empList.size();i++) {
-			System.out.println(i+"번"+empList.get(i).getUserId());
-		}
-		
-		for(int i =0; i< dpList.size(); i++) {
-			System.out.println(i+"번"+dpList.get(i).getDpName());
-		} 
-		
-		for(int i =0; i < grList.size(); i++) {
-			System.out.println(i+"번"+grList.get(i).getGdName());
+		for(int i = 0; i<dpList.size(); i++) {
+			System.out.println(dpList.get(i).getDpName());
 		}
 		
 		mav.addObject("grList",grList);

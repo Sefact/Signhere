@@ -20,11 +20,12 @@
 				<div class="form-group col-md-1">
 					<label for="grCode">직급</label>
 				</div>
-				<div class="form-group col-md-11">
-					<select name =""grCode"">
+				<div class="form-group col-md-5">
+					<select name ="grCode">
 						<option value="">직급선택</option>
-						<c:forEach var = "name" items="${empList}">
-							<option value="${name.grCode}">
+						<c:forEach var = "grade" items="${grList}">
+							<option value="${grade.gdCode}">
+								${grade.gdName }
 							</option>
 						</c:forEach>
 					</select>
@@ -38,8 +39,9 @@
 				<div class="form-group col-md-5">
 					<select name ="dpCode">
 						<option value="">부서선택</option>
-						<c:forEach var = "name" items="${empList}">
-							<option value="${name.dpCode}">
+						<c:forEach var = "department" items="${dpList}">
+							<option value="${department.dpCode}">
+								${department.dpName }
 							</option>
 						</c:forEach>
 					</select>
@@ -52,7 +54,7 @@
 			
 		</form>
 
-	<h2 class="sub-header">Section title</h2>
+	<h2 class="sub-header">직원리스트</h2>
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>
@@ -64,7 +66,7 @@
 				</tr>
 			</thead>
 			<tbody>
-			<c:forEach var = "empLists" items="${empLists}">
+			<c:forEach var = "empLists" items="${empList}">
 				<tr>
 					<td><c:out value="${empLists.userId}" /></td>
 					<td><c:out value="${empLists.userName}" /></td>
