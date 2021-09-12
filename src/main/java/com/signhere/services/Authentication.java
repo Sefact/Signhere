@@ -232,7 +232,8 @@ public class Authentication implements AuthentInter {
 
 		// 1이면 이메일&아이디가 일치하는게 있다. 0이면 일치하는게 없다
 		if(this.convertToBoolean(info)){
-		
+			
+			//home.jsp에 넘겨줌.
 			message="입력하신 이메일로 인증페이지를 전송했습니다.";
 			
 			mav.addObject("message",message);
