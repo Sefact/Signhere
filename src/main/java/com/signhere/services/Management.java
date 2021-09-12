@@ -108,12 +108,23 @@ public class Management {
 		return ub;
 	}
 
-	public ModelAndView mDelEmployee(String userId) {
-
-		//default = 실패, 성공시 message = 성공 
-		mav.addObject("네트워크 오류! message","직원삭제 실패");
-
-		return mav;
+	public String mDelEmployee(UserBean userList) {
+		int counter =0;
+		/*
+		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
+		
+		그냥 삭제시 AH 테이블 child record 오류 발생 정책 바꿔 줘야함.
+		
+		for(int i = 0; i < userList.getUserIdArr().length; i++) {
+			userList.setUserId(userList.getUserIdArr()[i]);
+			sqlSession.update("deleteEmp",userList);
+			counter++;
+		}
+		if(counter == userList.getUserIdArr().length) {
+			this.setTransactionResult(true);
+		}
+		 */
+		return counter+"";
 	}
 
 	public ModelAndView mUpdateEmployee(UserBean ub) {
@@ -254,6 +265,32 @@ public class Management {
 		}
 		
 		return randomPw.toString();
+	}
+
+	public List<UserBean> searchEmp(UserBean ub) {
+		try {
+			ub.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.handleNullValues(ub);
+		List<UserBean> empList;
+		
+		empList = sqlSession.selectList("searchEmp",ub);
+		empList.get(0).setMessage(empList.size()+"");
+		return empList;
+	}
+
+	private void handleNullValues(UserBean ub) {
+		if(ub.getUserName().isEmpty()) {
+			ub.setUserName("");
+		}
+		if(ub.getDpCode().isEmpty()) {
+			ub.setDpCode("");
+		}
+		if(ub.getGrCode().isEmpty()) {
+			ub.setGrCode("");
+		}
 	}
 
 }

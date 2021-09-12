@@ -48,15 +48,14 @@ public class AdminController {
 	@PostMapping("/employeeDup")
 	@ResponseBody
 	public UserBean employeeDup(@RequestBody UserBean ub) {
-		
-		
 		return mag.mEmployeeDup(ub);
 	}
 	
 	//기존 직원 삭제 메소드 
 	@PostMapping("/delEmployee")
-	public ModelAndView delEmployee(@RequestParam String userId) {
-		return mag.mDelEmployee(userId);
+	@ResponseBody
+	public String delEmployee(@RequestBody UserBean userList) {
+		return mag.mDelEmployee(userList);
 	}
 	
 	@PostMapping("/updateEmployee")
@@ -77,5 +76,11 @@ public class AdminController {
 		System.out.println("controller");
 		String result = mag.mApListRemove(docList);
 		return result;
+	}
+	
+	@PostMapping("/searchEmp")
+	@ResponseBody
+	public List<UserBean> searchEmp(@RequestBody UserBean ub) {
+		return mag.searchEmp(ub);
 	}
 }

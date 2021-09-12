@@ -63,14 +63,61 @@ function afterAddEmp(data){
 	location.reload();
 }
 
-function showDelModal(){
-	$('#delModal').modal('show');
+function confirmDel(){
+	let empToDel = document.querySelectorAll(".empListRow");
+	let arr=[];
+	
+	for(let i =0; i<empToDel.length; i++){
+		if(empToDel[i].checked == true){
+			arr.push(empToDel[i].value);
+		}
+	}
+	
+	if(confirm(arr.length+"명의 직원을 정말 삭제합니까?")){
+		requestDelEmp(arr);
+	}
+}
+
+
+function requestDelEmp(empToDel){
+	let objArray = {"userIdArr":empToDel};
+	console.log(objArray);
+	fetchAjax("/delEmployee",'post',objArray,afterDelEmp);
+}
+
+function afterDelEmp(data){
+	alert(data+"명 삭제완료");
+	location.reload();
 }
 
 function searchEmployee(){
+	const userName = document.getElementsByName("userName")[0].value;
+	const grCode = document.getElementsByName("grCode")[0].value;
+	const dpCode = document.getElementsByName("dpCode")[0].value;
 	
+	const jsonData = {userName:userName, grCode:grCode, dpCode:dpCode};
+	
+	fetchAjax("/searchEmp",'post',jsonData,afterSearch);
 }
 
+function afterSearch(data){
+	let empList = JSON.parse(data);
+	console.log(empList[0].userId);
+	empListBody = document.querySelector("#empListBody");
+	empListBody.innerHTML="";
+	let tr = ``;
+	for(i=0; i<empList.length; i++){
+		console.log(i);
+		tr += `<tr>
+					<td><input type="checkBox" class="empListRow" value="${empList[i].userId}"></td>
+					<td>${empList[i].userId}</td>
+					<td>${empList[i].userName}</td>
+					<td>${empList[i].grName}</td>
+					<td>${empList[i].dpName}</td>
+				</tr>`
+	}
+	empListBody.innerHTML = tr;
+}
 
 function deleteDoc(){
 	const docListItems = document.querySelectorAll(".docListRow");
@@ -101,6 +148,7 @@ function deleteDoc(){
 	}) 
 	.then(jsonData =>{
 		console.log(jsonData)
+		location.reload();
 	}).catch(err=>{
 		console.log(err)
 	});

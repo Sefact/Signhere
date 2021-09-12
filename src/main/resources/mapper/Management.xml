@@ -125,4 +125,26 @@
 		INSERT INTO MM VALUES(#{userId},#{userPwd},#{dpCode},#{grCode},#{cmCode},#{userName},'','0','N')
 	</insert>
 	
+	<select id="searchEmp" parameterType="UserBean" resultType="UserBean">
+		SELECT 
+		MM.COMPANY_CODE AS cmCode,
+		MM.ID AS userId,
+		MM.NAME AS userName,
+		MM.GRADE_CODE AS grCode,
+		GR.GRADE_NAME AS grName,
+		MM.DEPARTMENT_CODE AS dpCode,
+		DP.DEPARTMENT_NAME AS dpName 
+		FROM 
+		MM 
+		INNER JOIN DP ON MM.COMPANY_CODE = DP.COMPANY_CODE 
+		INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
+		WHERE MM.COMPANY_CODE = #{cmCode} 
+		AND MM.NAME LIKE '%'|| #{userName} ||'%' 
+		AND MM.GRADE_CODE LIKE '%'|| #{grCode} || '%' 
+		AND MM.DEPARTMENT_CODE LIKE '%'|| #{dpCode} || '%'
+	</select>
+	<!--<update id="deleteEmp" parameterType="UserBean">
+	</update>
+	 -->
+	
 </mapper>
