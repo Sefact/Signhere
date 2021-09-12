@@ -68,6 +68,12 @@ function requestSignUp(){
 	const userName = document.getElementsByName("userName")[0];	
 	const userPwd = document.getElementsByName("userPwd")[0];
 	const userMail = document.getElementsByName("userMail")[0];
+	
+	//if(!isValidateCheck(0,cmCode.value)){
+	//	alert("회사코드가 사업자번호양식에 맞지 않습니다");	
+	//}
+	//if(!isValidateCheck(1,userId.value)){
+	//	alert("아이디가 조건에 맞지않습니다.");}
 
 	let form = makeForm("joinRequest","post");
 	
@@ -109,7 +115,7 @@ function requestNewInfo(){
 	const grName=document.getElementsByName("grName")[0];	
 	const userMail=document.getElementsByName("userMail")[0];
 	const userPwd=document.getElementsByName("userPwd")[0];
-	const checkUserPwd = document.getElementsByName("checkUserPwd")[0];
+
 	
 	
 	let form = makeForm("newInfoAccess","post");
@@ -274,10 +280,10 @@ function pwdValidate(obj){
 			//pwdMsg.innerText = "비밀번호는 영소문자,대문자,숫자,특수문자를 3가지 이상 혼합하여야 합니다.";	
 			alert("비밀번호는 영소문자,대문자,숫자,특수문자를 3가지 이상 혼합해주세요.");		
 		}else{
-			pwdMsg.innerText="사용가능한 비밀번호입니다";
+			pwdMsg.innerHTML="<span style='font-size:1.2em; color: green;'>사용가능한 비밀번호 입니다. </span>";
 		}	
 		}if (!charCount(obj.value,8,12)){
-			pwdMsg.innerText="비밀번호는 8~12자 이내로 입력해주세요.";
+			pwdMsg.innerHTML="<span style='font-size:1.2em; color: red;'>비밀번호는 8~12자 이내로 입력해주세요.</span>";
 			obj.value="";
 			obj.focus();
 	}	
@@ -286,7 +292,7 @@ function pwdConfirm(){
 	let pwdMsg2=document.getElementById("pwdMsg2");
 	let userPwd=document.getElementsByName("userPwd");
 	if(!(userPwd[0].value==userPwd[1].value)){
-		pwdMsg2.innerText="비번이 일치하지 않습니다.";
+		pwdMsg2.innerHTML="<span style='font-size:1.3em; color: red;'>비밀번호가 일치하지 않습니다. </span>";
 		userPwd[1].value="";
 		userPwd[1].focus();	
 	}else{
@@ -336,8 +342,6 @@ function reConfirmPassword(message){
 	all.submit();
 	
 	alert(message);
-	
-	
 	
 }
 
