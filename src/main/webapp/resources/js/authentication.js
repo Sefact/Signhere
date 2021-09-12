@@ -16,8 +16,7 @@ fetch(action,{
 			console.error(`HTTP error status: ${res.status}`)
 		}
 	}) 
-	.then(jsonData =>{
-		
+	.then(jsonData =>{		
 		//parameter에 JSON화 시켜줘야함! 안그럼 object로 인식한다.
 		afterFunction(JSON.stringify(jsonData));
 		console.log(jsonData);
@@ -25,8 +24,6 @@ fetch(action,{
 		console.log(err);
 	});
 }
-
-
 
 
 
@@ -41,10 +38,6 @@ function sendUserInfo() {
 	form.appendChild(userPwd);
 	
 	document.body.appendChild(form);
-	
-	alert(userId);
-	alert(userPwd);
-	
 	
 	form.submit();
 }
@@ -86,7 +79,6 @@ function requestSignUp(){
 	
 	document.body.appendChild(form);
 	
-	console.log(form);
 	
 	form.submit();
 		
@@ -254,6 +246,9 @@ function dupUserIdCheckBlur(){
 			alert("ID가 조건에 맞지 않습니다.");
 			return;					
 		}
+		fetchAjax('/employeeDup','post',jsonData,afterDupCheck);
+							
+		}else{
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
 
@@ -279,6 +274,13 @@ function dupUserIdCheck(){
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
 	
+function afterDupCheck(jsonData){
+	jsonData = JSON.parse(jsonData);
+	
+	let btn = document.getElementById("dupBtn");
+	let userId = document.getElementsByName("userId")[0];
+	let msg = document.getElementById("message");
+
 //innerHTML. 아이디 중복체크하여 이상없을시 input type을 readOnly로 바꿔줌. 사용가능 alert창 띄워 줌.
 function dupUserIdCheck2(jsonData){
 	jsonData = JSON.parse(jsonData);

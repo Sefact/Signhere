@@ -25,6 +25,7 @@
        CM.COMPANY_NAME AS cmName,
        GR.GRADE_NAME AS grName,
        DP.DEPARTMENT_NAME AS dpName,
+       DP.DEPARTMENT_CODE AS dpCode,
        MM.ADMIN as admin      
        FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
        INNER JOIN GR ON GR.GRADE_CODE=MM.GRADE_CODE
@@ -37,7 +38,7 @@
 		INSERT INTO AH VALUES(SYSDATE,#{pwInitial},'1',#{privateIp},#{userId},#{cmCode},#{browser})
 	</insert>
 	
-		<insert id ="updateUserLogOut" parameterType ="AccessBean">
+	<insert id ="updateUserLogOut" parameterType ="AccessBean">
 		INSERT INTO AH VALUES(SYSDATE,#{pwInitial},'0',#{privateIp},#{userId},#{cmCode},#{browser})
 	</insert>
 	
