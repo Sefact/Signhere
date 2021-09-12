@@ -144,10 +144,9 @@ function logOut(){
 }
 
 
+//회사코드,아이디,비밀번호 유효성체크
 function isValidateCheck(type, word){
-	
 	let result;
-	
 	//회사코드(cmCode) 유효성체크 type을 0으로
 	const cmCodeComp=/^[0-9]{10}$/;
 	
