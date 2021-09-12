@@ -63,7 +63,7 @@ public class Authentication implements AuthentInter {
 				System.out.println("세션없지?");
 			}else {
 				//2.비밀번호체크
-				if(true){
+				if(enc.matches(ab.getUserPwd(), tmplist.get(0).getUserPwd())){
 					//브라우저 정도 ab에 담음
 					ab.setCmCode(tmplist.get(0).getCmCode());
 					ab.setBrowser(this.getBrowserInfo(req, "others"));
