@@ -41,6 +41,27 @@ public class Management {
 		return mav;
 	}
 	
+	public UserBean mailDup(UserBean ub) {
+		System.out.println("여ㅑ기오냐");
+		
+		String dupCheck="";
+		
+		int dupId=sqlSession.selectOne("mailDupCheck",ub);
+		
+		if(dupId==0) {
+			dupCheck="사용가능";
+		}else {
+			dupCheck="사용불가";
+			
+		}
+		
+		ub.setMessage(dupCheck);
+		
+		return ub;
+	
+	}
+	
+	
 
 	public CompanyBean mEmployerDup(CompanyBean cb) {
 		String dupCheck="";
@@ -186,5 +207,7 @@ public class Management {
 	private boolean convertToBoolean(int result) {
 		return result==1 ? true: false;  
 	}
+
+
 
 }

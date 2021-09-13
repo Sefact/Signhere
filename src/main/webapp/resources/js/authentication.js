@@ -257,53 +257,43 @@ function dupUserIdCheckBlur(){
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
 
-//아이디중복체크. 유효성 = 영문으로 시작 12자 이상//
+//이메일 중복체크
 function dupUserMailCheck(){
 	
-	let userId = document.getElementsByName("userId")[0];
+	let userMail = document.getElementsByName("userMail")[0];
 	
-	let jsonData={userId:userId.value};
-
-		//아이디 유효성 검사
-		if(!isValidateCheck(1,userId.value)){			
-			userId.value="";
-			userId.focus();
-			alert("ID가 조건에 맞지 않습니다.");
-			return;					
-		}
-			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
+	let jsonData={userMail:userMail.value};
+			fetchAjax('/mailDup','post',jsonData,dupUserMailCheck2);
 	}
 	
 //innerHTML. 아이디 중복체크하여 이상없을시 input type을 readOnly로 바꿔줌. 사용가능 alert창 띄워 줌.
 function dupUserMailCheck2(jsonData){
 	jsonData = JSON.parse(jsonData);
 	
-	let dupBtnUserId2 = document.getElementById("dupBtnUserId2");
-	let userId = document.getElementsByName("userId")[0];
+	let dupBtnUserMail2 = document.getElementById("dupBtnUserMail2");
+	let userMail = document.getElementsByName("userMail")[0];
 
 	if(jsonData.message=="사용가능"){
-	userId.setAttribute("readOnly",true);
+	userMail.setAttribute("readOnly",true);
 
-	dupBtnUserId2.innerHTML="<input type='button' value='재입력' onClick='reDupUserIdCheck()'>";
+	dupBtnUserMail2.innerHTML="<input type='button' value='재입력' onClick='reDupUserMailCheck()'>";
 
-	alert("사용가능한 ID입니다.");
+	alert("사용가능한 메일입니다.");
 	 }
 	   else
 		{
-			userId.value="";
-			alert("이미 존재하는 ID입니다");
-			userId.focus();
+			userMail.value="";
+			alert("이미 존재하는 메일입니다");
+			userMail.focus();
 }
 }
-//아이디 재입력 button
+//메일 재입력 button
 function reDupUserMailCheck(){
-	let userId = document.getElementsByName("userId")[0];
-	userId.readOnly=false;
-	userId.value="";
-	userId.focus();
+	let userMail = document.getElementsByName("userMail")[0];
+	userMail.readOnly=false;
+	userMail.value="";
+	userMail.focus();
 }
-
-
 
 //아이디중복체크. 유효성 = 영문으로 시작 12자 이상//
 function dupUserIdCheck(){
@@ -377,10 +367,11 @@ function pwdValidate(obj){
 function pwdConfirm(){
 	let pwdMsg2=document.getElementById("pwdMsg2");
 	let userPwd=document.getElementsByName("userPwd");
+	let userPwd2=document.getElementsByName("userPwd2");
 	if(!(userPwd[0].value==userPwd2[0].value)){
 		pwdMsg2.innerHTML="<span style='font-size:1.3em; color: red;'>비밀번호가 일치하지 않습니다. </span>";
-		userPwd[2].value="";
-		userPwd[2].focus();	
+		userPwd2[0].value="";
+		userPwd2[0].focus();	
 	}else{
 		pwdMsg2.innerText="비밀번호가 맞... 습ㄴ..니다";	
 	}	
