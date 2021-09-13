@@ -119,6 +119,65 @@ function afterSearch(data){
 	empListBody.innerHTML = tr;
 }
 
+function requestUserInfoDetail(){
+	let userId = document.querySelectorAll(".empListRow");
+	let jsonData;
+	
+	for(let i =0; i<userId.length; i++){
+		if(userId[i].checked == true){
+			jsonData = {userId:userId[i].value}
+		}
+	}
+	
+	fetchAjax("/userInfo","post",jsonData,showModifyModal);
+}
+
+function showModifyModal(data){
+	$('#modifyModal').modal('show');
+	let userDetail = JSON.parse(data);
+	let userIdSelected = document.getElementById("userIdSelected");
+	let userMailSelected = document.getElementById("userMailSelected");
+	let userNameSelected = document.getElementById("userNameSelected");
+	let grCodeSelected = document.getElementById("grCodeSelected");
+	let dpCodeSelected = document.getElementById("dpCodeSelected");
+	
+	userIdSelected.innerHTML=userDetail[0].userId;
+	userMailSelected.innerHTML=userDetail[0].userMail;
+	userNameSelected.innerHTML=userDetail[0].userName;
+	grCodeSelected.innerHTML=userDetail[0].grName;
+	grCodeSelected.value = userDetail[0].grCode;
+	dpCodeSelected.innerHTML =userDetail[0].dpName;
+	dpCodeSelected.value =userDetail[0].dpCode;
+}
+
+function requestModifyEmp(){
+	let userId = document.getElementById("userIdSelected").innerHTML;
+	let grCode = document.getElementsByName("grCodeSelected")[0].value;
+	let originalGrCode = document.getElementById("grCodeSelected").value;
+	let dpCode = document.getElementsByName("dpCodeSelected")[0].value;
+	let originalDpCode = document.getElementById("dpCodeSelected").value;
+	
+	if(grCode == ""){
+		grCode = originalGrCode;
+	}
+	if(dpCode ==""){
+		dpCode = originalDpCode;
+	}
+	
+	let jsonData = {userId:userId, grCode:grCode, dpCode:dpCode}
+	
+	console.log(jsonData);
+	
+	fetchAjax("/updateEmployee",'post',jsonData,afterModifyEmp);
+}
+
+function afterModifyEmp(data){
+	showData = JSON.parse(data);
+	console.log(showData);
+	location.reload();
+}
+
+
 function deleteDoc(){
 	const docListItems = document.querySelectorAll(".docListRow");
 	let arr=[];

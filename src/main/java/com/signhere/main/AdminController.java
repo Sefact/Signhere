@@ -59,7 +59,8 @@ public class AdminController {
 	}
 	
 	@PostMapping("/updateEmployee")
-	public ModelAndView updateEmployee(@ModelAttribute UserBean ub) {
+	@ResponseBody
+	public String updateEmployee(@RequestBody UserBean ub) {
 		return mag.mUpdateEmployee(ub);
 	}
 	
@@ -82,5 +83,11 @@ public class AdminController {
 	@ResponseBody
 	public List<UserBean> searchEmp(@RequestBody UserBean ub) {
 		return mag.searchEmp(ub);
+	}
+	
+	@PostMapping("/userInfo")
+	@ResponseBody
+	public List<UserBean> userInfo(@RequestBody UserBean ub) {
+		return mag.userInfo(ub);
 	}
 }

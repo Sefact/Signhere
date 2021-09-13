@@ -143,6 +143,26 @@
 		AND MM.GRADE_CODE LIKE '%'|| #{grCode} || '%' 
 		AND MM.DEPARTMENT_CODE LIKE '%'|| #{dpCode} || '%'
 	</select>
+	
+	<select id="getUserInfoDetail" parameterType="UserBean" resultType="UserBean">
+		SELECT 
+		MM.ID AS userId,
+		MM.NAME AS userName,
+		MM.GRADE_CODE AS grCode,
+		GR.GRADE_NAME AS grName,
+		MM.DEPARTMENT_CODE AS dpCode,
+		DP.DEPARTMENT_NAME AS dpName,
+		MM.MAIL AS userMail 
+		FROM 
+		MM 
+		INNER JOIN DP ON MM.COMPANY_CODE = DP.COMPANY_CODE 
+		INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
+		WHERE MM.ID = #{userId}
+	</select>
+	
+	<update id ="updateEmpInfo" parameterType="UserBean">
+		UPDATE MM SET GRADE_CODE = #{grCode}, DEPARTMENT_CODE = #{dpCode} WHERE ID = #{userId}
+	</update>
 	<!--<update id="deleteEmp" parameterType="UserBean">
 	</update>
 	 -->

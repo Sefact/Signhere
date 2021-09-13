@@ -127,10 +127,15 @@ public class Management {
 		return counter+"";
 	}
 
-	public ModelAndView mUpdateEmployee(UserBean ub) {
-		//default = 실패, 성공시 message = 성공
-		mav.addObject("message","네트워크 오류!  직원 수정 실패");
-		return mav;
+	public String mUpdateEmployee(UserBean ub) {
+		String result = null;
+		System.out.println(ub.getUserId());
+		System.out.println(ub.getGrCode());
+		System.out.println(ub.getDpCode());
+		
+		result = sqlSession.update("updateEmpInfo",ub)+"";
+		
+		return result;
 	}
 
 	public ModelAndView mApListAdmin() {
@@ -291,6 +296,13 @@ public class Management {
 		if(ub.getGrCode().isEmpty()) {
 			ub.setGrCode("");
 		}
+	}
+
+	public List<UserBean> userInfo(UserBean ub) {
+		System.out.println(ub.getUserId());
+		List<UserBean> userDetailList;
+		userDetailList = sqlSession.selectList("getUserInfoDetail", ub);
+		return userDetailList;
 	}
 
 }

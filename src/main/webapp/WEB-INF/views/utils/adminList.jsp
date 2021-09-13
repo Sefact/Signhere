@@ -57,6 +57,7 @@
 	<h2 class="sub-header">직원리스트</h2>
 	<button class="btn btn-primary" id="addEmployeeBtn" onclick="showAddModal()">직원추가</button>
 	<button class="btn btn-primary" id="deleteEmployeeBtn" onclick="confirmDel()">직원삭제</button>
+	<button class="btn btn-primary" id="deleteEmployeeBtn" onclick="requestUserInfoDetail()">직원정보수정</button>
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>
@@ -71,7 +72,12 @@
 			<tbody id="empListBody">
 			<c:forEach var = "empLists" items="${empList}">
 				<tr>
-					<td><input type="checkBox" class="empListRow" value="${empLists.userId}"></td>
+					<td>
+						<input type="checkBox" class="empListRow" value="${empLists.userId}">
+						<input type="hidden" class="empListRowName" value="${empLists.userName}">
+						<input type="hidden" class="empListRowgrName" value="${empLists.grName}">
+						<input type="hidden" class="empListRowdpName" value="${empLists.dpName}">
+					</td>
 					<td><c:out value="${empLists.userId}" /></td>
 					<td><c:out value="${empLists.userName}" /></td>
 					<td><c:out value="${empLists.grName}" /></td>
@@ -123,6 +129,62 @@
           </div>
           <div class="modal-footer">
             <button type="button" data-dismiss="modal" onClick="requestAddNewEmp()" id="requestAddNewBtn" class="btn btn primary">확인</button>
+            <button type="button" data-dismiss="modal" class="btn btn-default">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- modify Employee modal -->
+	<div id="modifyModal" role="dialog" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">&times;</button>
+            <h4 class="modal-title">직원 정보 수정</h4>
+          </div>
+          <div id="modalBodyContents" class="modal-body">
+            <div>
+            	<label for ="userIdSelected">아이디</label>
+            	<span id="userIdSelected"></span>
+            	
+            </div>
+            <div>
+            	<label for ="userMailSelected">이메일</label>
+            	<span id="userMailSelected"></span>
+            	
+            </div>
+            <div>
+            	<label for ="userNameSelected">이름</label>
+            	<span id="userNameSelected"></span>
+            	
+            </div>
+            <div>
+            	<label for ="grCodeSelected">직급</label>
+            	<span id="grCodeSelected"></span>
+            	<select id="grCodeSelectedBox" name ="grCodeSelected">
+					<option value="">직급선택</option>
+						<c:forEach var = "grade" items="${grList}">
+							<option value="${grade.gdCode}">
+								${grade.gdName }
+							</option>
+					</c:forEach>
+				</select>
+            </div>
+            <div>
+            	<label for ="dpCodeSelected">부서</label>
+            	<span id="dpCodeSelected"></span>
+            	<select id="dpCodeSelectedBox" name ="dpCodeSelected">
+					<option value="">부서선택</option>
+					<c:forEach var = "department" items="${dpList}">
+						<option value="${department.dpCode}">
+							${department.dpName }
+						</option>
+						</c:forEach>
+				</select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-dismiss="modal" onClick="requestModifyEmp()" id="requestModifyEmpBtn" class="btn btn primary">확인</button>
             <button type="button" data-dismiss="modal" class="btn btn-default">닫기</button>
           </div>
         </div>
