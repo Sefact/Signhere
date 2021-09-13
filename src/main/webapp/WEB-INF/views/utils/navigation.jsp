@@ -392,6 +392,8 @@
 				aplReceiver.push(data);
 			}
 			
+			alert(aplReceiver);
+			
 			var json = JSON.stringify(aplReceiver);
 			
 			$.ajax({
