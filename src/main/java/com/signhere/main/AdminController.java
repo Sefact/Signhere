@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.signhere.beans.CompanyBean;
+import com.signhere.beans.DepartmentBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Management;
@@ -33,37 +35,38 @@ public class AdminController {
 	//직원 관리 페이지로 이동 
 	@PostMapping("/admin")
 	public ModelAndView admin() {
-		mav = new ModelAndView();
-		
-		mav.setViewName("admin/admin");
-		
-		return mav;
+		return mag.mAdmin();
 	}
 	
 	//직원 관리 페이지에서 새로운 직원 추가
 	@PostMapping("/addEmployee")
-	public ModelAndView addEmployee(@ModelAttribute UserBean ub) {
+	@ResponseBody
+	public String addEmployee(@RequestBody UserBean ub) {
 		return mag.mAddEmployee(ub);
 	}
 	
-	//새로운 직원 추가시 id 중복 체크 
-	//최초 회원가입시에도 사용.(Authentication.class join 메소드
+
+	
+	
+	
+	//새로운 직원 추가시 id 중복 체크  
+	//최초 회원가입시에도 사용.(Authentication.class) join 메소드
 	@PostMapping("/employeeDup")
 	@ResponseBody
 	public UserBean employeeDup(@RequestBody UserBean ub) {
-		
-		
 		return mag.mEmployeeDup(ub);
 	}
 	
 	//기존 직원 삭제 메소드 
 	@PostMapping("/delEmployee")
-	public ModelAndView delEmployee(@RequestParam String userId) {
-		return mag.mDelEmployee(userId);
+	@ResponseBody
+	public String delEmployee(@RequestBody UserBean userList) {
+		return mag.mDelEmployee(userList);
 	}
 	
 	@PostMapping("/updateEmployee")
-	public ModelAndView updateEmployee(@ModelAttribute UserBean ub) {
+	@ResponseBody
+	public String updateEmployee(@RequestBody UserBean ub) {
 		return mag.mUpdateEmployee(ub);
 	}
 	
@@ -80,5 +83,23 @@ public class AdminController {
 		System.out.println("controller");
 		String result = mag.mApListRemove(docList);
 		return result;
+	}
+	
+	@PostMapping("/searchEmp")
+	@ResponseBody
+	public List<UserBean> searchEmp(@RequestBody UserBean ub) {
+		return mag.searchEmp(ub);
+	}
+	
+	@PostMapping("/userInfo")
+	@ResponseBody
+	public List<UserBean> userInfo(@RequestBody UserBean ub) {
+		return mag.userInfo(ub);
+	}
+	
+	@PostMapping("/addNewDept")
+	@ResponseBody
+	public String addNewDept(@RequestBody DepartmentBean db) {
+		return mag.addNewDept(db);
 	}
 }

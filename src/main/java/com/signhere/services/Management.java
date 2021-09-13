@@ -3,6 +3,7 @@ package com.signhere.services;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,14 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.DepartmentBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.signhere.beans.CompanyBean;
 import com.signhere.beans.DocumentBean;
+import com.signhere.beans.GradeBean;
 import com.signhere.beans.UserBean;
+import com.signhere.utils.Encryption;
+import com.signhere.utils.Session;
 
 @Service
 public class Management {
@@ -23,7 +29,11 @@ public class Management {
 	SqlSessionTemplate sqlSession;
 	@Autowired
 	DataSourceTransactionManager tx;
-
+	@Autowired
+	Session ssn;
+	@Autowired
+	Encryption enc;
+	
 	ModelAndView mav;
 	private DefaultTransactionDefinition def;
 	private TransactionStatus status;
@@ -32,52 +42,130 @@ public class Management {
 		//mav 초기화 
 		mav = new ModelAndView();
 	}
-
-	public ModelAndView mAddEmployee(UserBean ub) {
-
-		//default = 실패, 성공시 message = 성공 
-		mav.addObject("message","네트워크 오류! 직원추가 실패");
+	
+	public ModelAndView mAdmin() {
+		
+		UserBean ub = new UserBean();
+		DepartmentBean dp = new DepartmentBean();
+		GradeBean gr = new GradeBean();
+		
+		try {
+			ub.setCmCode((String)ssn.getAttribute("cmCode"));
+			dp.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		//사원리스트
+		List<UserBean> empList;
+		empList = sqlSession.selectList("getAllEmp",ub);
+		//부서리스트
+		
+		List<DepartmentBean> dpList;
+		dpList = sqlSession.selectList("getAllDp",dp);
+		//직급리스트
+		List<GradeBean> grList;
+		grList = sqlSession.selectList("getAllGr",gr);
+		
+		mav.addObject("grList",grList);
+		mav.addObject("dpList",dpList);
+		mav.addObject("empList",empList);
+		mav.setViewName("admin/admin");
+		
 		return mav;
 	}
+	
 
+	public String mAddEmployee(UserBean ub) {
+		
+		try {
+			ub.setCmCode((String)ssn.getAttribute("cmCode"));
+			ub.setUserPwd(enc.encode(ub.getCmCode()+ub.getUserId()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		int result = sqlSession.insert("addNewEmp",ub);
+		
+		return result+"";
+	}
+
+
+	public CompanyBean mEmployerDup(CompanyBean cb) {
+		String dupCheck="";
+		
+		int dupId=sqlSession.selectOne("cmCodeDupCheck",cb);
+		
+		if(dupId==0) {
+			dupCheck="사용가능";
+		}else {
+			dupCheck="사용불가";
+			
+		}
+		
+		cb.setMessage(dupCheck);
+		
+		return cb;
+	}
+	
+	
 	public UserBean mEmployeeDup(UserBean ub) {
 		//default = 중복, db에 dupCheck = 사용가능
 		String dupCheck = "";
 		
 		
 		int dupId = sqlSession.selectOne("userIdDupCheck",ub);
-		System.out.println(dupId);
+	
 	
 		if(dupId==0)
 		{ dupCheck="사용가능";
 		
 		} 	else {
-			dupCheck="중복";
+			dupCheck="사용불가";
 			
 		}
 		ub.setMessage(dupCheck);
-		System.out.println(ub.getMessage());
 		return ub;
 	}
 
-	public ModelAndView mDelEmployee(String userId) {
-
-		//default = 실패, 성공시 message = 성공 
-		mav.addObject("네트워크 오류! message","직원삭제 실패");
-
-		return mav;
+	public String mDelEmployee(UserBean userList) {
+		int counter =0;
+		
+		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
+		
+		
+		for(int i = 0; i < userList.getUserIdArr().length; i++) {
+			userList.setUserId(userList.getUserIdArr()[i]);
+			sqlSession.update("deleteEmp",userList);
+			counter++;
+		}
+		if(counter == userList.getUserIdArr().length) {
+			this.setTransactionResult(true);
+		}
+		 
+		return counter+"";
 	}
 
-	public ModelAndView mUpdateEmployee(UserBean ub) {
-		//default = 실패, 성공시 message = 성공
-		mav.addObject("message","네트워크 오류!  직원 수정 실패");
-		return mav;
+	public String mUpdateEmployee(UserBean ub) {
+		String result = null;
+		System.out.println(ub.getUserId());
+		System.out.println(ub.getGrCode());
+		System.out.println(ub.getDpCode());
+		
+		result = sqlSession.update("updateEmpInfo",ub)+"";
+		
+		return result;
 	}
 
 	public ModelAndView mApListAdmin() {
 		// session에 id와 company Code가 있다는 가정하에 진행 
 		DocumentBean db = new DocumentBean();
-		db.setCmCode("1234567890");
+		try {
+			db.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		db.setApCode("C");
 		List<DocumentBean> searchedList;
 		Map<String,Object> map = new HashMap<>();
@@ -99,7 +187,11 @@ public class Management {
 
 	public String mApListRemove(DocumentBean db) {
 		// session에 id와 company Code가 있다는 가정하에 진행 
-		db.setCmCode("1234567890");
+		try {
+			db.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		String message = db.getDmNumArr().length + "개의 문서가 삭제 완료되었습니다.";
 
@@ -137,7 +229,7 @@ public class Management {
 
 		if(counter != 0) {
 			this.setTransactionResult(false);
-			message="네으퉈으 오류! 삭제실패";
+			message="네트워크 오류! 삭제실패";
 
 		}
 		System.out.println(counter);
@@ -167,4 +259,95 @@ public class Management {
 	private boolean convertToBoolean(int result) {
 		return result==1 ? true: false;  
 	}
+	
+	private String generatePw() {
+		char[] specialChar = {'!','@','#','$','%','^','&','*'};
+		
+		Random r = new Random();
+		int randomLower = r.nextInt(2)+3;
+		int randomUpper = r.nextInt(2)+3;
+		int randomChar = r.nextInt(2)+1;
+		int randomNum = r.nextInt(2)+3;
+		int randomIndex=0;
+		char tmpChar = ' ';
+		char[] tmpPwArr = new char[randomLower+randomUpper+randomChar+randomNum];
+		StringBuffer randomPw = new StringBuffer();
+		
+		for(int i = 0; i<randomLower; i++) {
+			tmpPwArr[i] = (char)(r.nextInt(26)+'a');
+		}
+		for(int i = 0; i<randomUpper; i++) {
+			tmpPwArr[i+randomLower] = (char)(r.nextInt(26)+'A');
+		}
+		for(int i=0; i<randomNum; i++) {
+			tmpPwArr[i+randomLower+randomUpper] = (char)r.nextInt(9);
+		}
+		for(int i=0; i<randomChar; i++) {
+			tmpPwArr[i+randomLower+randomUpper+randomNum] = specialChar[r.nextInt(7)];
+		}
+		
+		for(int i=0; i<tmpPwArr.length; i++) {
+			randomIndex = r.nextInt(tmpPwArr.length);
+			tmpChar = tmpPwArr[i];
+			tmpPwArr[i] = tmpPwArr[randomIndex];
+			tmpPwArr[randomIndex] = tmpChar;
+		}
+		
+		for(int i = 0; i<tmpPwArr.length; i++) {
+			randomPw.append(tmpPwArr[i]);
+		}
+		
+		return randomPw.toString();
+	}
+
+	public List<UserBean> searchEmp(UserBean ub) {
+		try {
+			ub.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.handleNullValues(ub);
+		List<UserBean> empList;
+		
+		empList = sqlSession.selectList("searchEmp",ub);
+		empList.get(0).setMessage(empList.size()+"");
+		return empList;
+	}
+
+	private void handleNullValues(UserBean ub) {
+		if(ub.getUserName().isEmpty()) {
+			ub.setUserName("");
+		}
+		if(ub.getDpCode().isEmpty()) {
+			ub.setDpCode("");
+		}
+		if(ub.getGrCode().isEmpty()) {
+			ub.setGrCode("");
+		}
+	}
+
+	public List<UserBean> userInfo(UserBean ub) {
+		System.out.println(ub.getUserId());
+		List<UserBean> userDetailList;
+		userDetailList = sqlSession.selectList("getUserInfoDetail", ub);
+		return userDetailList;
+	}
+
+	public String addNewDept(DepartmentBean db) {
+		String result = "0";
+		try {
+			db.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(db.getDpName());
+		if(sqlSession.insert("addNewDept",db)==1) {
+			result = "1";
+		}
+		
+		System.out.println(result);
+		return result;
+	}
+
+
 }

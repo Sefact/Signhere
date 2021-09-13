@@ -25,7 +25,11 @@ public class Document {
 	public List<DocumentBean> mSearchText(DocumentBean db){
 
 		//여기서 sessino에 들어간 cmCode 저장
-		db.setCmCode("1234567890");
+		try {
+			db.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		this.handleNullValues(db);
 		this.changeDateFormat(db);
 

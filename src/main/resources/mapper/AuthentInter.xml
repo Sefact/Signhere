@@ -48,5 +48,17 @@
 	
 	</update>
 	
+		<update id="changePwd" parameterType="UserBean">
+	
+			UPDATE MM SET PW=#{userPwd} WHERE ID=#{userId}
+	
+		</update>
+	
+	<select id="findInfo" parameterType="userBean" resultType="int">
+		SELECT COUNT(*) 
+		FROM MM 
+		WHERE ID=#{userId} AND MAIL=#{userMail}	
+	</select>
+	
 	
 </mapper>
