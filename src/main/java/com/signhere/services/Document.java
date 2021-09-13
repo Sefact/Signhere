@@ -68,7 +68,6 @@ public class Document {
 			userList = sqlSession.selectList("selOrgChart", ub);
 		} else if(apCheck.equals("D")) {
 			userList = sqlSession.selectList("selDepartmentChart", ub);
-			System.out.println(userList);
 		} else if(apCheck.equals("R")) {
 			userList = sqlSession.selectList("selReferenceChart", ub);
 		} else {
@@ -81,19 +80,19 @@ public class Document {
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();
 		
-		System.out.println(db);
+		List<DocumentBean> docList = null;
 		
-		List<DocumentBean> docList;
+		System.out.println(db);
 		
 		try {
 			db.setCmCode((String) ssn.getAttribute("cmCode"));
+			ssn.setAttribute("docBean", db);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	
 		
-		//docList = 
-		//sqlSession.inesrt("insTemporary"
 		//sqlSession.insert("insTemporary", db);
 
 		return mav;

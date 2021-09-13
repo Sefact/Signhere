@@ -3,10 +3,13 @@ package com.signhere.main;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,7 +23,7 @@ public class DraftController {
 	@Autowired
 	private Document doc;
 	private ModelAndView mav;
-
+	
 	@PostMapping("/writeDraft")
 	@ResponseBody
 	public List<UserBean> writeDraft(@RequestBody List<UserBean> ulist) {
@@ -29,7 +32,7 @@ public class DraftController {
 		return ulist;
 	}
 	
-	@RequestMapping("/confirmDraft")
+	@PostMapping("/confirmDraft")
 	@ResponseBody
 	public ModelAndView confirmDraft(@RequestBody List<DocumentBean> db) {
 		mav = new ModelAndView();
@@ -42,13 +45,9 @@ public class DraftController {
 	}
 	
 	@RequestMapping("/draftMove")
-	@ResponseBody
-	public ModelAndView draftMove(@RequestBody List<DocumentBean> db) {
-		mav = new ModelAndView();
+	public String draftMove() {
 		
-		mav.setViewName("draft/draft");
-		
-		return mav;
+		return "draft/draft";
 	}
 	
 	@PostMapping("/modifyDraft")
