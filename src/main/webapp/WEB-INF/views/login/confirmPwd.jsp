@@ -27,7 +27,7 @@
         </div>
        <div id="pwdMsg"></div>
         <div class="form-group">
-            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호 확인" onBlur="pwdConfirm()">
+            <input type="password" class="form-control" name="userPwd2" placeholder="비밀번호 확인" onBlur="pwdConfirm()">
         </div>
          <div id="pwdMsg2"></div>
         </div>      

@@ -125,6 +125,7 @@ public class Authentication implements AuthentInter {
 			if(ssn.getAttribute("userId")!=null) {
 				ab.setBrowser(this.getBrowserInfo(req, "others"));
 				ab.setPrivateIp(req.getRemoteAddr());
+				System.out.println(ab.getPwInitial());
 				sqlSession.insert("updateUserLogOut",ab);
 
 			}else {
@@ -198,7 +199,6 @@ public class Authentication implements AuthentInter {
 
 			e.printStackTrace();
 		}
-
 		//수정한 값들, 메일과 비번이 null이면 ""으로 수정해주는 메소드
 		this.handleNullValues(ub);
 
@@ -250,11 +250,18 @@ public class Authentication implements AuthentInter {
 	}
 	//메일을 정상적으로 받고 사용자에게 제공되는 비밀번호 바꾸는 페이지에서 컨펌을 누르면 비밀번호 체인지~
 	public ModelAndView mConfirmPwd(UserBean ub)  {
+		String message="비밀번호가 성공적으로 변겅되었습니다.";
+		
 		ModelAndView mav = new ModelAndView();
+		AccessBean ab = new AccessBean();	
 		//비빌번호 바꾸기 MM테이블에 접근에서 일치하는 아이디의 비밀번호를 사용자가 입력한번호로 바꿔준다
-		System.out.println(enc.encode(ub.getUserPwd()));	
+		System.out.println(ub.getUserPwd()+"암호화 전");
+		ub.setUserPwd(enc.encode(ub.getUserPwd()));
+		System.out.println(ub.getUserPwd()+"암호화 후");
 		sqlSession.update("changePwd",ub);	
+		mav.addObject("message",message);
 		mav.setViewName("login/home");
+
 		return mav;
 	}
 	
@@ -262,11 +269,10 @@ public class Authentication implements AuthentInter {
 		MailForm mf = new MailForm();
 
 		//이따가  to에 ub.usermail 저장하기
-		mf.setTo("glassrain00@gmail.com");
-		mf.setFrom("telecaster0naver.com");
-		
+		mf.setTo(ub.getUserMail());
+		mf.setFrom("telecaster0naver.com");		
 		mf.setSubject("사인히어 비밀번호 찾기");
-		mf.setContents("비밀번호 바꾸는 링크 페이지");
+		mf.setContents("<a href='http://192.168.1.169/confirmPwd'>비빌번호 변경 </a>");
 		this.mFindPwdMailSend(mf, ub);
 		
 	}
