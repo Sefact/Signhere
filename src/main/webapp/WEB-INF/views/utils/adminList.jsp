@@ -57,7 +57,7 @@
 	<h2 class="sub-header">직원리스트</h2>
 	<button class="btn btn-primary" id="addEmployeeBtn" onclick="showAddModal()">직원추가</button>
 	<button class="btn btn-primary" id="deleteEmployeeBtn" onclick="confirmDel()">직원삭제</button>
-	<button class="btn btn-primary" id="deleteEmployeeBtn" onclick="requestUserInfoDetail()">직원정보수정</button>
+	<button class="btn btn-primary" id="modifyEmployeeBtn" onclick="requestUserInfoDetail()">직원정보수정</button>
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>

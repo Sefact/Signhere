@@ -168,8 +168,9 @@
 	<update id ="updateEmpInfo" parameterType="UserBean">
 		UPDATE MM SET GRADE_CODE = #{grCode}, DEPARTMENT_CODE = #{dpCode} WHERE ID = #{userId}
 	</update>
-	<!--<update id="deleteEmp" parameterType="UserBean">
-	</update>
-	 -->
+	
+	<delete id="deleteEmp" parameterType="UserBean">
+		DELETE FROM MM WHERE ID=#{userId}
+	</delete>
 	
 </mapper>

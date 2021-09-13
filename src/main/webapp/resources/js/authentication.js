@@ -244,14 +244,10 @@ function dupUserIdCheckBlur(){
 			userId.value="";
 			userId.focus();
 			alert("ID가 조건에 맞지 않습니다.");
-			return;					
+			return;						
 		}
-		fetchAjax('/employeeDup','post',jsonData,afterDupCheck);
-							
-		}else{
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
-
 
 
 
@@ -390,6 +386,3 @@ function reConfirmPassword(message){
 	alert(message);
 	
 }
-
-
-

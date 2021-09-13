@@ -131,10 +131,9 @@ public class Management {
 
 	public String mDelEmployee(UserBean userList) {
 		int counter =0;
-		/*
+		
 		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
 		
-		그냥 삭제시 AH 테이블 child record 오류 발생 정책 바꿔 줘야함.
 		
 		for(int i = 0; i < userList.getUserIdArr().length; i++) {
 			userList.setUserId(userList.getUserIdArr()[i]);
@@ -144,7 +143,7 @@ public class Management {
 		if(counter == userList.getUserIdArr().length) {
 			this.setTransactionResult(true);
 		}
-		 */
+		 
 		return counter+"";
 	}
 
@@ -162,7 +161,11 @@ public class Management {
 	public ModelAndView mApListAdmin() {
 		// session에 id와 company Code가 있다는 가정하에 진행 
 		DocumentBean db = new DocumentBean();
-		db.setCmCode("1234567890");
+		try {
+			db.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		db.setApCode("C");
 		List<DocumentBean> searchedList;
 		Map<String,Object> map = new HashMap<>();
@@ -184,7 +187,11 @@ public class Management {
 
 	public String mApListRemove(DocumentBean db) {
 		// session에 id와 company Code가 있다는 가정하에 진행 
-		db.setCmCode("1234567890");
+		try {
+			db.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		String message = db.getDmNumArr().length + "개의 문서가 삭제 완료되었습니다.";
 
