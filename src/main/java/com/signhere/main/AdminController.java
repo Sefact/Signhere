@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.signhere.beans.CompanyBean;
+import com.signhere.beans.DepartmentBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Management;
@@ -94,5 +95,11 @@ public class AdminController {
 	@ResponseBody
 	public List<UserBean> userInfo(@RequestBody UserBean ub) {
 		return mag.userInfo(ub);
+	}
+	
+	@PostMapping("/addNewDept")
+	@ResponseBody
+	public String addNewDept(@RequestBody DepartmentBean db) {
+		return mag.addNewDept(db);
 	}
 }
