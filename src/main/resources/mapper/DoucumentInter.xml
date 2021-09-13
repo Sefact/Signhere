@@ -147,6 +147,10 @@
         			WHERE RF.REFERENCE_ID='202103002' OR RD.READER_ID='202103002'
         	
         	</select>
+        	
+        	<insert id="insTemporary" parameterType="DocumentBean">
+        		INSERT INTO TL (DOCUMENT_NUM, WRITER, COMPANY_CODE, DOCUMENT_CODE) VALUES(CONCAT(#{cmCode}, TEMP_SEQ.NEXTVAL), #{apId}, #{cmCode}, #{dmCode})
+        	</insert>
 </mapper>
 
 

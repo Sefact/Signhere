@@ -20,6 +20,14 @@ public class DocumentBean {
 	private String dmDate2;
 	private String dmCode;
 	private String dmName;
+	//APPROVALLINE테이블의 APPROVAL_ID가 담길 BEAN
+	private String apId;
+	//REFERENCE 테이블의 REFERENCE_ID가 담길 BEAN
+	private String refId;
+	//REFERENCE 테이블의 READING_ID가 담길 BEAN
+	private String readingId;
+	//APPROVALLINE테이블의 APPROVAL_SEQ가 담길 BEAN
+	private String aplSeq;
 	private char searchCode;
 	private String[] dmNumArr;
 }
