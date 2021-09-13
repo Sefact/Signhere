@@ -92,7 +92,7 @@
 									<button type="button" id="mApLineDel" class="btn btn-primary btn-block">삭제</button>
 								</div>
 								<div class="form-group col-md-5">
-									<select id="selMyApprovalLine" class="form-control" size="4">
+									<select id="selMyApprovalLine" name="selMyApprovalLine" class="form-control" size="4">
 									</select>
 								</div>
 							</div>
@@ -145,11 +145,11 @@
 								</div>
 								<div class="form-group col-md-2">
 									<label>기안</label>
-									<input type="radio" name="dmCode" value="null"/>
+									<input type="radio" name="dmCode" value="D"/>
 								</div>
 								<div class="form-group col-md-2">
 									<label>시행</label>
-									<input type="radio" name="dmCode" value="null"/>
+									<input type="radio" name="dmCode" value="E"/>
 								</div>
 								<div class="form-group col-md-4">
 								</div>
@@ -158,7 +158,7 @@
 					</form>
 				</div>
 				<div class="modal-footer">
-					<input type="button" onClick="sendApproval()" class="btn btn primary" value="Send"/>
+					<input type="button" id="sendApproval" class="btn btn primary" value="Send"/>
 					<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
 				</div>
 			</div>
@@ -184,7 +184,7 @@
 					var orgLength = Object.keys(data).length;
 
 					$.each(data, function(index, value) {
-						modalHtml += '<option value=' + value.userName + '>';
+						modalHtml += '<option value=' + value.userId + '>';
 						modalHtml += value.userName;
 						modalHtml += '</option>';
 					});
@@ -202,9 +202,10 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#mApLineSave').click(function() {
-			var myApCheck = $("select[id=myApprovalLine]").val();
+			var myApCheck = $("#myApprovalLine option:selected").text();
+			var myApValue = $("#myApprovalLine option:selected").val();
 			var selMyAplHtml = '';
-			selMyAplHtml += '<option value=' + myApCheck + '>';
+			selMyAplHtml += '<option value=' + myApValue + '>';
 			selMyAplHtml += myApCheck;
 			selMyAplHtml += '</option>';
 			
@@ -245,7 +246,7 @@
 					var orgLength = Object.keys(data).length;
 
 					$.each(data, function(index, value) {
-						otherDPHtml += '<option value=' + value.userName + '>';
+						otherDPHtml += '<option value=' + value.userId + '>';
 						otherDPHtml += value.userName;
 						otherDPHtml += '</option>';
 					});
@@ -267,9 +268,10 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#otApLineSave').click(function() {
-			var otApCheck = $("select[id=otherApprovalLine]").val();
+			var otApCheck = $("#otherApprovalLine option:selected").text();
+			var otApValue = $("#otherApprovalLine option:selected").val();
 			var selOtAplHtml = '';
-			selOtAplHtml += '<option value=' + otApCheck + '>';
+			selOtAplHtml += '<option value=' + otApValue + '>';
 			selOtAplHtml += otApCheck;
 			selOtAplHtml += '</option>';
 			
@@ -310,7 +312,7 @@
 					var orgLength = Object.keys(data).length;
 
 					$.each(data, function(index, value) {
-						referenceHtml += '<option value=' + value.userName + '>';
+						referenceHtml += '<option value=' + value.userId + '>';
 						referenceHtml += value.userName;
 						referenceHtml += '</option>';
 					});
@@ -332,9 +334,10 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#rfLineSave').click(function() {
-			var referenceCheck = $("select[id=otherApprovalLine]").val();
+			var referenceCheck = $("#referenceLine option:selected").text();
+			var referenceValue = $("#referenceLine option:selected").val();
 			var selOtAplHtml = '';
-			selOtAplHtml += '<option value=' + referenceCheck + '>';
+			selOtAplHtml += '<option value=' + referenceValue + '>';
 			selOtAplHtml += referenceCheck;
 			selOtAplHtml += '</option>';
 			
@@ -354,27 +357,60 @@
 	});
 	</script>
 	
+	<!-- Send Draft -->
 	<script type="text/javascript">
-		function sendApproval() {
-			var userId = document.getElementById("selMyApprovalLine");
+	$('document').ready(function() {
+		$('#sendApproval').click(function() {
+			// m: My | o: Other | r: Reference
+			var mAplSize = $("#selMyApprovalLine option").length;
+			var oAplSize = $("#selOtApprovalLine option").length;
+			var rAplSize = $("#selReferencelLine option").length;
 			
-			let form = makeForm("confirmDraft", "post");
-
-			form.appendChild(userId);
-
-			document.body.appendChild(form);
-			form.submit();
-		}
-		
-		function makeForm(action, method, name = null) {
-			let form = document.createElement("form");
+			var pushApline = document.getElementById("selMyApprovalLine");
+			var pushOtApline = document.getElementById("selOtApprovalLine");
+			var pushRfApline = document.getElementById("selReferencelLine");
 			
-			if(name != null){
-				form.setAttribute("name", name);
+			var radioDmCode = $('input[name="dmCode"]:checked').val();
+			
+			var aplReceiver = [];
+			// Draft Writer Initalize
+			var data = {'aplSeq':'1', 'apId':'${sessionScope.userId}', 'dmCode':radioDmCode};
+			aplReceiver.push(data);
+			
+			for(var i=0; i<mAplSize; i++) {
+				data = {'aplSeq':i+2, 'apId':pushApline[i].value};
+				aplReceiver.push(data);
 			}
-			form.setAttribute("action", action);
-			form.setAttribute("method", method);
 			
-			return form;
-		}
+			for(var i=0; i<oAplSize; i++) {
+				data = {'aplSeq':mAplSize+2, 'apId':pushOtApline[i].value};
+				aplReceiver.push(data);
+			}
+			
+			for(var i=0; i<rAplSize; i++) {
+				data = {'refId':pushRfApline[i].value};
+				aplReceiver.push(data);
+			}
+			
+			var json = JSON.stringify(aplReceiver);
+			
+			$.ajax({
+				type: 'POST',
+				url : '/confirmDraft',
+				data : json,
+				contentType: "application/json;charset=UTF-8",
+				dataType: 'json'
+			})
+			.done(function(data) {
+				/* alert(JSON.stringify(data));
+				var url = "/draftMove?db=" + JSON.stringify(data);
+				
+				location.href = url; */
+				console.log("Success");
+			})
+			.fail(function(data) {
+				console.log("Fail");
+			})
+		});
+	});
 	</script>

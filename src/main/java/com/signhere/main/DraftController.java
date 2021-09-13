@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Document;
@@ -27,13 +29,24 @@ public class DraftController {
 		return ulist;
 	}
 	
-	@PostMapping("/confirmDraft")
-	public ModelAndView confirmDraft(DocumentBean db) {
+	@RequestMapping("/confirmDraft")
+	@ResponseBody
+	public ModelAndView confirmDraft(@RequestBody List<DocumentBean> db) {
 		mav = new ModelAndView();
 		
-		System.out.println("DraftController!!");
+		mav = doc.mConfirmDraft(db.get(0));
 		
-		mav = doc.mConfirmDraft(db);
+		mav.setViewName("jsonView");
+		
+		return mav;
+	}
+	
+	@RequestMapping("/draftMove")
+	@ResponseBody
+	public ModelAndView draftMove(@RequestBody List<DocumentBean> db) {
+		mav = new ModelAndView();
+		
+		mav.setViewName("draft/draft");
 		
 		return mav;
 	}

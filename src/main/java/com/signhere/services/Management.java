@@ -333,5 +333,21 @@ public class Management {
 		return userDetailList;
 	}
 
+	public String addNewDept(DepartmentBean db) {
+		String result = "0";
+		try {
+			db.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(db.getDpName());
+		if(sqlSession.insert("addNewDept",db)==1) {
+			result = "1";
+		}
+		
+		System.out.println(result);
+		return result;
+	}
+
 
 }
