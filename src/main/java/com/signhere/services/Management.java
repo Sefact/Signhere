@@ -15,6 +15,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DepartmentBean;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.signhere.beans.CompanyBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.GradeBean;
 import com.signhere.beans.UserBean;
@@ -72,6 +74,7 @@ public class Management {
 		
 		return mav;
 	}
+	
 
 	public String mAddEmployee(UserBean ub) {
 		
@@ -88,23 +91,41 @@ public class Management {
 		return result+"";
 	}
 
+
+	public CompanyBean mEmployerDup(CompanyBean cb) {
+		String dupCheck="";
+		
+		int dupId=sqlSession.selectOne("cmCodeDupCheck",cb);
+		
+		if(dupId==0) {
+			dupCheck="사용가능";
+		}else {
+			dupCheck="사용불가";
+			
+		}
+		
+		cb.setMessage(dupCheck);
+		
+		return cb;
+	}
+	
+	
 	public UserBean mEmployeeDup(UserBean ub) {
 		//default = 중복, db에 dupCheck = 사용가능
 		String dupCheck = "";
 		
 		
 		int dupId = sqlSession.selectOne("userIdDupCheck",ub);
-		System.out.println(dupId);
+	
 	
 		if(dupId==0)
 		{ dupCheck="사용가능";
 		
 		} 	else {
-			dupCheck="중복";
+			dupCheck="사용불가";
 			
 		}
 		ub.setMessage(dupCheck);
-		System.out.println(ub.getMessage());
 		return ub;
 	}
 
@@ -304,5 +325,6 @@ public class Management {
 		userDetailList = sqlSession.selectList("getUserInfoDetail", ub);
 		return userDetailList;
 	}
+
 
 }

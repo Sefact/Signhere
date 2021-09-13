@@ -25,6 +25,7 @@
        CM.COMPANY_NAME AS cmName,
        GR.GRADE_NAME AS grName,
        DP.DEPARTMENT_NAME AS dpName,
+       DP.DEPARTMENT_CODE AS dpCode,
        MM.ADMIN as admin      
        FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
        INNER JOIN GR ON GR.GRADE_CODE=MM.GRADE_CODE
@@ -46,6 +47,18 @@
 		UPDATE MM SET MAIL=#{userMail}, PW=#{userPwd}, PWINITIAL='1'  WHERE ID =#{userId}
 	
 	</update>
+	
+		<update id="changePwd" parameterType="UserBean">
+	
+			UPDATE MM SET PW=#{userPwd} WHERE ID=#{userId}
+	
+		</update>
+	
+	<select id="findInfo" parameterType="userBean" resultType="int">
+		SELECT COUNT(*) 
+		FROM MM 
+		WHERE ID=#{userId} AND MAIL=#{userMail}	
+	</select>
 	
 	
 </mapper>

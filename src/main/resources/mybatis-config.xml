@@ -10,5 +10,4 @@
 		<typeAlias type="com.signhere.beans.DepartmentBean" alias="DepartmentBean"/>
 		<typeAlias type="com.signhere.beans.GradeBean" alias="GradeBean"/>
 	</typeAliases>
-	
 </configuration>

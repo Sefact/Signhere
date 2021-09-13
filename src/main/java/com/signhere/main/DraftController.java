@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
@@ -19,6 +20,7 @@ public class DraftController {
 	private ModelAndView mav;
 
 	@PostMapping("/writeDraft")
+	@ResponseBody
 	public List<UserBean> writeDraft(@RequestBody List<UserBean> ulist) {
 		ulist = doc.mWriteDraft(ulist.get(0));
 		
@@ -27,6 +29,10 @@ public class DraftController {
 	
 	@PostMapping("/confirmDraft")
 	public ModelAndView confirmDraft(DocumentBean db) {
+		mav = new ModelAndView();
+		
+		System.out.println("DraftController!!");
+		
 		mav = doc.mConfirmDraft(db);
 		
 		return mav;

@@ -9,14 +9,17 @@
 	<script src="/resources/js/authentication.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
-	<!-- JQuery -->
+	<!-- Jquery Core JS -->
 	<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-	<!-- popper.js -->
-	<script src="/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
+	<!-- Bootstrap Core JS -->
+	<script src="/webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<!-- Font-Awesome -->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<link href="/resources/css/login/login.css" rel="stylesheet">
 	
 </head>
-<body>   
+<body>  
+<div id="findMessage"> ${message}</div> 
     <div class="login-form">
         <h2 class="text-center">Login</h2>   
         <div class="form-group has-error">
@@ -30,6 +33,7 @@
         </div>
         <p><a href="#">Lost your Password?</a></p>
         <p onClick="signUpPage()">Sign Up</p>
+         <p onClick="findPwdPage()">Find Password</p>
 	</div>
 </body>
 </html>

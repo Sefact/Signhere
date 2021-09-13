@@ -78,12 +78,13 @@ public class HomeController {
 		
 		return mav;
 	}
-	
+	//비밀번호 찾기 페이지
 	@PostMapping("/findPwd")
 	public String findPwd() {
-		return "findPwd";
+		
+		return "login/findPwd";
 	}
-	
+	//비밀번호 찾기 페이지에서 아이디와 이메일을 기반으로 일치하는 정보가 있으면 그 메일로 비밀번호 변경 페이지 링크를 보내줌
 	@PostMapping("/callFindPwd")
 	public ModelAndView callFindPwd(@ModelAttribute UserBean ub) {
 		mav = auth.mCallFindPwd(ub);
@@ -91,9 +92,18 @@ public class HomeController {
 		return mav;
 	}
 	
-	@PostMapping("/confirmPwd")
-	public String confirmPwd(@ModelAttribute String userId) {
-		return "confirmPwd";
+	// callFindPwd에서 일치하는 정보를 입력했을 때 보내지는 비밀번호 변경 페이지
+	@GetMapping("/confirmPwd")
+	public String confirmPwd(@ModelAttribute UserBean ub) {
+		
+		return "login/confirmPwd";
+	}
+	//confirmPwd의 페이지에서 비밀번호를 변경해주는 method.
+	@PostMapping("/callConfirmPwd")
+	public ModelAndView callConfirmPwd(@ModelAttribute UserBean ub) {
+		mav = auth.mConfirmPwd(ub);
+		
+		return mav;
 	}
 	
 	@PostMapping("/myInfo")
@@ -124,12 +134,11 @@ public class HomeController {
 	}
 	
 	@PostMapping("/orgChart")
+	@ResponseBody
 	public List<UserBean> orgChart(@RequestBody List<UserBean> ulist) {
-		System.out.println(ulist);
-		
 		List<UserBean> orgChart;
 		
-		orgChart = null;
+		orgChart = auth.mOrgChart(ulist.get(0));
 		
 		return orgChart;
 	}

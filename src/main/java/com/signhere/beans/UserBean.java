@@ -11,6 +11,7 @@ public class UserBean {
 	private String userName;
 	private String userMail;
 	private int pwInital;
+	private String apCheck;
 	private String admin;
 	private String dpCode;
 	private String dpName;

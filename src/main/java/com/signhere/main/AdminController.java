@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.signhere.beans.CompanyBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Management;
@@ -43,8 +44,12 @@ public class AdminController {
 		return mag.mAddEmployee(ub);
 	}
 	
-	//새로운 직원 추가시 id 중복 체크 
-	//최초 회원가입시에도 사용.(Authentication.class join 메소드
+
+	
+	
+	
+	//새로운 직원 추가시 id 중복 체크  
+	//최초 회원가입시에도 사용.(Authentication.class) join 메소드
 	@PostMapping("/employeeDup")
 	@ResponseBody
 	public UserBean employeeDup(@RequestBody UserBean ub) {
