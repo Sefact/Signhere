@@ -1,6 +1,8 @@
 /**
  * 
  */
+
+
 function fetchAjax(action,method,data,afterFunction){
 fetch(action,{
 		method:method,
@@ -244,14 +246,10 @@ function dupUserIdCheckBlur(){
 			userId.value="";
 			userId.focus();
 			alert("ID가 조건에 맞지 않습니다.");
-			return;					
+			return;						
 		}
-		fetchAjax('/employeeDup','post',jsonData,afterDupCheck);
-							
-		}else{
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
-
 
 
 
@@ -280,7 +278,7 @@ function afterDupCheck(jsonData){
 	let btn = document.getElementById("dupBtn");
 	let userId = document.getElementsByName("userId")[0];
 	let msg = document.getElementById("message");
-
+}
 //innerHTML. 아이디 중복체크하여 이상없을시 input type을 readOnly로 바꿔줌. 사용가능 alert창 띄워 줌.
 function dupUserIdCheck2(jsonData){
 	jsonData = JSON.parse(jsonData);
@@ -388,8 +386,5 @@ function reConfirmPassword(message){
 	all.submit();
 	
 	alert(message);
-	
 }
-
-
 

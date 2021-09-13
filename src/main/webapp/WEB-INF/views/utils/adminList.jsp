@@ -6,7 +6,7 @@
 
 	<h1 class="page-header">Employees</h1>
 	
-		<form id="entForm">
+		<form >
 			<div class="form-row">
 				<div class="form-group col-md-1">
 					<label for="userName">이름</label>
@@ -57,7 +57,8 @@
 	<h2 class="sub-header">직원리스트</h2>
 	<button class="btn btn-primary" id="addEmployeeBtn" onclick="showAddModal()">직원추가</button>
 	<button class="btn btn-primary" id="deleteEmployeeBtn" onclick="confirmDel()">직원삭제</button>
-	<button class="btn btn-primary" id="deleteEmployeeBtn" onclick="requestUserInfoDetail()">직원정보수정</button>
+	<button class="btn btn-primary" id="modifyEmployeeBtn" onclick="requestUserInfoDetail()">직원정보수정</button>
+	<button class="btn btn-primary" id="addDepartmentBtn" onclick="showAddDpModal()">부서 추가</button>
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>
@@ -185,6 +186,43 @@
           </div>
           <div class="modal-footer">
             <button type="button" data-dismiss="modal" onClick="requestModifyEmp()" id="requestModifyEmpBtn" class="btn btn primary">확인</button>
+            <button type="button" data-dismiss="modal" class="btn btn-default">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- add Department modal -->
+	<div id="addDeptModal" role="dialog" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">&times;</button>
+            <h4 class="modal-title">부서추가</h4>
+          </div>
+          <div id="addDeptBody" class="modal-body">
+            <div>
+            	<table class="table table-striped">
+            		<tr>
+            			<th></th>
+            			<th>부서이름</th>
+            		</tr>
+            		
+            		<c:forEach var = "department" items="${dpList}">
+            		<tr value="${department.dpCode}">
+            			<td></td>
+            			<td><c:out value="${department.dpName}" /></td>
+						</c:forEach>
+					</tr>
+				</table>
+            </div>
+            <div>
+            	<input name="deptInputBox" id="deptInputBox" type="text" style=display:none placeholder="부서명" />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" onClick="showAddDeptBox()" id="showAddDepBtn" class="btn btn primary">부서추가</button>
+            <button type="button" style=display:none data-dismiss="modal" onClick="requestAddDept()" id="requestAddDepBtn" class="btn btn primary">확인</button>
             <button type="button" data-dismiss="modal" class="btn btn-default">닫기</button>
           </div>
         </div>

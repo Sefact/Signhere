@@ -213,6 +213,37 @@ function deleteDoc(){
 	});
 }
 
+function showAddDpModal(){
+	$('#addDeptModal').modal('show');
+}
+
+function showAddDeptBox(){
+	let addDeptBox = document.getElementById("deptInputBox");
+	let showAddDepBtn = document.getElementById("showAddDepBtn");
+	let requestAddDepBtn = document.getElementById("requestAddDepBtn");
+	addDeptBox.style.display="block";
+	showAddDepBtn.style.display="none";
+	requestAddDepBtn.style.display="block";
+}
+
+function requestAddDept(){
+	let deptName = document.getElementsByName("deptInputBox")[0].value;
+	let jsonData = {dpName:deptName};
+	
+	fetchAjax("/addNewDept",'post',jsonData,afterAddingDept);
+	
+}
+
+function afterAddingDept(data){
+	result = JSON.parse(data);
+	if(result == "1"){
+		alert("추가 성공");
+	}else{
+		alert("추가실패");
+	}
+	location.reload();
+}
+
 function fetchAjax(action,method,data,afterfunction){
 fetch(action,{
 		method:method,
