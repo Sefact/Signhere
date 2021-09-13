@@ -42,7 +42,7 @@ public class Management {
 	}
 	
 	public UserBean mailDup(UserBean ub) {
-		System.out.println("여ㅑ기오냐");
+	
 		
 		String dupCheck="";
 		

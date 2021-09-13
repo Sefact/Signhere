@@ -49,7 +49,7 @@ public class Authentication implements AuthentInter {
 	ModelAndView mav;
 	private DefaultTransactionDefinition def;
 	private TransactionStatus status;
-	
+
 	@Autowired
 	JavaMailSenderImpl javaMail;
 
@@ -226,20 +226,20 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mCallFindPwd(@ModelAttribute UserBean ub) {
 		mav = new ModelAndView();		
 		String message="";
-		
+
 		int info;	
 		info=sqlSession.selectOne("findInfo",ub);
 
 		// 1이면 이메일&아이디가 일치하는게 있다. 0이면 일치하는게 없다
 		if(this.convertToBoolean(info)){
-			
+
 			//home.jsp에 넘겨줌.
 			message="입력하신 이메일로 인증페이지를 전송했습니다.";
-			
+
 			mav.addObject("message",message);
 			this.mFindPwdMailForm(ub);
 			mav.setViewName("login/home");
-		
+
 		}else { 
 			message="아이디 혹은 이메일과 일치하는 정보가 없습니다.";
 			mav.setViewName("redirect:/");
@@ -251,32 +251,34 @@ public class Authentication implements AuthentInter {
 	//메일을 정상적으로 받고 사용자에게 제공되는 비밀번호 바꾸는 페이지에서 컨펌을 누르면 비밀번호 체인지~
 	public ModelAndView mConfirmPwd(UserBean ub)  {
 		String message="비밀번호가 성공적으로 변겅되었습니다.";
-		
+
 		ModelAndView mav = new ModelAndView();
 		AccessBean ab = new AccessBean();	
 		//비빌번호 바꾸기 MM테이블에 접근에서 일치하는 아이디의 비밀번호를 사용자가 입력한번호로 바꿔준다
-		System.out.println(ub.getUserPwd()+"암호화 전");
+
 		ub.setUserPwd(enc.encode(ub.getUserPwd()));
-		System.out.println(ub.getUserPwd()+"암호화 후");
+		ub.setUserId(ub.getUserId());
+
 		sqlSession.update("changePwd",ub);	
 		mav.addObject("message",message);
 		mav.setViewName("login/home");
 
 		return mav;
 	}
-	
+
 	public void mFindPwdMailForm(UserBean ub) {
 		MailForm mf = new MailForm();
 
 		//이따가  to에 ub.usermail 저장하기
+		System.out.println(ub.getUserMail());
 		mf.setTo(ub.getUserMail());
-		mf.setFrom("telecaster0naver.com");		
+		mf.setFrom("telecaster0@naver.com");		
 		mf.setSubject("사인히어 비밀번호 찾기");
-		mf.setContents("<a href='http://192.168.1.169/confirmPwd'>비빌번호 변경 </a>");
+		mf.setContents("<a href='http://localhost/confirmPwd'>비빌번호 변경 </a>");
 		this.mFindPwdMailSend(mf, ub);
-		
+
 	}
-	
+
 	public void mFindPwdMailSend(MailForm mf,UserBean ub) {
 		MimeMessage mail = javaMail.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mail,"UTF-8");	
@@ -288,7 +290,7 @@ public class Authentication implements AuthentInter {
 			javaMail.send(mail);
 		} catch (MessagingException e) {
 			e.printStackTrace();	}
-	
+
 	}
 
 	public ModelAndView mMyInfoConfirm(UserBean ub) {
@@ -346,13 +348,17 @@ public class Authentication implements AuthentInter {
 		return result==1 ? true: false;  
 	}
 
-	public String mHome() {
+	public String mHome(UserBean ub) {
 		String page= "login/home";
 
 		try {
 
 			if(ssn.getAttribute("userId") != null) {
-				page = "login/main";
+				if(ub.getPwInital()==0) {					
+					page="login/newInfo";										
+				} else {
+					page="login/main";				
+				}				
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

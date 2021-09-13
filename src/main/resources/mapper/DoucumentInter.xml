@@ -131,7 +131,7 @@
         
         	<select id="referenceApproval" parameterType="DocumentBean" resultType="DocumentBean">
         	
-        	SELECT
+        			SELECT
         			DM.DOCUMENT_NUM AS "dmNum",
         			DM.DOCUMENT_TITLE AS "dmTitle",
         			DS.DOCUMENT_TITLE AS "dmCode",
@@ -142,7 +142,7 @@
         			INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
         			INNER JOIN RF ON DM.DOCUMENT_NUM=RF.DOCUMENT_NUM
         			INNER JOIN RD ON DM.DOCUMENT_NUM=RD.DOCUMENT_NUM
-        			WHERE RF.REFERENCE_ID=#{refpId} OR RD.READER_ID=#{readingId}
+        			WHERE RF.REFERENCE_ID=#{refId} OR RD.READER_ID=#{readingId}
         	
         	</select>
 </mapper>

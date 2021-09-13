@@ -16,7 +16,7 @@
 	
 </head>
 <body>   
-<form action="/callConfirmPwd" method="post" name="all">  
+
     <div class="login-form">
         <h2 class="text-center">Change Password</h2>   
         <div class="form-group has-error">
@@ -40,6 +40,6 @@
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="cancelPassword()">메인으로</button>
         </div>
 	</div>
-	</form>
+
 </body>
 </html>

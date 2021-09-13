@@ -33,9 +33,9 @@ public class HomeController {
 	private ModelAndView mav;
 	
 	@RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
-	public String home() {
+	public String home(UserBean ub) {
     
-		return auth.mHome();
+		return auth.mHome(ub);
 
 
 	}

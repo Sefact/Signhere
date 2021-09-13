@@ -27,10 +27,6 @@ fetch(action,{
 }
 
 
-
-
-
-
 function sendUserInfo() {
 	const userId = document.getElementsByName("userId")[0];
 	const userPwd = document.getElementsByName("userPwd")[0];
@@ -414,10 +410,12 @@ function confirmPassword(message){
 
 //confirmPwd.jsp에서 비밀번호 변경을 하는 function. (button)
 function reConfirmPassword(message){
+	let userId=document.getElementsByName("userId")[0];
 	let userPwd=document.getElementsByName("userPwd")[0];
 	
 	let form = makeForm("callConfirmPwd","post");
 	
+	form.appendChild(userId);
 	form.appendChild(userPwd);
 	
 	document.body.appendChild(form);
@@ -428,6 +426,14 @@ function reConfirmPassword(message){
 	
 	
 	alert(message);
+	
+}
+
+function cancelPassword(){
+	
+	let form = makeForm("login","get");
+	form.appendChild
+	form.submit();
 	
 }
 
