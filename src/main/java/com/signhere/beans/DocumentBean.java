@@ -30,4 +30,6 @@ public class DocumentBean {
 	private String aplSeq;
 	private char searchCode;
 	private String[] dmNumArr;
+	private List<ApprovalBean> aplBean;
+	private List<ReadingReferenceBean> rfBean;
 }
