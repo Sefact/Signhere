@@ -6,7 +6,7 @@
 
 	<h1 class="page-header">Employees</h1>
 	
-		<form id="entForm">
+		<form >
 			<div class="form-row">
 				<div class="form-group col-md-1">
 					<label for="userName">이름</label>
