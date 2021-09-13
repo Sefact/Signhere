@@ -18,6 +18,7 @@
 <body>   
     <div class="login-form">
         <h2 class="text-center">Sign Here</h2>   
+        <input type="button" onClick="logOut()">Logout
   
 		<div class="form-group">
             <input type="text" class="form-control" name="cmName" placeholder="회사이름" value="${sessionScope.cmName}" disabled>
@@ -32,16 +33,18 @@
             <input type="text" class="form-control" name="grName" placeholder="직급" value ="${sessionScope.grName}"  disabled>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userMail" placeholder="이메일" required="required">
+            <input type="text" class="form-control" name="userMail" placeholder="이메일" value ="${sessionScope.userMail}" >
              <input id="dupBtnMail" type="button" value="중복체크" onClick="dupUserMailCheck()" />
              <div id="dupBtnUserMail2"></div>
         </div>
         <div class="form-group">
             <input type="password" class="form-control" name="userPwd" placeholder="비밀번호" onBlur="pwdValidate(this)" >
         </div>
+         <div id="pwdMsg"></div>
                 <div class="form-group">
-            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호확인" onBlur="pwdConfirm()">
-        </div>        
+            <input type="password" class="form-control" name="userPwd2" placeholder="비밀번호확인" onBlur="pwdConfirm()">
+        </div> 
+        <div id="pwdMsg2"></div>       
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="requestNewInfo()">확인</button>
         </div>

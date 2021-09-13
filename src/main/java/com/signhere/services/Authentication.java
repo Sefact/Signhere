@@ -87,6 +87,8 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userName",tmplist.get(0).getUserName());
 							ssn.setAttribute("dpName",tmplist.get(0).getDpName());
 							ssn.setAttribute("grName",tmplist.get(0).getGrName());
+							ssn.setAttribute("userMail",tmplist.get(0).getUserMail());
+
 
 							//최초로그인(pwIntial(최초기본설정여부)판단 후  ID,cmCode,Admin => Session 저장.)
 							if(tmplist.get(0).getPwInitial().equals("1")) {

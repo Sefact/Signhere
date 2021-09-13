@@ -38,10 +38,7 @@ function sendUserInfo() {
 	
 	document.body.appendChild(form);
 	
-	alert(userId);
-	alert(userPwd);
-	
-	
+
 	form.submit();
 }
 
@@ -420,11 +417,7 @@ function reConfirmPassword(message){
 	
 	document.body.appendChild(form);
 	
-	alert(message);
-	
 	form.submit();
-	
-	
 	alert(message);
 	
 }
@@ -436,6 +429,3 @@ function cancelPassword(){
 	form.submit();
 	
 }
-
-
-
