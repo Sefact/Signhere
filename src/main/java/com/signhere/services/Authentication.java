@@ -93,6 +93,8 @@ public class Authentication implements AuthentInter {
 								ssn.setAttribute("grName",tmplist.get(0).getGrName());
 								if(tmplist.get(0).getUserMail() != null) {
 									ssn.setAttribute("userMail", tmplist.get(0).getUserMail());
+									//여기서 이메일도 들어가있으면 미리 띄워 줘야함 > 만약 처음에 null이 아니여서 넣는다는 가정 
+									System.out.println(ssn.getAttribute("userMail"));
 								}
 								mav.setViewName("login/newInfo");
 							}
@@ -100,6 +102,7 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+
 							ssn.setAttribute("apCheck", tmplist.get(0).getDpCode());
 
 							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
@@ -210,7 +213,7 @@ public class Authentication implements AuthentInter {
 
 		//수정한 값들, 메일과 비번이 null이면 ""으로 수정해주는 메소드
 		this.handleNullValues(ub);
-
+		
 		if(this.convertToBoolean(sqlSession.update("updateNewInfo", ub))) {				
 			mav.setViewName("login/main");		
 		}else {

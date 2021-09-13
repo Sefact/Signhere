@@ -34,26 +34,17 @@ public class AdminController {
 	//직원 관리 페이지로 이동 
 	@PostMapping("/admin")
 	public ModelAndView admin() {
-		mav = new ModelAndView();
-		
-		mav.setViewName("admin/admin");
-		
-		return mav;
+		return mag.mAdmin();
 	}
 	
 	//직원 관리 페이지에서 새로운 직원 추가
 	@PostMapping("/addEmployee")
-	public ModelAndView addEmployee(@ModelAttribute UserBean ub) {
+	@ResponseBody
+	public String addEmployee(@RequestBody UserBean ub) {
 		return mag.mAddEmployee(ub);
 	}
 	
-	@PostMapping("/employerDup")
-	@ResponseBody
-	public CompanyBean employerDup(@RequestBody CompanyBean cb) {
-		
-		
-		return mag.mEmployerDup(cb);
-	}
+
 	
 	
 	
@@ -67,12 +58,14 @@ public class AdminController {
 	
 	//기존 직원 삭제 메소드 
 	@PostMapping("/delEmployee")
-	public ModelAndView delEmployee(@RequestParam String userId) {
-		return mag.mDelEmployee(userId);
+	@ResponseBody
+	public String delEmployee(@RequestBody UserBean userList) {
+		return mag.mDelEmployee(userList);
 	}
 	
 	@PostMapping("/updateEmployee")
-	public ModelAndView updateEmployee(@ModelAttribute UserBean ub) {
+	@ResponseBody
+	public String updateEmployee(@RequestBody UserBean ub) {
 		return mag.mUpdateEmployee(ub);
 	}
 	
@@ -89,5 +82,17 @@ public class AdminController {
 		System.out.println("controller");
 		String result = mag.mApListRemove(docList);
 		return result;
+	}
+	
+	@PostMapping("/searchEmp")
+	@ResponseBody
+	public List<UserBean> searchEmp(@RequestBody UserBean ub) {
+		return mag.searchEmp(ub);
+	}
+	
+	@PostMapping("/userInfo")
+	@ResponseBody
+	public List<UserBean> userInfo(@RequestBody UserBean ub) {
+		return mag.userInfo(ub);
 	}
 }
