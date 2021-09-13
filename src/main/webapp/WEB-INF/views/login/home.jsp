@@ -18,7 +18,8 @@
 	<link href="/resources/css/login/login.css" rel="stylesheet">
 	
 </head>
-<body>   
+<body>  
+<div id="findMessage"> ${message}</div> 
     <div class="login-form">
         <h2 class="text-center">Login</h2>   
         <div class="form-group has-error">
@@ -32,6 +33,7 @@
         </div>
         <p><a href="#">Lost your Password?</a></p>
         <p onClick="signUpPage()">Sign Up</p>
+         <p onClick="findPwdPage()">Find Password</p>
 	</div>
 </body>
 </html>

@@ -9,20 +9,27 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.config.MvcNamespaceHandler;
 
 import com.signhere.beans.AccessBean;
 import com.signhere.beans.CompanyBean;
 import com.signhere.beans.DocumentBean;
+import com.signhere.beans.MailForm;
 import com.signhere.beans.UserBean;
 import com.signhere.mapper.AuthentInter;
 import com.signhere.mapper.FriendsInter;
@@ -42,6 +49,9 @@ public class Authentication implements AuthentInter {
 	ModelAndView mav;
 	private DefaultTransactionDefinition def;
 	private TransactionStatus status;
+	
+	@Autowired
+	JavaMailSenderImpl javaMail;
 
 	@Override
 	public ModelAndView mLogin(HttpServletRequest req, AccessBean ab) {
@@ -53,14 +63,13 @@ public class Authentication implements AuthentInter {
 		String message = "네트워크 에러! 로그인 실패";
 		mav.setViewName("login/home");
 
-		//2.여기서 비밀번호, pwInitial, cmCode,cmName, 부서,직급, 관리자권한, 가져옴 (+이름?)
+		//2.여기서 userId를 통해 비밀번호, pwInitial, cmCode,cmName, 부서,직급, 관리자권한, 가져옴 (+이름?)
 		List<AccessBean> tmplist;
 		tmplist = sqlSession.selectList("getLogInInfo",ab);
 
 		try {
 			if(!(ssn.getAttribute("userId")==null)) {
 				mav.setViewName("login/main");
-				System.out.println("세션없지?");
 			}else {
 				//2.비밀번호체크
 				if(enc.matches(ab.getUserPwd(), tmplist.get(0).getUserPwd())){
@@ -70,8 +79,6 @@ public class Authentication implements AuthentInter {
 					ab.setPwInitial(tmplist.get(0).getPwInitial());
 					//여기선 tomcat run configuration 변경 하였지만 실제 서버에서 설정을 또 바꿔 줘야함  https://admm.tistory.com/80
 					ab.setPrivateIp(req.getRemoteAddr());
-
-
 					//AccessHistory테이블에 로그인 기록 저장
 					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
 						//session에 저장 및 main.jsp이동
@@ -86,6 +93,8 @@ public class Authentication implements AuthentInter {
 								ssn.setAttribute("grName",tmplist.get(0).getGrName());
 								if(tmplist.get(0).getUserMail() != null) {
 									ssn.setAttribute("userMail", tmplist.get(0).getUserMail());
+									//여기서 이메일도 들어가있으면 미리 띄워 줘야함 > 만약 처음에 null이 아니여서 넣는다는 가정 
+									System.out.println(ssn.getAttribute("userMail"));
 								}
 								mav.setViewName("login/newInfo");
 							}
@@ -93,15 +102,18 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+
 							ssn.setAttribute("apCheck", tmplist.get(0).getDpCode());
 
-						} catch (Exception e) {
+							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
+							ab.setUserId((String)ssn.getAttribute("userId"));
 
+						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
 				}else {
-					System.out.println("설마여기?");
+					System.out.println("로그인실패! 띠용!");
 					message = "아이디 비밀번호를 확인해주세요.";
 					mav.setViewName("login/home");
 				}
@@ -201,7 +213,7 @@ public class Authentication implements AuthentInter {
 
 		//수정한 값들, 메일과 비번이 null이면 ""으로 수정해주는 메소드
 		this.handleNullValues(ub);
-
+		
 		if(this.convertToBoolean(sqlSession.update("updateNewInfo", ub))) {				
 			mav.setViewName("login/main");		
 		}else {
@@ -222,22 +234,66 @@ public class Authentication implements AuthentInter {
 
 	}
 
-	public ModelAndView mCallFindPwd(UserBean ub) {
-		mav = new ModelAndView();
+	//프론트에서 form에 담아 보내자.	
+	public ModelAndView mCallFindPwd(@ModelAttribute UserBean ub) {
+		mav = new ModelAndView();		
+		String message="";
+		
+		int info;	
+		info=sqlSession.selectOne("findInfo",ub);
 
-		mav.setViewName("home");
-		//mav.setViewName("redirect:/");
+		// 1이면 이메일&아이디가 일치하는게 있다. 0이면 일치하는게 없다
+		if(this.convertToBoolean(info)){
+		
+			message="입력하신 이메일로 인증페이지를 전송했습니다.";
+			
+			mav.addObject("message",message);
+			this.mFindPwdMailForm(ub);
+			mav.setViewName("login/home");
+		
+		}else { 
+			message="아이디 혹은 이메일과 일치하는 정보가 없습니다.";
+			mav.setViewName("redirect:/");
+		}
 
+		return mav;
+
+	}
+	//메일을 정상적으로 받고 사용자에게 제공되는 비밀번호 바꾸는 페이지에서 컨펌을 누르면 비밀번호 체인지~
+	public ModelAndView mConfirmPwd(UserBean ub)  {
+		ModelAndView mav = new ModelAndView();
+		//비빌번호 바꾸기 MM테이블에 접근에서 일치하는 아이디의 비밀번호를 사용자가 입력한번호로 바꿔준다
+		System.out.println(enc.encode(ub.getUserPwd()));	
+		sqlSession.update("changePwd",ub);	
+		mav.setViewName("login/home");
 		return mav;
 	}
+	
+	public void mFindPwdMailForm(UserBean ub) {
+		MailForm mf = new MailForm();
 
-	public ModelAndView mConfirmPwd(UserBean ub) {
-		mav = new ModelAndView();
-
-		mav.setViewName("home");
-		//mav.setViewName("redirect:/");
-
-		return mav;
+		//이따가  to에 ub.usermail 저장하기
+		mf.setTo("glassrain00@gmail.com");
+		mf.setFrom("telecaster0naver.com");
+		
+		mf.setSubject("사인히어 비밀번호 찾기");
+		mf.setContents("비밀번호 바꾸는 링크 페이지");
+		this.mFindPwdMailSend(mf, ub);
+		
+	}
+	
+	public void mFindPwdMailSend(MailForm mf,UserBean ub) {
+		MimeMessage mail = javaMail.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(mail,"UTF-8");	
+		try {
+			helper.setFrom(mf.getFrom());
+			helper.setTo(mf.getTo());
+			helper.setSubject(mf.getSubject());
+			helper.setText(mf.getContents(),true);
+			javaMail.send(mail);
+		} catch (MessagingException e) {
+			e.printStackTrace();	}
+	
 	}
 
 	public ModelAndView mMyInfoConfirm(UserBean ub) {
@@ -260,27 +316,6 @@ public class Authentication implements AuthentInter {
 	/* Select Organization Chart */
 	public List<UserBean> mOrgChart(UserBean ub) {
 		List<UserBean> userList = null;
-		
-		String apCheck = ub.getApCheck();	
-		try {
-			ub.setUserId((String) ssn.getAttribute("userId"));
-			ub.setDpCode((String) ssn.getAttribute("apCheck"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		/* A=ApprovalLine | D=DepartmentLine | R=ReferenceLine */
-		if(apCheck.equals("A")) {
-			userList = sqlSession.selectList("selOrgChart", ub);
-		} else if(apCheck.equals("D")) {
-			userList = sqlSession.selectList("selDepartmentChart", ub);
-		} else if(apCheck.equals("R")) {
-			userList = sqlSession.selectList("selReferenceChart", ub);
-			System.out.println(userList);
-		} else {
-			System.out.println("Error");
-		}
 
 		return userList;
 	}

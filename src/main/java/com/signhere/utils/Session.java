@@ -9,7 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 public class Session {
 	//singleton생성위한 session class
-	
+		
 		/* Session영역으로부터 attribute 값을 가져 오기 위한 method  */
 	    public Object getAttribute(String name) throws Exception {
 	        return (Object) RequestContextHolder.getRequestAttributes().getAttribute(name, RequestAttributes.SCOPE_SESSION);

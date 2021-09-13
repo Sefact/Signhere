@@ -140,6 +140,20 @@
 									</select>
 								</div>
 							</div>
+							<div class="form-row">
+								<div class="form-group col-md-4">
+								</div>
+								<div class="form-group col-md-2">
+									<label>기안</label>
+									<input type="radio" name="dmCode" value="null"/>
+								</div>
+								<div class="form-group col-md-2">
+									<label>시행</label>
+									<input type="radio" name="dmCode" value="null"/>
+								</div>
+								<div class="form-group col-md-4">
+								</div>
+							</div>
 						</div>
 					</form>
 				</div>
@@ -161,7 +175,7 @@
 				
 				$.ajax({
 					type: 'POST',
-					url : '/orgChart',
+					url : '/writeDraft',
 					data : json,
 					contentType: "application/json;charset=UTF-8",
 					dataType: 'json'
@@ -222,7 +236,7 @@
 			if($("#otherDepartment").css("display") == "none"){
 				$.ajax({
 					type: 'POST',
-					url : '/orgChart',
+					url : '/writeDraft',
 					data : json,
 					contentType: "application/json;charset=UTF-8",
 					dataType: 'json'
@@ -287,7 +301,7 @@
 			if($("#referenceForm").css("display") == "none"){
 				$.ajax({
 					type: 'POST',
-					url : '/orgChart',
+					url : '/writeDraft',
 					data : json,
 					contentType: "application/json;charset=UTF-8",
 					dataType: 'json'
@@ -342,7 +356,14 @@
 	
 	<script type="text/javascript">
 		function sendApproval() {
-			alert("SendApproval");
+			var userId = document.getElementById("selMyApprovalLine");
+			
+			let form = makeForm("confirmDraft", "post");
+
+			form.appendChild(userId);
+
+			document.body.appendChild(form);
+			form.submit();
 		}
 		
 		function makeForm(action, method, name = null) {

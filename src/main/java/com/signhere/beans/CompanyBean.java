@@ -6,4 +6,5 @@ import lombok.Data;
 public class CompanyBean {
 	private String cmCode;
 	private String cmName;
+	private String message;
 }
