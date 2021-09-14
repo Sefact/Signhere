@@ -4,6 +4,8 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.signhere.mapper.ManagementInter">
+	
+
 	<select id="getAllApListAdmin" parameterType="DocumentBean" resultType="DocumentBean">
 		SELECT DM.DOCUMENT_NUM AS dmNum,
 		DM.DOCUMENT_TITLE AS dmTitle,
@@ -102,5 +104,84 @@
 	<delete id="removeDMList" parameterType="DocumentBean">
 		DELETE FROM DM WHERE DOCUMENT_NUM = #{dmNum}
 	</delete>
+	
+	<select id = "getAllDp" parameterType = "DepartmentBean" resultType="DepartmentBean">
+		SELECT 
+		DEPARTMENT_CODE AS dpCode,
+		COMPANY_CODE AS cmCode,
+		DEPARTMENT_NAME AS dpName 
+		FROM DP WHERE COMPANY_CODE = #{cmCode}
+	</select>
+	
+	<select id="getAllGr" parameterType="GradeBean" resultType ="GradeBean">
+		SELECT GRADE_CODE AS gdCode, GRADE_NAME AS gdName FROM GR
+	</select>
+	
+	<select id ="getAllEmp" parameterType = "UserBean" resultType="UserBean">
+		SELECT 
+		MM.COMPANY_CODE AS cmCode,
+		MM.ID AS userId,
+		MM.NAME AS userName,
+		MM.GRADE_CODE AS grCode,
+		GR.GRADE_NAME AS grName,
+		MM.DEPARTMENT_CODE AS dpCode,
+		DP.DEPARTMENT_NAME AS dpName 
+		FROM 
+		MM 
+		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE 
+		INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
+		WHERE MM.COMPANY_CODE = ${cmCode}
+	</select>
+	
+	<insert id ="addNewEmp" parameterType="UserBean">
+		INSERT INTO MM VALUES(#{userId},#{userPwd},#{dpCode},#{grCode},#{cmCode},#{userName},'','0','N')
+	</insert>
+	
+	<select id="searchEmp" parameterType="UserBean" resultType="UserBean">
+		SELECT 
+		MM.COMPANY_CODE AS cmCode,
+		MM.ID AS userId,
+		MM.NAME AS userName,
+		MM.GRADE_CODE AS grCode,
+		GR.GRADE_NAME AS grName,
+		MM.DEPARTMENT_CODE AS dpCode,
+		DP.DEPARTMENT_NAME AS dpName 
+		FROM 
+		MM 
+		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE 
+		INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
+		WHERE MM.COMPANY_CODE = #{cmCode} 
+		AND MM.NAME LIKE '%'|| #{userName} ||'%' 
+		AND MM.GRADE_CODE LIKE '%'|| #{grCode} || '%' 
+		AND MM.DEPARTMENT_CODE LIKE '%'|| #{dpCode} || '%'
+	</select>
+	
+	<select id="getUserInfoDetail" parameterType="UserBean" resultType="UserBean">
+		SELECT 
+		MM.ID AS userId,
+		MM.NAME AS userName,
+		MM.GRADE_CODE AS grCode,
+		GR.GRADE_NAME AS grName,
+		MM.DEPARTMENT_CODE AS dpCode,
+		DP.DEPARTMENT_NAME AS dpName,
+		MM.MAIL AS userMail 
+		FROM 
+		MM 
+		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE 
+		INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
+		WHERE MM.ID = #{userId}
+	</select>
+	
+	<update id ="updateEmpInfo" parameterType="UserBean">
+		UPDATE MM SET GRADE_CODE = #{grCode}, DEPARTMENT_CODE = #{dpCode} WHERE ID = #{userId}
+	</update>
+	
+	<delete id="deleteEmp" parameterType="UserBean">
+		DELETE FROM MM WHERE ID=#{userId}
+	</delete>
+	
+	<insert id="addNewDept" parameterType="DepartmentBean">
+		INSERT INTO DP VALUES(((SELECT COUNT(*) FROM DP WHERE COMPANY_CODE=#{cmCode})+1),#{cmCode},#{dpName})
+	</insert>
 	
 </mapper>

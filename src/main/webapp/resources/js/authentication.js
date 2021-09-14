@@ -1,6 +1,8 @@
 /**
  * 
  */
+
+
 function fetchAjax(action,method,data,afterFunction){
 fetch(action,{
 		method:method,
@@ -16,8 +18,7 @@ fetch(action,{
 			console.error(`HTTP error status: ${res.status}`)
 		}
 	}) 
-	.then(jsonData =>{
-		
+	.then(jsonData =>{		
 		//parameter에 JSON화 시켜줘야함! 안그럼 object로 인식한다.
 		afterFunction(JSON.stringify(jsonData));
 		console.log(jsonData);
@@ -37,7 +38,6 @@ function sendUserInfo() {
 	form.appendChild(userPwd);
 	
 	document.body.appendChild(form);
-	
 
 	form.submit();
 }
@@ -79,7 +79,6 @@ function requestSignUp(){
 	
 	document.body.appendChild(form);
 	
-	console.log(form);
 	
 	form.submit();
 		
@@ -272,7 +271,7 @@ function dupUserIdCheckBlur(){
 			userId.value="";
 			userId.focus();
 			alert("ID가 조건에 맞지 않습니다.");
-			return;					
+			return;						
 		}
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
@@ -315,6 +314,7 @@ function reDupUserMailCheck(){
 	userMail.focus();
 }
 
+
 function mailValidate(){
 	
 	let userMail = document.getElementsByName("userMail")[0].value;
@@ -325,6 +325,7 @@ function mailValidate(){
 		alert("이메일을 입력해주세요.");		
 	}
 }
+
 //아이디중복체크. 유효성 = 영문으로 시작 12자 이상//
 function dupUserIdCheck(){
 	
@@ -342,6 +343,13 @@ function dupUserIdCheck(){
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
 	
+function afterDupCheck(jsonData){
+	jsonData = JSON.parse(jsonData);
+	
+	let btn = document.getElementById("dupBtn");
+	let userId = document.getElementsByName("userId")[0];
+	let msg = document.getElementById("message");
+}
 //innerHTML. 아이디 중복체크하여 이상없을시 input type을 readOnly로 바꿔줌. 사용가능 alert창 띄워 줌.
 function dupUserIdCheck2(jsonData){
 	jsonData = JSON.parse(jsonData);
@@ -456,8 +464,8 @@ function reConfirmPassword(message){
 	
 	form.submit();
 	alert(message);
-	
 }
+
 
 function cancelPassword(){
 	
@@ -466,3 +474,4 @@ function cancelPassword(){
 	form.submit();
 	
 }
+

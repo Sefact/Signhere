@@ -145,6 +145,14 @@
         			WHERE RF.REFERENCE_ID=#{refId} OR RD.READER_ID=#{readingId}
         	
         	</select>
+        	
+        	<insert id="insTemporary" parameterType="DocumentBean">
+        		INSERT INTO TL (DOCUMENT_NUM, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES(CONCAT(#{cmCode}, TEMP_SEQ.NEXTVAL), #{dmWriteId}, #{dmTitle}, TO_CHAR(SYSDATE), #{cmCode}, #{dmCode})
+        	</insert>
+        	
+        	<select id="selTemporary" parameterType="DocumentBean" resultType="DocumentBean">
+        		SELECT DOCUMENT_NUM AS "dmNum", DOCUMENT_DATE AS "dmDate" FROM TL WHERE WRITER = #{dmWriteId} AND DOCUMENT_TITLE = #{dmTitle} AND COMPANY_CODE = #{cmCode}
+        	</select>
 </mapper>
 
 

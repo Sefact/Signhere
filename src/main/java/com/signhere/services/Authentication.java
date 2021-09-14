@@ -84,6 +84,7 @@ public class Authentication implements AuthentInter {
 					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
 						//session에 저장 및 main.jsp이동
 						try {
+
 							ssn.setAttribute("cmName",tmplist.get(0).getCmName());
 							ssn.setAttribute("userName",tmplist.get(0).getUserName());
 							ssn.setAttribute("dpName",tmplist.get(0).getDpName());
@@ -95,14 +96,31 @@ public class Authentication implements AuthentInter {
 							if(tmplist.get(0).getPwInitial().equals("1")) {
 								mav.setViewName("login/main");								
 							} else {
+								ssn.setAttribute("cmName",tmplist.get(0).getCmName());
+								ssn.setAttribute("userName",tmplist.get(0).getUserName());
+								ssn.setAttribute("dpName",tmplist.get(0).getDpName());
+								ssn.setAttribute("grName",tmplist.get(0).getGrName());
+								if(tmplist.get(0).getUserMail() != null) {
+									ssn.setAttribute("userMail", tmplist.get(0).getUserMail());
+									//여기서 이메일도 들어가있으면 미리 띄워 줘야함 > 만약 처음에 null이 아니여서 넣는다는 가정 
+									System.out.println(ssn.getAttribute("userMail"));
+								}
 								mav.setViewName("login/newInfo");
 							}
+							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+
 							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
 							
 							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 추후에 세션을 리스트에 담아 뿌리기
+
+
+							ssn.setAttribute("apCheck", tmplist.get(0).getDpCode());
+
+							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
+
 							ab.setUserId((String)ssn.getAttribute("userId"));
 
 						} catch (Exception e) {
@@ -125,8 +143,14 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mLogOut(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		mav = new ModelAndView();
 		String message="";
+		
+		
+		
 		try {
 			if(ssn.getAttribute("userId")!=null) {
+				ab.setPwInitial((String)ssn.getAttribute("pwInitial"));
+				ab.setUserId((String)ssn.getAttribute("userId"));
+				ab.setCmCode((String)ssn.getAttribute("cmCode"));
 				ab.setBrowser(this.getBrowserInfo(req, "others"));
 				ab.setPrivateIp(req.getRemoteAddr());
 				//ab.setPwinitial(ssn.getAttribute("pwIntial"));	
@@ -134,7 +158,9 @@ public class Authentication implements AuthentInter {
 				ab.setPwInitial((String)ssn.getAttribute("pwInitial"));
 				ab.setCmCode((String)ssn.getAttribute("cmCode"));
 				sqlSession.insert("updateUserLogOut",ab);
+
 				System.out.println("로그아웃");
+
 			}else {
 				message="이미 로그아웃 하셨습니다";
 				mav.addObject("message",message);
@@ -209,12 +235,14 @@ public class Authentication implements AuthentInter {
 		//수정한 값들, 메일과 비번이 null이면 ""으로 수정해주는 메소드
 		this.handleNullValues(ub);
 
+
 		if(this.convertToBoolean(sqlSession.update("updateNewInfo", ub))) {
 			try {
 				ssn.setAttribute("pwIntialCheck", "1");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+
 			mav.setViewName("login/main");		
 		}else {
 
@@ -340,10 +368,9 @@ public class Authentication implements AuthentInter {
 		return mav;
 	}
 
+	/* Select Organization Chart */
 	public List<UserBean> mOrgChart(UserBean ub) {
-		List<UserBean> userList;
-
-		userList = null;
+		List<UserBean> userList = null;
 
 		return userList;
 	}

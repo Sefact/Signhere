@@ -4,4 +4,39 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.signhere.mapper.AdminInter">
+	<select id="selOrgChart" resultType="UserBean" parameterType="UserBean">
+		SELECT NAME AS "userName",
+			   MM.ID AS "userId", 
+		       MM.COMPANY_CODE AS "cmCode",
+       		   MM.DEPARTMENT_CODE AS "mmdpCode",
+      		   DP.COMPANY_CODE AS "dpCmCode",
+      		   DP.DEPARTMENT_CODE AS "dpCode"
+		FROM MM INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND
+								 MM.COMPANY_CODE = DP.COMPANY_CODE
+		WHERE MM.COMPANY_CODE = #{cmCode} AND MM.DEPARTMENT_CODE = #{dpCode} AND MM.ID NOT LIKE #{userId}
+	</select>
+	
+	<select id="selDepartmentChart" resultType="UserBean" parameterType="UserBean">
+		SELECT NAME AS "userName", 
+			   MM.ID AS "userId",  
+		       MM.COMPANY_CODE AS "cmCode",
+       		   MM.DEPARTMENT_CODE AS "mmdpCode",
+      		   DP.COMPANY_CODE AS "dpCmCode",
+      		   DP.DEPARTMENT_CODE AS "dpCode"
+		FROM MM INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND
+								 MM.COMPANY_CODE = DP.COMPANY_CODE
+		WHERE MM.COMPANY_CODE = #{cmCode} AND MM.DEPARTMENT_CODE NOT LIKE #{dpCode}
+	</select>
+	
+	<select id="selReferenceChart" resultType="UserBean" parameterType="UserBean">
+		SELECT NAME AS "userName", 
+			   MM.ID AS "userId",
+		       MM.COMPANY_CODE AS "cmCode",
+       		   MM.DEPARTMENT_CODE AS "mmdpCode",
+      		   DP.COMPANY_CODE AS "dpCmCode",
+      		   DP.DEPARTMENT_CODE AS "dpCode"
+		FROM MM INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND
+								 MM.COMPANY_CODE = DP.COMPANY_CODE
+		WHERE MM.COMPANY_CODE = #{cmCode} AND MM.ID NOT LIKE #{userId}
+	</select>
 </mapper>

@@ -13,11 +13,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.signhere.beans.EntrustBean;
 import com.signhere.beans.UserBean;
 import com.signhere.mapper.EntrustInter;
+import com.signhere.utils.Session;
 
 @Service
 public class Entrust {
 	@Autowired
 	SqlSessionTemplate sqlSession;
+	@Autowired
+	Session ssn;
 	ModelAndView mav;
 	EntrustInter ent;
 	
@@ -42,6 +45,13 @@ public class Entrust {
 		
 		ub.setAdmin(ub.getCompany().get(0).getCmCode());
 		
+		try {
+			ub.setUserId((String) ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		userList = sqlSession.selectList("selReceiver", ub);
 		
 		return userList;
@@ -49,6 +59,13 @@ public class Entrust {
 	
 	public ModelAndView mSaveEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
+		
+		try {
+			eb.setEtSenderId((String) ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		sqlSession.insert("insEntrust", eb);
 		

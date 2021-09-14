@@ -11,18 +11,25 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
+import com.signhere.utils.Session;
 
 @Service
 public class Document {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	ModelAndView mav;
+	@Autowired
+	Session ssn;
 
 
 	public List<DocumentBean> mSearchText(DocumentBean db){
 
 		//여기서 sessino에 들어간 cmCode 저장
-		db.setCmCode("1234567890");
+		try {
+			db.setCmCode((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		this.handleNullValues(db);
 		this.changeDateFormat(db);
 
@@ -45,17 +52,50 @@ public class Document {
 	
 
 	public List<UserBean> mWriteDraft(UserBean ub) {
-		List<UserBean> userList;
-
-		userList = null;
+		List<UserBean> userList = null;
+		
+		String apCheck = ub.getApCheck();	
+		try {
+			ub.setUserId((String) ssn.getAttribute("userId"));
+			ub.setDpCode((String) ssn.getAttribute("apCheck"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/* A=ApprovalLine | D=DepartmentLine | R=ReferenceLine */
+		if(apCheck.equals("A")) {
+			userList = sqlSession.selectList("selOrgChart", ub);
+		} else if(apCheck.equals("D")) {
+			userList = sqlSession.selectList("selDepartmentChart", ub);
+		} else if(apCheck.equals("R")) {
+			userList = sqlSession.selectList("selReferenceChart", ub);
+		} else {
+			System.out.println("Error");
+		}
 
 		return userList;
 	}
 
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();
+		
+		List<DocumentBean> tempList = null;
+		
+		try {
+			db.setDmWriteId((String) ssn.getAttribute("userId"));
+			db.setCmCode((String) ssn.getAttribute("cmCode"));
 
-		mav.setViewName("writeDraft");
+			sqlSession.insert("insTemporary", db);
+			tempList = sqlSession.selectList("selTemporary", db);
+
+			ssn.setAttribute("tempList", tempList);
+			ssn.setAttribute("docBean", db);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(db);
 
 		return mav;
 	}
