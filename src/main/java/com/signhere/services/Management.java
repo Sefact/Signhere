@@ -75,6 +75,27 @@ public class Management {
 		return mav;
 	}
 	
+	public UserBean mailDup(UserBean ub) {
+	
+		
+		String dupCheck="";
+		
+		int dupId=sqlSession.selectOne("mailDupCheck",ub);
+		
+		if(dupId==0) {
+			dupCheck="사용가능";
+		}else {
+			dupCheck="사용불가";
+			
+		}
+		
+		ub.setMessage(dupCheck);
+		
+		return ub;
+	
+	}
+	
+	
 
 	public String mAddEmployee(UserBean ub) {
 		
@@ -348,6 +369,8 @@ public class Management {
 		System.out.println(result);
 		return result;
 	}
+
+
 
 
 }
