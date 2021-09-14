@@ -153,6 +153,10 @@
         	<select id="selTemporary" parameterType="DocumentBean" resultType="DocumentBean">
         		SELECT DOCUMENT_NUM AS "dmNum", DOCUMENT_DATE AS "dmDate" FROM TL WHERE WRITER = #{dmWriteId} AND DOCUMENT_TITLE = #{dmTitle} AND COMPANY_CODE = #{cmCode}
         	</select>
+        	
+        	<update id="upTemporary" parameterType="DocumentBean">
+        		UPDATE TL SET DOCUMENT_TITLE = #{dmTitle}, DOCUMENT_DATE = TO_CHAR(SYSDATE) WHERE DOCUMENT_NUM = #{dmNum}
+        	</update>
 </mapper>
 
 

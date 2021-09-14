@@ -51,8 +51,11 @@ public class DraftController {
 	}
 	
 	@PostMapping("/modifyDraft")
+	@ResponseBody
 	public List<DocumentBean> modifyDraft(@RequestBody List<DocumentBean> dlist) {
 		List<DocumentBean> tempList;
+		
+		System.out.println(dlist.get(0));
 		
 		tempList = doc.mModifyDraft(dlist.get(0));
 		
