@@ -35,26 +35,35 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12">
+					<label>문서제목</label>
 					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmTitle}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-6">
-					<input type="text" class="form-control" id="" placeholder="문서번호" disabled/>
+					<label>문서번호</label>
+					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmNum}" disabled/>
 				</div>
 				<div class="form-group col-md-6">
-					<input type="text" class="form-control" id="" placeholder="날짜" disabled/>
+					<label>날짜</label>
+					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmDate}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
-					<input type="text" class="form-control" id="" placeholder="작성자" disabled/>
+					<label>작성자</label>
+					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmWriter}" disabled/>
 				</div>
 				<div class="form-group col-md-4">
-					<input type="text" class="form-control" id="" placeholder="참조자" disabled/>
+					<label>참조자</label>
+					<!-- <input type="text" class="form-control" id="" value="${sessionScope.docBean.rfBean[0].rdId}" disabled/>  -->
+					<select class="form-control">
+						<option value="${sessionScope.docBean.rfBean[0].rdName}">${sessionScope.docBean.rfBean[0].rdName}</option>
+					</select>
 				</div>
 				<div class="form-group col-md-4">
-					<input type="text" class="form-control" id="" placeholder="문서번호" disabled/>
+					<label>문서종류</label>
+					<input type="text" class="form-control" id="" placeholder="${sessionScope.docBean.dmCode}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
