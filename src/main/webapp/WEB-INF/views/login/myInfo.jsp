@@ -8,6 +8,7 @@
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
+	<script src="/resources/js/authentication.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
 	<!-- JQuery -->
@@ -38,7 +39,7 @@
             <input type="text" class="form-control" name="grName" placeholder="직급" value ="${sessionScope.grName}"  disabled>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userMail" placeholder="이메일" value ="${sessionScope.userMail}" >
+            <input type="text" class="form-control" name="userMail" placeholder="이메일" value ="${sessionScope.userMail}" onBlur="mailValidate()" >
              <input id="dupBtnMail" type="button" value="중복체크" onClick="dupUserMailCheck()" />
              <div id="dupBtnUserMail2"></div>
         </div>
@@ -57,7 +58,6 @@
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="cancelNewInfo()">취소</button>
         </div>
 	</div>
-</body>
-</html>
+
 </body>
 </html>

@@ -44,7 +44,7 @@
         </div>
          <div id="pwdMsg2"></div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userMail" placeholder="이메일" required="required" >
+            <input type="text" class="form-control" name="userMail" placeholder="이메일" onBlur="mailValidate()" > 
              <input id="dupBtnMail" type="button" value="중복체크" onClick="dupUserMailCheck()" />
              <div id="dupBtnUserMail2"></div>
         </div>       

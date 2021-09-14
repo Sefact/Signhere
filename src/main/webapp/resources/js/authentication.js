@@ -302,8 +302,8 @@ function dupUserMailCheck2(jsonData){
 	 }
 	   else
 		{
-			userMail.value="";
 			alert("이미 존재하는 메일입니다");
+			userMail.value="";
 			userMail.focus();
 }
 }
@@ -315,6 +315,16 @@ function reDupUserMailCheck(){
 	userMail.focus();
 }
 
+function mailValidate(){
+	
+	let userMail = document.getElementsByName("userMail")[0].value;
+
+	
+	//구체적인  유효성 조건은 나중에 다시 정리하겠습니다..
+	if(userMail.indexOf('@')<0){		
+		alert("이메일을 입력해주세요.");		
+	}
+}
 //아이디중복체크. 유효성 = 영문으로 시작 12자 이상//
 function dupUserIdCheck(){
 	

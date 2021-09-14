@@ -102,7 +102,7 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
 							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
 							
-							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
+							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 추후에 세션을 리스트에 담아 뿌리기
 							ab.setUserId((String)ssn.getAttribute("userId"));
 
 						} catch (Exception e) {
@@ -209,7 +209,12 @@ public class Authentication implements AuthentInter {
 		//수정한 값들, 메일과 비번이 null이면 ""으로 수정해주는 메소드
 		this.handleNullValues(ub);
 
-		if(this.convertToBoolean(sqlSession.update("updateNewInfo", ub))) {				
+		if(this.convertToBoolean(sqlSession.update("updateNewInfo", ub))) {
+			try {
+				ssn.setAttribute("pwIntialCheck", "1");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			mav.setViewName("login/main");		
 		}else {
 
@@ -373,20 +378,21 @@ public class Authentication implements AuthentInter {
 		return result==1 ? true: false;  
 	}
 
-	public String mHome(UserBean ub) {
+	public String mHome(@ModelAttribute UserBean ub) {
 		String page= "login/home";
 
 		try {
 
 			if(ssn.getAttribute("userId") != null) {
-			
-				//ub.setUserId((String)ssn.getAttribute("userId"));
-
-				if(ub.getPwInital()==0) {					
-					page="login/newInfo";										
-				} else {
-					page="login/main";				
-				}				
+			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
+			if(((String)ssn.getAttribute("pwIntialCheck"))=="1") {
+				
+				page="login/main";	
+				
+			}else {				
+					page="login/newInfo";	
+					
+				} 		
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

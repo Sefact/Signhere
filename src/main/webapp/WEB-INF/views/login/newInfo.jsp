@@ -33,7 +33,7 @@
             <input type="text" class="form-control" name="grName" placeholder="직급" value ="${sessionScope.grName}"  disabled>
         </div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userMail" placeholder="이메일" value ="${sessionScope.userMail}" >
+            <input type="text" class="form-control" name="userMail" placeholder="이메일" value ="${sessionScope.userMail}"  onBlur="mailValidate()">
              <input id="dupBtnMail" type="button" value="중복체크" onClick="dupUserMailCheck()" />
              <div id="dupBtnUserMail2"></div>
         </div>
