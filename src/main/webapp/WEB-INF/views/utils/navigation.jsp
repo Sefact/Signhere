@@ -448,33 +448,33 @@
 			var rfInital = "";
 			
 			// Draft Writer Initalize & Push aplBean
-			var aplInital = {'aplSeq':'1', 'apId':'${sessionScope.userId}'};
+			var aplInital = {'aplSeq':'1', 'aplId':'${sessionScope.userId}', 'aplName':'${sessionScope.userName}'};
 			aplBean.push(aplInital);
 			for(var i=0; i<mAplSize; i++) {
-				aplInital = {'aplSeq':i+2, 'apId':pushApline[i].value};
+				aplInital = {'aplSeq':i+2, 'aplId':pushApline[i].value, 'aplName':pushApline[i].text};
 				aplBean.push(aplInital);
 			}
 			
 			// Department Approval Line Push aplBean
 			for(var i=0; i<oAplSize; i++) {
-				aplInital = {'aplSeq':mAplSize+2, 'apId':pushOtApline[i].value};
+				aplInital = {'aplSeq':mAplSize+2, 'aplId':pushOtApline[i].value, 'aplName':pushOtApline[i].text};
 				aplBean.push(aplInital);
 			}	
 			
 			// Reference Line Push
 			for(var i=0; i<rAplSize; i++) {
-				rfInital = {'refId':pushRfApline[i].value};
+				rfInital = {'rdId':pushRfApline[i].value, 'rdName':pushRfApline[i].text};
 				rfBean.push(rfInital);
 			}
 			
-			var docInital = {'dmCode':radioDmCode, 'dmTitle':dmTitle, aplBean, rfBean};
+			var docInital = {'dmCode':radioDmCode, 'dmTitle':dmTitle, 'dmWriter':'${sessionScope.userName}', aplBean, rfBean};
 			docBean.push(docInital);
 			
 			var json = JSON.stringify(docBean);
 			
 			alert(json);
 			
-			$.ajax({
+ 			$.ajax({
 				type: 'POST',
 				url : '/confirmDraft',
 				data : json,
