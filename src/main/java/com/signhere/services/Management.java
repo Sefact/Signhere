@@ -20,8 +20,8 @@ public class Management {
 	}
 
 	public ModelAndView mAddEmployee(UserBean ub) {
+		//default = 실패, 성공시 message = 성공
 		
-		//default = 실패, 성공시 message = 성공 
 		mav.addObject("message","네트워크 오류! 직원추가 실패");
 		return mav;
 	}
@@ -29,6 +29,9 @@ public class Management {
 	public String mEmployeeDup(String userId) {
 		//default = 중복, db에 dupCheck = 사용가능
 		String dupCheck = "중복";
+		if(dupCheck!=null) {
+			
+		}
 		return dupCheck;
 	}
 
