@@ -68,7 +68,6 @@ public class Document {
 			userList = sqlSession.selectList("selOrgChart", ub);
 		} else if(apCheck.equals("D")) {
 			userList = sqlSession.selectList("selDepartmentChart", ub);
-			System.out.println(userList);
 		} else if(apCheck.equals("R")) {
 			userList = sqlSession.selectList("selReferenceChart", ub);
 		} else {
@@ -81,20 +80,22 @@ public class Document {
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();
 		
-		System.out.println(db);
-		
-		List<DocumentBean> docList;
+		List<DocumentBean> tempList = null;
 		
 		try {
+			db.setDmWriteId((String) ssn.getAttribute("userId"));
 			db.setCmCode((String) ssn.getAttribute("cmCode"));
+
+			sqlSession.insert("insTemporary", db);
+			tempList = sqlSession.selectList("selTemporary", db);
+
+			ssn.setAttribute("tempList", tempList);
+			ssn.setAttribute("docBean", db);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		//docList = 
-		//sqlSession.inesrt("insTemporary"
-		//sqlSession.insert("insTemporary", db);
+		System.out.println(db);
 
 		return mav;
 	}
