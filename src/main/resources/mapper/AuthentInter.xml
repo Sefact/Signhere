@@ -38,7 +38,7 @@
 		INSERT INTO AH VALUES(SYSDATE,#{pwInitial},'1',#{privateIp},#{userId},#{cmCode},#{browser})
 	</insert>
 	
-		<insert id ="updateUserLogOut" parameterType ="AccessBean">
+	<insert id ="updateUserLogOut" parameterType ="AccessBean">
 		INSERT INTO AH VALUES(SYSDATE,#{pwInitial},'0',#{privateIp},#{userId},#{cmCode},#{browser})
 	</insert>
 	
@@ -66,5 +66,12 @@
 		WHERE ID=#{userId} AND MAIL=#{userMail}	
 	</select>
 	
+	<select id="checkPwd" parameterType="userBean" resultType="String">
+		SELECT PW
+		FROM MM 
+		WHERE ID=#{userId}
 	
+	</select>
+	
+
 </mapper>

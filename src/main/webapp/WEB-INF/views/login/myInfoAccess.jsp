@@ -8,6 +8,7 @@
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
+	<script src="/resources/js/authentication.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
 	<!-- JQuery -->
@@ -20,6 +21,25 @@
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
 <body>
-	<jsp:include page="../utils/navigation.jsp" />
+
+<div class="form-group">
+       
+	${message }
+		<input type="hidden" name="userId" value="${sessionScope.userId}">
+            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호"  onBlur="pwdValidate(this)">
+        </div>
+       <div id="pwdMsg"></div>
+          
+        <div class="form-group">      
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="myInfo()">내정보 수정 페이지</button>
+		</div>
+		</div>
+
+		
+
+       
+	
+	
 </body>
 </html>

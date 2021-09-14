@@ -54,7 +54,7 @@ public class Authentication implements AuthentInter {
 	JavaMailSenderImpl javaMail;
 
 	@Override
-	public ModelAndView mLogin(HttpServletRequest req, AccessBean ab) {
+	public ModelAndView mLogin(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		//세션 만료시 로그아웃 시켜주는거 1) 시간 초과 2) 브라우저 닫을때
 
 
@@ -77,6 +77,7 @@ public class Authentication implements AuthentInter {
 					ab.setCmCode(tmplist.get(0).getCmCode());
 					ab.setBrowser(this.getBrowserInfo(req, "others"));
 					ab.setPwInitial(tmplist.get(0).getPwInitial());
+					System.out.println("로그인 성공");
 					//여기선 tomcat run configuration 변경 하였지만 실제 서버에서 설정을 또 바꿔 줘야함  https://admm.tistory.com/80
 					ab.setPrivateIp(req.getRemoteAddr());
 					//AccessHistory테이블에 로그인 기록 저장
@@ -99,7 +100,8 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
-
+							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
+							
 							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
 							ab.setUserId((String)ssn.getAttribute("userId"));
 
@@ -108,7 +110,7 @@ public class Authentication implements AuthentInter {
 						}
 					}
 				}else {
-					System.out.println("로그인실패! 띠용!");
+					System.out.println("로그인실패! 띠용~!");
 					message = "아이디 비밀번호를 확인해주세요.";
 					mav.setViewName("login/home");
 				}
@@ -120,16 +122,19 @@ public class Authentication implements AuthentInter {
 		return mav;
 	}
 
-	public ModelAndView mLogOut(HttpServletRequest req, AccessBean ab) {
+	public ModelAndView mLogOut(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		mav = new ModelAndView();
 		String message="";
 		try {
 			if(ssn.getAttribute("userId")!=null) {
 				ab.setBrowser(this.getBrowserInfo(req, "others"));
 				ab.setPrivateIp(req.getRemoteAddr());
-				System.out.println(ab.getPwInitial());
+				//ab.setPwinitial(ssn.getAttribute("pwIntial"));	
+				ab.setUserId((String)ssn.getAttribute("userId"));
+				ab.setPwInitial((String)ssn.getAttribute("pwInitial"));
+				ab.setCmCode((String)ssn.getAttribute("cmCode"));
 				sqlSession.insert("updateUserLogOut",ab);
-
+				System.out.println("로그아웃");
 			}else {
 				message="이미 로그아웃 하셨습니다";
 				mav.addObject("message",message);
@@ -255,7 +260,7 @@ public class Authentication implements AuthentInter {
 		String message="비밀번호가 성공적으로 변겅되었습니다.";
 
 		ModelAndView mav = new ModelAndView();
-		AccessBean ab = new AccessBean();	
+		
 		//비빌번호 바꾸기 MM테이블에 접근에서 일치하는 아이디의 비밀번호를 사용자가 입력한번호로 바꿔준다
 
 		ub.setUserPwd(enc.encode(ub.getUserPwd()));
@@ -295,14 +300,32 @@ public class Authentication implements AuthentInter {
 
 	}
 
+	//내정보 들어갔을때 비번2차인증페이지에서 확인 버튼 눌렀을때.!
 	public ModelAndView mMyInfoConfirm(UserBean ub) {
 		mav = new ModelAndView();
+		String pwdCheck;
+		String message="비밀번호가 일치하지 않습니다.";
+		
+	
+		//비번확인하고  직접적 내 정보를 수정하는 페이지로 고	
+		pwdCheck = sqlSession.selectOne("checkPwd",ub);
+		System.out.println(ub.getUserId());
+		System.out.println(ub.getUserPwd());
+	
+		if(enc.matches(ub.getUserPwd(), pwdCheck)) {
+			mav.setViewName("login/myInfo");
 
-		mav.setViewName("myInfo");
-		//mav.setViewName("redirect:/");
-
+		}else {
+			mav.addObject("message",message);
+			mav.addObject("redirect:/");
+		
+		}
+		
 		return mav;
 	}
+	
+	
+	
 
 	public ModelAndView mMyInfoDup(UserBean ub) {
 		mav = new ModelAndView();
@@ -356,6 +379,9 @@ public class Authentication implements AuthentInter {
 		try {
 
 			if(ssn.getAttribute("userId") != null) {
+			
+				//ub.setUserId((String)ssn.getAttribute("userId"));
+
 				if(ub.getPwInital()==0) {					
 					page="login/newInfo";										
 				} else {

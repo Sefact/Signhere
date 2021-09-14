@@ -137,6 +137,33 @@ function logOut(){
 }
 
 
+function myInfoAccess(){
+	
+	let form = makeForm("myInfoAccess","post");
+	
+	document.body.appendChild(form);
+	
+	form.submit();
+}
+
+
+
+function myInfo(){
+	
+	let userId = document.getElementsByName("userId")[0];
+	let userPwd = document.getElementsByName("userPwd")[0];
+	
+	let form = makeForm("myInfoConfirm","post");
+	
+	form.appendChild(userId);
+	form.appendChild(userPwd);
+		
+	document.body.appendChild(form);
+	
+	form.submit();
+}
+
+
 //회사코드,아이디,비밀번호 유효성체크
 function isValidateCheck(type, word){
 	let result;

@@ -42,13 +42,15 @@ public class HomeController {
 	
 	@PostMapping("/login")
 	public ModelAndView login(HttpServletRequest req,@ModelAttribute AccessBean ab) {
+		mav = auth.mLogin(req,ab);
 		
-		return auth.mLogin(req,ab);
+		return mav;
 	}
 	
 	@GetMapping("/logOut")
 	public ModelAndView logOut(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		mav = auth.mLogOut(req, ab);
+	
 		
 		return mav;
 	}
@@ -106,9 +108,11 @@ public class HomeController {
 		return mav;
 	}
 	
-	@PostMapping("/myInfo")
+	//내정보 수정으로 가는 페이지 (비밀번호 2차확인 페이지)
+	@PostMapping("/myInfoAccess")
 	public String myInfo() {
-		return "myInfoAccess";
+		return "login/myInfoAccess";
+		
 	}
 	
 	//비밀번호 2차확인
@@ -126,6 +130,7 @@ public class HomeController {
 		return mav;
 	}
 	
+	//내정보 수정 하는 페이지
 	@PostMapping("/updateMemberTable")
 	public ModelAndView updateMemberTable(@ModelAttribute UserBean ub) {
 		mav = auth.mUpdateMemberTable(ub);
