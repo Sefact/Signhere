@@ -9,7 +9,7 @@
 
 			SELECT * FROM(
         	SELECT ENTRUST_NUM AS ETNUM, SENDER, RECEIVER, SETTING, REASON, ROWNUM AS RNUM
-        	FROM ENTRUST WHERE ROWNUM <= #{page} * #{perPageNum}) 
+        	FROM ENTRUST WHERE SENDER = #{senderId} AND ROWNUM <= #{page} * #{perPageNum}) 
 			WHERE RNUM > (#{page} -1) * #{perPageNum}
 
 		]]>
@@ -19,7 +19,7 @@
         SELECT
             count(*)
         FROM
-			ENTRUST
+			ENTRUST WHERE SENDER = #{senderId}
     	]]>
 	</select>
 	<select id="selReceiver" resultType="UserBean" parameterType="UserBean">

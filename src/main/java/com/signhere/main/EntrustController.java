@@ -42,6 +42,7 @@ public class EntrustController {
 	@PostMapping("/saveEntrust")
 	@ResponseBody
 	public ModelAndView saveEntrust(@RequestBody List<EntrustBean> eb) {
+		mav = new ModelAndView();
 		
 		mav = ent.mSaveEntrust(eb.get(0));
 		
@@ -51,6 +52,7 @@ public class EntrustController {
 	@PostMapping("/disCheckEntrust")
 	@ResponseBody
 	public ModelAndView disCheckEntrust(@RequestBody List<EntrustBean> eb) {
+		mav = new ModelAndView();
 		
 		mav = ent.mDisCheckEntrust(eb.get(0));
 
