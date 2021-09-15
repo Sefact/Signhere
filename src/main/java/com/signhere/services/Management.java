@@ -140,9 +140,9 @@ public class Management {
 	
 	
 		if(dupId==0)
-		{ dupCheck="사용가능";
+		{dupCheck="사용가능";
 		
-		} 	else {
+		}else {
 			dupCheck="사용불가";
 			
 		}

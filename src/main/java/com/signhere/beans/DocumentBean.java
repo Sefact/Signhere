@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -32,4 +34,8 @@ public class DocumentBean {
 	private String[] dmNumArr;
 	private List<ApprovalBean> aplBean;
 	private List<ReadingReferenceBean> rfBean;
+	private String[] signiture;
+	private String[] filePath;
+	//springframework multipartFile
+	private MultipartFile fileList;
 }

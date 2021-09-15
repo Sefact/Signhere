@@ -78,6 +78,11 @@ body {
   margin-top: 0;
 }
 
+#image_container > img {
+	width:100px;
+	height:100px;
+}
+
 
 /*
  * Placeholder dashboard ideas

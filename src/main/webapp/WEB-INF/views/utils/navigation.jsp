@@ -182,7 +182,6 @@
 				})
 				.done(function(data) {
 					var orgLength = Object.keys(data).length;
-
 					$.each(data, function(index, value) {
 						modalHtml += '<option value=' + value.userId + '>';
 						modalHtml += value.userName;
@@ -220,7 +219,6 @@
 	$('document').ready(function() {
 		$('#mApLineDel').click(function() {
 			var selMyApCheck = $("#selMyApprovalLine option:selected").val();
-
 			$("#selMyApprovalLine option[value="+ selMyApCheck +"]").remove();
 		})
 	});
@@ -244,7 +242,6 @@
 				})
 				.done(function(data) {
 					var orgLength = Object.keys(data).length;
-
 					$.each(data, function(index, value) {
 						otherDPHtml += '<option value=' + value.userId + '>';
 						otherDPHtml += value.userName;
@@ -286,7 +283,6 @@
 	$('document').ready(function() {
 		$('#otApLineDel').click(function() {
 			var selOtApCheck = $("#selOtApprovalLine option:selected").val();
-
 			$("#selOtApprovalLine option[value="+ selOtApCheck +"]").remove();
 		})
 	});
@@ -310,7 +306,6 @@
 				})
 				.done(function(data) {
 					var orgLength = Object.keys(data).length;
-
 					$.each(data, function(index, value) {
 						referenceHtml += '<option value=' + value.userId + '>';
 						referenceHtml += value.userName;
@@ -351,7 +346,6 @@
 	$('document').ready(function() {
 		$('#rfLineDel').click(function() {
 			var selRfCheck = $("#selReferencelLine option:selected").val();
-
 			$("#selReferencelLine option[value="+ selRfCheck +"]").remove();
 		})
 	});
@@ -406,7 +400,6 @@
  		let form = makeForm("confirmDraft", "post");
 		
 		form.append(json);
-
 		document.body.append(form);
 		form.submit();
 		
@@ -427,6 +420,7 @@
 	
 	<!-- Send Draft -->
 	<script type="text/javascript">
+	
 	$('document').ready(function() {
 		$('#sendApproval').click(function() {
 			var dmTitle = document.getElementsByName("dmTitle")[0].value;
@@ -467,11 +461,6 @@
 				rfBean.push(rfInital);
 			}
 			
-
-			alert(aplReceiver);
-			
-			var json = JSON.stringify(aplReceiver);
-
 			var docInital = {'dmCode':radioDmCode, 'dmTitle':dmTitle, 'dmWriter':'${sessionScope.userName}', aplBean, rfBean};
 			docBean.push(docInital);
 			
@@ -487,8 +476,8 @@
 				dataType: 'json'
 			})
 			.done(function(data) {
-				location.href = "/draftMove";
 				
+				location.href="/draftMove";
 				console.log("Success");
 			})
 			.fail(function(data) {
@@ -496,4 +485,33 @@
 			})
 		});
 	});
-	</script>
+	
+	function setThumbnail(event){
+		//파일삭제기능 고려해야 함..
+		for(var image of event.target.files){
+		
+		var reader = new FileReader();
+		
+		
+		reader.onload = function (event){
+			var img = document.createElement("img");
+			img.setAttribute("src",event.target.result);
+			img.setAttribute("name","filePath");
+			img.width="200px";
+			img.height="200px"
+			document.querySelector("div#image_container").appendChild(img);
+		
+			
+		};
+		
+		console.log(image);
+		reader.readAsDataURL(image);
+		
+		}
+	}
+
+	function showApConfirmModal(){
+		$('#apCommentModal').modal('show');
+	}
+
+</script>

@@ -2,6 +2,7 @@ package com.signhere.services;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.utils.Session;
@@ -81,6 +83,7 @@ public class Document {
 		mav = new ModelAndView();
 		
 		List<DocumentBean> tempList = null;
+		List<UserBean> aplDetailList = null;
 		
 		try {
 			db.setDmWriteId((String) ssn.getAttribute("userId"));
@@ -88,14 +91,28 @@ public class Document {
 
 			sqlSession.insert("insTemporary", db);
 			tempList = sqlSession.selectList("selTemporary", db);
-
+			
 			ssn.setAttribute("tempList", tempList);
 			ssn.setAttribute("docBean", db);
+			
+			handleNullApl(db,db.getAplBean().size());
+			
+			HashMap map = new HashMap();
+			map.put("cmCode", db.getCmCode());
+			for(int i = 1; i< db.getAplBean().size(); i++) {
+				map.put("userId"+i, db.getAplBean().get(i).getAplId());
+			}
+			
+			
+			aplDetailList = sqlSession.selectList("getAplDetailInfo", map);
+			
+			ssn.setAttribute("aplList", aplDetailList);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		System.out.println(db);
+		System.out.println(aplDetailList.toString());
 
 		return mav;
 	}
@@ -146,6 +163,18 @@ public class Document {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	
+	private void handleNullApl(DocumentBean db, int aplNumbers) {
+		//2명 > 2번 
+		//1명 > 3번 
+		int counter = 4-aplNumbers;
+		ApprovalBean tmpAp = new ApprovalBean();
+		tmpAp.setAplId("");
+		for(int i = 0; i<counter; i++) {
+			db.getAplBean().add(aplNumbers, tmpAp);
 		}
 	}
 }

@@ -33,6 +33,12 @@
 	<context:component-scan base-package="com.signhere.services" />
 	<context:component-scan base-package="com.signhere.utils" />
 	
+	<beans:bean id = "multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="3145728" />
+		<beans:property name="maxInMemorySize" value ="104857600" />
+		<beans:property name="defaultEncoding" value="utf-8" />	
+	</beans:bean>
+	
 	<beans:bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>
 	
 	<beans:bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">

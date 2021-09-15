@@ -153,6 +153,23 @@
         	<select id="selTemporary" parameterType="DocumentBean" resultType="DocumentBean">
         		SELECT DOCUMENT_NUM AS "dmNum", DOCUMENT_DATE AS "dmDate" FROM TL WHERE WRITER = #{dmWriteId} AND DOCUMENT_TITLE = #{dmTitle} AND COMPANY_CODE = #{cmCode}
         	</select>
+	
+			
+			<select id="getAplDetailInfo" parameterType="hashMap" resultType="UserBean">
+				SELECT 
+				MM.ID AS userId,
+				MM.NAME AS userName,
+				MM.GRADE_CODE AS grCode,
+				GR.GRADE_NAME AS grName,
+				MM.DEPARTMENT_CODE AS dpCode,
+				DP.DEPARTMENT_NAME AS dpName
+				FROM 
+				MM 
+				INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE 
+				INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
+				WHERE MM.COMPANY_CODE = #{cmCode} AND (MM.ID = #{userId1} OR MM.ID=#{userId2} OR MM.ID=#{userId3})
+			</select>
+			
 </mapper>
 
 
