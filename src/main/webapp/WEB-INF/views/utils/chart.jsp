@@ -2,6 +2,8 @@
 <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 
+
+
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	<h1 class="page-header">Dashboard</h1>
 
@@ -27,38 +29,37 @@
 				src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
 				width="200" height="200" class="img-responsive"
 				alt="Generic placeholder thumbnail">
-			<h4>Label</h4>
-			<span class="text-muted">Something else</span>
+			<h4>Label</h4><canvas id="myChart"></canvas>
+
 		</div>
-		<div class="col-xs-6 col-sm-3 placeholder">
-			<img
-				src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-				width="200" height="200" class="img-responsive"
-				alt="Generic placeholder thumbnail">
-			<h4>Label</h4>
-			<span class="text-muted">Something else</span>
-		</div>
+
 	</div>
 
-	<h2 class="sub-header">Section title</h2>
+	<h2 class="sub-header">결제함에 글들을 보여주는 섹션 두개로 나눌예정..?</h2>
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>
+			
 				<tr>
 					<th>#</th>
+					<th></th>
+					<td></td>
 					<th>Header</th>
 					<th>Header</th>
 					<th>Header</th>
-					<th>Header</th>
+				
 				</tr>
+				
 			</thead>
 			<tbody>
 				<tr>
-					<td>1,001</td>
-					<td>Lorem</td>
+				<c:forEach var="docList" items="${docList}">
+					<td></td>
+					<td><c:out value="${docList}"/></td>
 					<td>ipsum</td>
 					<td>dolor</td>
 					<td>sit</td>
+					</c:forEach>
 				</tr>
 				<tr>
 					<td>1,002</td>
@@ -169,3 +170,23 @@
 		</table>
 	</div>
 </div>
+
+<script src="/resources/js/chart/chart.js"></script>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+
+var chart = new Chart(ctx, {
+	type : 'doughnut',
+	data : {
+		labels : [ 'Red', 'Blue', 'Yellow' ],
+		datasets : [ {
+			label : 'My First Dataset',
+			data : [ 300, 50, 100 ],
+			backgroundColor : [ 'rgb(255, 99, 132)', 'rgb(54, 162, 235)',
+					'rgb(255, 205, 86)' ],
+			hoverOffset : 4
+		} ]
+	}
+});
+
+</script>
