@@ -136,6 +136,9 @@
 							<div class="form-row">
 								<div class="form-group col-md-5">
 									<select id="myModifyLine" class="form-control" size="4">
+										<c:forEach var="ogAplList" items="${sessionScope.ogAplMap}">
+												<option value="<c:out value="${ogAplList.aplId}"></c:out>"><c:out value="${ogAplList.aplName}"></c:out></option>
+										</c:forEach>
 									</select>
 								</div>
 								<div class="form-group col-md-2">
@@ -162,6 +165,9 @@
 							<div class="form-row" id="modifyDepartment" style="display:none">
 								<div class="form-group col-md-5">
 									<select id="otherModifyLine" class="form-control" size="4">
+										<c:forEach var="ogDpList" items="${sessionScope.ogDocMap}">
+												<option value="<c:out value="${ogDpList.aplId}"></c:out>"><c:out value="${ogDpList.aplName}"></c:out></option>
+										</c:forEach>
 									</select>
 								</div>
 								<div class="form-group col-md-2">
@@ -187,6 +193,9 @@
 							<div class="form-row" id="rfModifyForm" style="display:none">
 								<div class="form-group col-md-5">
 									<select id="rfModifyLine" class="form-control" size="4">
+										<c:forEach var="ogRfList" items="${sessionScope.ogRefMap}">
+												<option value="<c:out value="${ogRfList.rdId}"></c:out>"><c:out value="${ogRfList.rdName}"></c:out></option>
+										</c:forEach>
 									</select>
 								</div>
 								<div class="form-group col-md-2">
@@ -231,32 +240,8 @@
 	<script type="text/javascript">
 		$('document').ready(function() {
 			$('#approvalModify').click(function() {
-				var data = [{'apCheck': 'A', 'cmCode': ${sessionScope.cmCode}}];
-				var json = JSON.stringify(data);
-				var modalHtml = '';
-				
-				$.ajax({
-					type: 'POST',
-					url : '/writeDraft',
-					data : json,
-					contentType: "application/json;charset=UTF-8",
-					dataType: 'json'
-				})
-				.done(function(data) {
-					var orgLength = Object.keys(data).length;
-
-					$.each(data, function(index, value) {
-						modalHtml += '<option value=' + value.userId + '>';
-						modalHtml += value.userName;
-						modalHtml += '</option>';
-					});
-					$('#myModifyLine').html(modalHtml);
-					$('#modifyModal').modal('show');
-				})
-				.fail(function(data) {
-					console.log("Fail");
-				})
-			});
+				$('#modifyModal').modal('show');
+			})
 		});
 	</script>
 	
@@ -271,8 +256,11 @@
 			selMyAplHtml += myApCheck;
 			selMyAplHtml += '</option>';
 			
-			//selMyApprovalLine
+			// #1 Modify Approval Append
 			$('#selMyModifyLine').append(selMyAplHtml);
+			
+			// #2 Remove Modify Approval
+			$("#myModifyLine option[value="+ myApValue +"]").remove();
 		})
 	});
 	</script>
@@ -281,9 +269,19 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#mModifyLineDel').click(function() {
-			var selMyApCheck = $("#selMyModifyLine option:selected").val();
-
-			$("#selMyModifyLine option[value="+ selMyApCheck +"]").remove();
+			var selMyApCheck = $("#selMyModifyLine option:selected").text();
+			var selMyApValue = $("#selMyModifyLine option:selected").val();
+			var selectedAp = '';
+			selectedAp += '<option value=' + selMyApValue + '>';
+			selectedAp += selMyApCheck;
+			selectedAp += '</option>';
+			
+			
+			// #1 Remove Selected Modify Approval 
+			$("#selMyModifyLine option[value="+ selMyApValue +"]").remove();
+			
+			// #2 Append Selected Modify Approval
+			$('#myModifyLine').append(selectedAp);
 		})
 	});
 	</script>
@@ -292,32 +290,7 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#modifyDPOnOff').click(function() {
-			var data = [{'apCheck': 'D', 'cmCode': ${sessionScope.cmCode}}];
-			var json = JSON.stringify(data);
-			var otherDPHtml = '';
-			
-			if($("#modifyDepartment").css("display") == "none"){
-				$.ajax({
-					type: 'POST',
-					url : '/writeDraft',
-					data : json,
-					contentType: "application/json;charset=UTF-8",
-					dataType: 'json'
-				})
-				.done(function(data) {
-					var orgLength = Object.keys(data).length;
-
-					$.each(data, function(index, value) {
-						otherDPHtml += '<option value=' + value.userId + '>';
-						otherDPHtml += value.userName;
-						otherDPHtml += '</option>';
-					});
-					$('#otherModifyLine').html(otherDPHtml);
-				})
-				.fail(function(data) {
-					console.log("Fail");
-				})
-				
+			if($("#modifyDepartment").css("display") == "none"){				
 		        $('#modifyDepartment').show();  
 		    } else {  
 		        $('#modifyDepartment').hide();  
@@ -337,8 +310,11 @@
 			selOtAplHtml += otApCheck;
 			selOtAplHtml += '</option>';
 			
-			//selMyApprovalLine
+			// #1 Append Modify Department
 			$('#seldpModify').append(selOtAplHtml);
+			
+			// #2 Remove Modify Department
+			$("#otherModifyLine option[value="+ otApValue +"]").remove();
 		})
 	});
 	</script>
@@ -347,9 +323,18 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#dpModifyDel').click(function() {
-			var selOtApCheck = $("#seldpModify option:selected").val();
-
-			$("#seldpModify option[value="+ selOtApCheck +"]").remove();
+			var selOtApValue = $("#seldpModify option:selected").val();
+			var selOtApCheck = $("#seldpModify option:selected").text();
+			var selectedDp = '';
+			selectedDp += '<option value=' + selOtApValue + '>';
+			selectedDp += selOtApCheck;
+			selectedDp += '</option>';
+			
+			// #1 Remove Modify Dpeartment
+			$("#seldpModify option[value="+ selOtApValue +"]").remove();
+			
+			// #1 Append Modify Department
+			$('#otherModifyLine').append(selectedDp);
 		})
 	});
 	</script>
@@ -358,33 +343,8 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#rfModifyOnOff').click(function() {
-			var data = [{'apCheck': 'R', 'cmCode': ${sessionScope.cmCode}}];
-			var json = JSON.stringify(data);
-			var referenceHtml = '';
-			
 			if($("#rfModifyForm").css("display") == "none"){
-				$.ajax({
-					type: 'POST',
-					url : '/writeDraft',
-					data : json,
-					contentType: "application/json;charset=UTF-8",
-					dataType: 'json'
-				})
-				.done(function(data) {
-					var orgLength = Object.keys(data).length;
-
-					$.each(data, function(index, value) {
-						referenceHtml += '<option value=' + value.userId + '>';
-						referenceHtml += value.userName;
-						referenceHtml += '</option>';
-					});
-					$('#rfModifyLine').html(referenceHtml);
-				})
-				.fail(function(data) {
-					console.log("Fail");
-				})
-				
-		        $('#rfModifyForm').show();  
+				$('#rfModifyForm').show();  
 		    } else {  
 		        $('#rfModifyForm').hide();  
 		    }
@@ -398,12 +358,16 @@
 		$('#rfModifySave').click(function() {
 			var referenceCheck = $("#rfModifyLine option:selected").text();
 			var referenceValue = $("#rfModifyLine option:selected").val();
-			var selOtAplHtml = '';
-			selOtAplHtml += '<option value=' + referenceValue + '>';
-			selOtAplHtml += referenceCheck;
-			selOtAplHtml += '</option>';
+			var appendRfMd = '';
+			appendRfMd += '<option value=' + referenceValue + '>';
+			appendRfMd += referenceCheck;
+			appendRfMd += '</option>';
 			
-			$('#selRfModifyLine').append(selOtAplHtml);
+			// #1 Append Modify Reference
+			$('#selRfModifyLine').append(appendRfMd);
+			
+			// #2 Remove Modify Reference
+			$("#rfModifyLine option[value="+ referenceValue +"]").remove();
 		})
 	});
 	</script>
@@ -412,9 +376,19 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#rfModifyDel').click(function() {
-			var selRfCheck = $("#selRfModifyLine option:selected").val();
-
-			$("#selRfModifyLine option[value="+ selRfCheck +"]").remove();
+			var selRfValue = $("#selRfModifyLine option:selected").val();
+			var selRfCheck = $("#selRfModifyLine option:selected").text();
+			
+			var selectedRfMd = '';
+			selectedRfMd += '<option value=' + selRfValue + '>';
+			selectedRfMd += selRfCheck;
+			selectedRfMd += '</option>';
+			
+			// #1 Remove Selected Modify Reference
+			$("#selRfModifyLine option[value="+ selRfValue +"]").remove();
+			
+			// #2 Append Selected Modify Reference
+			$('#rfModifyLine').append(selectedRfMd);
 		})
 	});
 	</script>
@@ -425,60 +399,99 @@
 		$('#modifyApproval').click(function() {
 			var modifyTitle = document.getElementsByName("modifyTitle")[0].value;
 			
-			var mAplSize = $("#selMyModifyLine option").length;
-			var oAplSize = $("#seldpModify option").length;
-			var rAplSize = $("#selRfModifyLine option").length;
+			/* Origin Approval Info */
+			var originApSize = $("#myModifyLine option").length;
+			var originDpSize = $("#otherModifyLine option").length;
+			var originRfSize = $("#rfModifyLine option").length;
 			
-			var pushApline = document.getElementById("selMyModifyLine");
-			var pushOtApline = document.getElementById("seldpModify");
-			var pushRfApline = document.getElementById("selRfModifyLine");
-			
-			var radioDmCode = $('input[name="dmCode"]:checked').val();
+			var pushOriginAp = document.getElementById("myModifyLine");
+			var pushOriginDp = document.getElementById("otherModifyLine");
+			var pushOriginRf = document.getElementById("rfModifyLine");
 			
 			var docBean = [];
 			var aplBean = [];
 			var rfBean = [];
 			
-			var rfInital = "";
-			
-			// Draft Writer Initalize & Push aplBean
-			var aplInital = {'aplSeq':'1', 'aplId':'${sessionScope.userId}', 'aplName':'${sessionScope.userName}'};
-			aplBean.push(aplInital);
-			for(var i=0; i<mAplSize; i++) {
-				aplInital = {'aplSeq':i+2, 'aplId':pushApline[i].value, 'aplName':pushApline[i].text};
-				aplBean.push(aplInital);
+			// Origin Approval Inital & Push
+			for(var i=0; i<originApSize; i++) {
+				originApInital = {'aplSeq':i+1, 'aplId':pushOriginAp[i].value, 'aplName':pushOriginAp[i].text};
+				aplBean.push(originApInital);
 			}
 			
-			// Department Approval Line Push aplBean
-			for(var i=0; i<oAplSize; i++) {
-				aplInital = {'aplSeq':mAplSize+2, 'aplId':pushOtApline[i].value, 'aplName':pushOtApline[i].text};
-				aplBean.push(aplInital);
-			}	
-			
-			// Reference Line Push
-			for(var i=0; i<rAplSize; i++) {
-				rfInital = {'rdId':pushRfApline[i].value, 'rdName':pushRfApline[i].text};
-				rfBean.push(rfInital);
+			// Original Department Inital & Push
+			for(var i=0; i<originDpSize; i++) {
+				originDpInital = {'aplSeq':originApSize+1+i, 'aplId':pushOriginDp[i].value, 'aplName':pushOriginDp[i].text};
+				aplBean.push(originDpInital);
 			}
 			
-			var docInital = {'dmCode':radioDmCode, 'dmTitle':modifyTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':mAplSize, 'dmNum':${sessionScope.tempList[0].dmNum}, aplBean, rfBean};
-			docBean.push(docInital);
+			// Original Reference Inital & Push
+			for(var i=0; i<originRfSize; i++) {
+				originRfInital = {'rdId':pushOriginRf[i].value, 'rdName':pushOriginRf[i].text};
+				rfBean.push(originRfInital);
+			}
 			
-			var json = JSON.stringify(docBean);
+			var originDocInital = {'dmTitle':modifyTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':originApSize, aplBean, rfBean};
+			docBean.push(originDocInital);
 			
-			alert(json);
+			var temp = JSON.stringify(docBean);
 			
  			$.ajax({
 				type: 'POST',
-				url : '/modifyDraft',
-				data : json,
+				url : '/tempDraft',
+				data : temp,
 				contentType: "application/json;charset=UTF-8",
 				dataType: 'json'
 			})
 			.done(function(data) {
-				location.href = "/draftMove";
+				var mAplSize = $("#selMyModifyLine option").length;
+				var oAplSize = $("#seldpModify option").length;
+				var rAplSize = $("#selRfModifyLine option").length;
 				
-				console.log("Success");
+				var pushApline = document.getElementById("selMyModifyLine");
+				var pushOtApline = document.getElementById("seldpModify");
+				var pushRfApline = document.getElementById("selRfModifyLine");
+				
+				var radioDmCode = $('input[name="dmCode"]:checked').val();
+				
+				var docBean = [];
+				var aplBean = [];
+				var rfBean = [];
+				
+				var rfInital = "";
+				
+				// Draft Writer Initalize & Push aplBean
+				var aplInital = {'aplSeq':'1', 'aplId':'${sessionScope.userId}', 'aplName':'${sessionScope.userName}'};
+				aplBean.push(aplInital);
+				for(var i=0; i<mAplSize; i++) {
+					aplInital = {'aplSeq':i+2, 'aplId':pushApline[i].value, 'aplName':pushApline[i].text};
+					aplBean.push(aplInital);
+				}
+				
+				// Department Approval Line Push aplBean
+				for(var i=0; i<oAplSize; i++) {
+					aplInital = {'aplSeq':mAplSize+2, 'aplId':pushOtApline[i].value, 'aplName':pushOtApline[i].text};
+					aplBean.push(aplInital);
+				}	
+				
+				// Reference Line Push
+				for(var i=0; i<rAplSize; i++) {
+					rfInital = {'rdId':pushRfApline[i].value, 'rdName':pushRfApline[i].text};
+					rfBean.push(rfInital);
+				}
+				
+				var docInital = {'dmCode':radioDmCode, 'dmTitle':modifyTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':mAplSize, 'dmNum':${sessionScope.tempList[0].dmNum}, aplBean, rfBean};
+				docBean.push(docInital);
+				
+				var json = JSON.stringify(docBean);
+				
+				$.ajax({
+					type: 'POST',
+					url : '/modifyDraft',
+					data : json,
+					contentType: "application/json;charset=UTF-8",
+					dataType: 'json'
+				})
+				location.href = "/draftMove";
 			})
 			.fail(function(data) {
 				console.log("Fail");

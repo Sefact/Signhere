@@ -170,30 +170,35 @@
 		$('document').ready(function() {
 			$('#approvalModal').click(function() {
 				var data = [{'apCheck': 'A', 'cmCode': ${sessionScope.cmCode}}];
+				var apSize = $("#selMyApprovalLine option").length;
 				var json = JSON.stringify(data);
 				var modalHtml = '';
 				
-				$.ajax({
-					type: 'POST',
-					url : '/writeDraft',
-					data : json,
-					contentType: "application/json;charset=UTF-8",
-					dataType: 'json'
-				})
-				.done(function(data) {
-					var orgLength = Object.keys(data).length;
-
-					$.each(data, function(index, value) {
-						modalHtml += '<option value=' + value.userId + '>';
-						modalHtml += value.userName;
-						modalHtml += '</option>';
-					});
-					$('#myApprovalLine').html(modalHtml);
+				if(apSize > 0) {
 					$('#dummyModal').modal('show');
-				})
-				.fail(function(data) {
-					console.log("Fail");
-				})
+				} else {
+					$.ajax({
+						type: 'POST',
+						url : '/writeDraft',
+						data : json,
+						contentType: "application/json;charset=UTF-8",
+						dataType: 'json'
+					})
+					.done(function(data) {
+						var orgLength = Object.keys(data).length;
+
+						$.each(data, function(index, value) {
+							modalHtml += '<option value=' + value.userId + '>';
+							modalHtml += value.userName;
+							modalHtml += '</option>';
+						});
+						$('#myApprovalLine').html(modalHtml);
+						$('#dummyModal').modal('show');
+					})
+					.fail(function(data) {
+						console.log("Fail");
+					})
+				}
 			});
 		});
 	</script>
@@ -209,8 +214,11 @@
 			selMyAplHtml += myApCheck;
 			selMyAplHtml += '</option>';
 			
-			//selMyApprovalLine
+			// #1 selMyApprovalLine append
 			$('#selMyApprovalLine').append(selMyAplHtml);
+			
+			// #2 append after Remove selMyApprovalLine
+			$("#myApprovalLine option[value="+ myApValue +"]").remove();
 		})
 	});
 	</script>
@@ -219,9 +227,19 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#mApLineDel').click(function() {
-			var selMyApCheck = $("#selMyApprovalLine option:selected").val();
-
-			$("#selMyApprovalLine option[value="+ selMyApCheck +"]").remove();
+			var selMyApValue = $("#selMyApprovalLine option:selected").val();
+			var selMyApCheck = $("#selMyApprovalLine option:selected").text();
+			
+			var selectedAp = '';
+			selectedAp += '<option value=' + selMyApValue + '>';
+			selectedAp += selMyApCheck;
+			selectedAp += '</option>';
+			
+			// #1 Remove Selected Approval Line
+			$("#selMyApprovalLine option[value="+ selMyApValue +"]").remove();
+			
+			// #2 Append Origin Approval Line
+			$('#myApprovalLine').append(selectedAp);
 		})
 	});
 	</script>
@@ -231,33 +249,38 @@
 	$('document').ready(function() {
 		$('#otherDPOnOff').click(function() {
 			var data = [{'apCheck': 'D', 'cmCode': ${sessionScope.cmCode}}];
+			var dpSize = $("#selOtApprovalLine option").length;
 			var json = JSON.stringify(data);
 			var otherDPHtml = '';
 			
 			if($("#otherDepartment").css("display") == "none"){
-				$.ajax({
-					type: 'POST',
-					url : '/writeDraft',
-					data : json,
-					contentType: "application/json;charset=UTF-8",
-					dataType: 'json'
-				})
-				.done(function(data) {
-					var orgLength = Object.keys(data).length;
+				if(dpSize > 0) {
+					$('#otherDepartment').show();
+				} else {
+					$.ajax({
+						type: 'POST',
+						url : '/writeDraft',
+						data : json,
+						contentType: "application/json;charset=UTF-8",
+						dataType: 'json'
+					})
+					.done(function(data) {
+						var orgLength = Object.keys(data).length;
 
-					$.each(data, function(index, value) {
-						otherDPHtml += '<option value=' + value.userId + '>';
-						otherDPHtml += value.userName;
-						otherDPHtml += '</option>';
-					});
-					$('#otherApprovalLine').html(otherDPHtml);
-				})
-				.fail(function(data) {
-					console.log("Fail");
-				})
-				
-		        $('#otherDepartment').show();  
-		    } else {  
+						$.each(data, function(index, value) {
+							otherDPHtml += '<option value=' + value.userId + '>';
+							otherDPHtml += value.userName;
+							otherDPHtml += '</option>';
+						});
+						$('#otherApprovalLine').html(otherDPHtml);
+					})
+					.fail(function(data) {
+						console.log("Fail");
+					})
+					
+			        $('#otherDepartment').show();
+			    }
+			} else {  
 		        $('#otherDepartment').hide();  
 		    }
 		})
@@ -275,8 +298,11 @@
 			selOtAplHtml += otApCheck;
 			selOtAplHtml += '</option>';
 			
-			//selMyApprovalLine
+			// #1 append Other Department Approval Line
 			$('#selOtApprovalLine').append(selOtAplHtml);
+			
+			// #2 append after Remove selMyApprovalLine
+			$("#otherApprovalLine option[value="+ otApValue +"]").remove();
 		})
 	});
 	</script>
@@ -285,9 +311,19 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#otApLineDel').click(function() {
-			var selOtApCheck = $("#selOtApprovalLine option:selected").val();
-
-			$("#selOtApprovalLine option[value="+ selOtApCheck +"]").remove();
+			var selOtApValue = $("#selOtApprovalLine option:selected").val();
+			var selOtApCheck = $("#selOtApprovalLine option:selected").text();
+			
+			var selectedDp = '';
+			selectedDp += '<option value=' + selOtApValue + '>';
+			selectedDp += selOtApCheck;
+			selectedDp += '</option>';
+			
+			// #1 Remove Selected Department Line
+			$("#selOtApprovalLine option[value="+ selOtApValue +"]").remove();
+			
+			// #2 Append Origin Department Line
+			$('#otherApprovalLine').append(selectedDp);
 		})
 	});
 	</script>
@@ -297,32 +333,36 @@
 	$('document').ready(function() {
 		$('#referenceOnOff').click(function() {
 			var data = [{'apCheck': 'R', 'cmCode': ${sessionScope.cmCode}}];
+			var rfSize = $("#selReferencelLine option").length;
 			var json = JSON.stringify(data);
 			var referenceHtml = '';
 			
 			if($("#referenceForm").css("display") == "none"){
-				$.ajax({
-					type: 'POST',
-					url : '/writeDraft',
-					data : json,
-					contentType: "application/json;charset=UTF-8",
-					dataType: 'json'
-				})
-				.done(function(data) {
-					var orgLength = Object.keys(data).length;
+				if(rfSize > 0) {
+					$('#referenceForm').show();	
+				} else {
+					$.ajax({
+						type: 'POST',
+						url : '/writeDraft',
+						data : json,
+						contentType: "application/json;charset=UTF-8",
+						dataType: 'json'
+					})
+					.done(function(data) {
+						var orgLength = Object.keys(data).length;
 
-					$.each(data, function(index, value) {
-						referenceHtml += '<option value=' + value.userId + '>';
-						referenceHtml += value.userName;
-						referenceHtml += '</option>';
-					});
-					$('#referenceLine').html(referenceHtml);
-				})
-				.fail(function(data) {
-					console.log("Fail");
-				})
-				
-		        $('#referenceForm').show();  
+						$.each(data, function(index, value) {
+							referenceHtml += '<option value=' + value.userId + '>';
+							referenceHtml += value.userName;
+							referenceHtml += '</option>';
+						});
+						$('#referenceLine').html(referenceHtml);
+					})
+					.fail(function(data) {
+						console.log("Fail");
+					})
+			        $('#referenceForm').show();	
+				}				  
 		    } else {  
 		        $('#referenceForm').hide();  
 		    }
@@ -341,7 +381,11 @@
 			selOtAplHtml += referenceCheck;
 			selOtAplHtml += '</option>';
 			
+			// #1 append Reference Line
 			$('#selReferencelLine').append(selOtAplHtml);
+			
+			// #2 append after Remove Select Reference Line
+			$("#referenceLine option[value="+ referenceValue +"]").remove();
 		})
 	});
 	</script>
@@ -350,9 +394,19 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#rfLineDel').click(function() {
-			var selRfCheck = $("#selReferencelLine option:selected").val();
-
-			$("#selReferencelLine option[value="+ selRfCheck +"]").remove();
+			var selRfValue = $("#selReferencelLine option:selected").val();
+			var selRfCheck = $("#selReferencelLine option:selected").text();
+			
+			var selectedRf = '';
+			selectedRf += '<option value=' + selRfValue + '>';
+			selectedRf += selRfCheck;
+			selectedRf += '</option>';
+			
+			// #1 Remvoe Selected Reference
+			$("#selReferencelLine option[value="+ selRfValue +"]").remove();
+			
+			// #2 Append Origin Reference Line
+			$('#referenceLine').append(selectedRf);
 		})
 	});
 	</script>
@@ -363,58 +417,101 @@
 		$('#sendApproval').click(function() {
 			var dmTitle = document.getElementsByName("dmTitle")[0].value;
 			
-			var mAplSize = $("#selMyApprovalLine option").length;
-			var oAplSize = $("#selOtApprovalLine option").length;
-			var rAplSize = $("#selReferencelLine option").length;
+			/* Origin Approval Info */
+			var originApSize = $("#myApprovalLine option").length;
+			var originDpSize = $("#otherApprovalLine option").length;
+			var originRfSize = $("#referenceLine option").length;
 			
-			var pushApline = document.getElementById("selMyApprovalLine");
-			var pushOtApline = document.getElementById("selOtApprovalLine");
-			var pushRfApline = document.getElementById("selReferencelLine");
-			
-			var radioDmCode = $('input[name="dmCode"]:checked').val();
+			var pushOriginAp = document.getElementById("myApprovalLine");
+			var pushOriginDp = document.getElementById("otherApprovalLine");
+			var pushOriginRf = document.getElementById("referenceLine");
 			
 			var docBean = [];
 			var aplBean = [];
 			var rfBean = [];
 			
-			var rfInital = "";
-			
-			// Draft Writer Initalize & Push aplBean
-			var aplInital = {'aplSeq':'1', 'aplId':'${sessionScope.userId}', 'aplName':'${sessionScope.userName}'};
-			aplBean.push(aplInital);
-			for(var i=0; i<mAplSize; i++) {
-				aplInital = {'aplSeq':i+2, 'aplId':pushApline[i].value, 'aplName':pushApline[i].text};
-				aplBean.push(aplInital);
+			// Origin Approval Inital & Push
+			for(var i=0; i<originApSize; i++) {
+				originApInital = {'aplSeq':i+1, 'aplId':pushOriginAp[i].value, 'aplName':pushOriginAp[i].text};
+				aplBean.push(originApInital);
 			}
 			
-			// Department Approval Line Push aplBean
-			for(var i=0; i<oAplSize; i++) {
-				aplInital = {'aplSeq':mAplSize+2, 'aplId':pushOtApline[i].value, 'aplName':pushOtApline[i].text};
-				aplBean.push(aplInital);
-			}	
-			
-			// Reference Line Push
-			for(var i=0; i<rAplSize; i++) {
-				rfInital = {'rdId':pushRfApline[i].value, 'rdName':pushRfApline[i].text};
-				rfBean.push(rfInital);
+			// Original Department Inital & Push
+			for(var i=0; i<originDpSize; i++) {
+				originDpInital = {'aplSeq':originApSize+1+i, 'aplId':pushOriginDp[i].value, 'aplName':pushOriginDp[i].text};
+				aplBean.push(originDpInital);
 			}
 			
-			var docInital = {'dmCode':radioDmCode, 'dmTitle':dmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':mAplSize, aplBean, rfBean};
-			docBean.push(docInital);
+			// Original Reference Inital & Push
+			for(var i=0; i<originRfSize; i++) {
+				originRfInital = {'rdId':pushOriginRf[i].value, 'rdName':pushOriginRf[i].text};
+				rfBean.push(originRfInital);
+			}
 			
-			var json = JSON.stringify(docBean);
+			var originDocInital = {'dmTitle':dmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':originApSize, aplBean, rfBean};
+			docBean.push(originDocInital);
+			
+			var temp = JSON.stringify(docBean);
 			
  			$.ajax({
 				type: 'POST',
-				url : '/confirmDraft',
-				data : json,
+				url : '/tempDraft',
+				data : temp,
 				contentType: "application/json;charset=UTF-8",
 				dataType: 'json'
 			})
 			.done(function(data) {
-				location.href = "/draftMove";
+				/* Selected Approval Info */
+				var mAplSize = $("#selMyApprovalLine option").length;
+				var oAplSize = $("#selOtApprovalLine option").length;
+				var rAplSize = $("#selReferencelLine option").length;
 				
+				var pushApline = document.getElementById("selMyApprovalLine");
+				var pushOtApline = document.getElementById("selOtApprovalLine");
+				var pushRfApline = document.getElementById("selReferencelLine");
+				
+				var radioDmCode = $('input[name="dmCode"]:checked').val();
+				
+				var docBean = [];
+				var aplBean = [];
+				var rfBean = [];
+				
+				var rfInital = "";
+				
+				// Draft Writer Initalize & Push aplBean
+				var aplInital = {'aplSeq':'1', 'aplId':'${sessionScope.userId}', 'aplName':'${sessionScope.userName}'};
+				aplBean.push(aplInital);
+				for(var i=0; i<mAplSize; i++) {
+					aplInital = {'aplSeq':i+2, 'aplId':pushApline[i].value, 'aplName':pushApline[i].text};
+					aplBean.push(aplInital);
+				}
+				
+				// Department Approval Line Push aplBean
+				for(var i=0; i<oAplSize; i++) {
+					aplInital = {'aplSeq':mAplSize+2, 'aplId':pushOtApline[i].value, 'aplName':pushOtApline[i].text};
+					aplBean.push(aplInital);
+				}	
+				
+				// Reference Line Push
+				for(var i=0; i<rAplSize; i++) {
+					rfInital = {'rdId':pushRfApline[i].value, 'rdName':pushRfApline[i].text};
+					rfBean.push(rfInital);
+				}
+				
+				var docInital = {'dmCode':radioDmCode, 'dmTitle':dmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':mAplSize, aplBean, rfBean};
+				docBean.push(docInital);
+				
+				var json = JSON.stringify(docBean);
+				
+				$.ajax({
+					type: 'POST',
+					url : '/confirmDraft',
+					data : json,
+					contentType: "application/json;charset=UTF-8",
+					dataType: 'json'
+				})
 				console.log("Success");
+				location.href = "/draftMove";
 			})
 			.fail(function(data) {
 				console.log("Fail");
