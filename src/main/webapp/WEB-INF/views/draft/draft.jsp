@@ -59,7 +59,7 @@
 					<!-- <input type="text" class="form-control" id="" value="${sessionScope.docBean.rfBean[0].rdId}" disabled/>  -->
 					<select class="form-control">
 						<option value="${sessionScope.docBean.rfBean[0].rdName}">${sessionScope.docBean.rfBean[0].rdName}</option>
-					</select>
+					</select>ㅌ
 				</div>
 				<div class="form-group col-md-4">
 					<label>문서종류</label>

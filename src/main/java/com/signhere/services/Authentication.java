@@ -111,9 +111,10 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+							ssn.setAttribute("userName",tmplist.get(0).getUserName());
 
 							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
-							
+
 							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 추후에 세션을 리스트에 담아 뿌리기
 
 
@@ -143,9 +144,9 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mLogOut(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		mav = new ModelAndView();
 		String message="";
-		
-		
-		
+
+
+
 		try {
 			if(ssn.getAttribute("userId")!=null) {
 				ab.setPwInitial((String)ssn.getAttribute("pwInitial"));
@@ -293,7 +294,7 @@ public class Authentication implements AuthentInter {
 		String message="비밀번호가 성공적으로 변겅되었습니다.";
 
 		ModelAndView mav = new ModelAndView();
-		
+
 		//비빌번호 바꾸기 MM테이블에 접근에서 일치하는 아이디의 비밀번호를 사용자가 입력한번호로 바꿔준다
 
 		ub.setUserPwd(enc.encode(ub.getUserPwd()));
@@ -338,27 +339,27 @@ public class Authentication implements AuthentInter {
 		mav = new ModelAndView();
 		String pwdCheck;
 		String message="비밀번호가 일치하지 않습니다.";
-		
-	
+
+
 		//비번확인하고  직접적 내 정보를 수정하는 페이지로 고	
 		pwdCheck = sqlSession.selectOne("checkPwd",ub);
 		System.out.println(ub.getUserId());
 		System.out.println(ub.getUserPwd());
-	
+
 		if(enc.matches(ub.getUserPwd(), pwdCheck)) {
 			mav.setViewName("login/myInfo");
 
 		}else {
 			mav.addObject("message",message);
 			mav.addObject("redirect:/");
-		
+
 		}
-		
+
 		return mav;
 	}
-	
-	
-	
+
+
+
 
 	public ModelAndView mMyInfoDup(UserBean ub) {
 		mav = new ModelAndView();
@@ -408,21 +409,20 @@ public class Authentication implements AuthentInter {
 	public String mHome(@ModelAttribute UserBean ub) {
 		String page= "login/home";
 
-		try {
-
-			if(ssn.getAttribute("userId") != null) {
+		try {if(ssn.getAttribute("userId") != null) {
 			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
-			if(((String)ssn.getAttribute("pwIntialCheck"))=="1") {
-				
+			//로그인한 상태에서 main으로 가면 자꾸 newInfo로감.. 심지어 pwInitial은 1로 잘 나옴			
+
+			if(((String)ssn.getAttribute("pwInitial"))=="1"|| 				
+					((String)ssn.getAttribute("pwIntialCheck"))=="1") {	
 				page="login/main";	
-				
-			}else {				
-					page="login/newInfo";	
-					
-				} 		
-			}
+				System.out.println(ssn.getAttribute("pwInitial")+"메인으로타야지");
+			}else{				
+				page="login/newInfo";
+			} 		
+		}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		return page;

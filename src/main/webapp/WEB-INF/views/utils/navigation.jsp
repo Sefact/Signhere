@@ -427,6 +427,9 @@
 	
 	<!-- Send Draft -->
 	<script type="text/javascript">
+	
+	
+	
 	$('document').ready(function() {
 		$('#sendApproval').click(function() {
 			var dmTitle = document.getElementsByName("dmTitle")[0].value;
@@ -482,9 +485,8 @@
 				dataType: 'json'
 			})
 			.done(function(data) {
-				location.href = "/draftMove";
-				
-				console.log("Success");
+				location.href = "/draftMove";			
+				console.log("Success");		
 			})
 			.fail(function(data) {
 				console.log("Fail");
