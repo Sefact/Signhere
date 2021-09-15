@@ -71,16 +71,14 @@
 	</div>
 
 	<!-- modal -->
-	<div id="dummyModal" role="dialog" class="modal fade">
+	<div id="receiverModal" role="dialog" class="modal fade">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" data-dismiss="modal" class="close">&times;</button>
             <h4 class="modal-title">조직도</h4>
           </div>
-          <div id="selMember" class="modal-body">
-            <p>Modal Body</p>
-          </div>
+          <div id="receiverInfo" class="modal-body"></div>
           <div class="modal-footer">
             <button type="button" data-dismiss="modal" id="selReceiver" class="btn btn primary">Send</button>
             <button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
@@ -105,18 +103,16 @@
 					dataType: 'json'
 				})
 				.done(function(data) {
+					console.log(data);
+					
 					$.each(data, function(index, value) {
-						console.log(index + " " + value);
 						outHtml += '<div>';
 						outHtml += "<input type='radio' name='userName' value=" + value.userId + ">";
-						outHtml += value.userId;
+						outHtml += value.userName;
 						outHtml += '</div>';
 					});
-					$('#selMember').html(outHtml);
-					
-					$('#dummyModal').modal('show');
-					
-					
+					$('#receiverInfo').html(outHtml);
+					$('#receiverModal').modal('show');
 				})
 				.fail(function(data) {
 					console.log("Fail");
@@ -150,8 +146,6 @@
 			$('#entrustSave').click(function() {
 				var etReason = document.getElementsByName("etReason")[0];
 				var etReceiverId = document.getElementsByName("etReceiverId")[0];
-				
-				console.log(etReason.value + " : " + etReceiverId);
 				
 				var data = [{'etReceiverId':etReceiverId.value, 'etReason':etReason.value}];
 				var json = JSON.stringify(data);

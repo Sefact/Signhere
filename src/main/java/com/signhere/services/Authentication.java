@@ -110,6 +110,7 @@ public class Authentication implements AuthentInter {
 							}
 							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
 							ssn.setAttribute("userId", tmplist.get(0).getUserId());
+							ssn.setAttribute("userName", tmplist.get(0).getUserName());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
 							ssn.setAttribute("userName",tmplist.get(0).getUserName());

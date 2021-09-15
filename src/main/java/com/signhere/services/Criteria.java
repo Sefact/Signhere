@@ -3,6 +3,7 @@ package com.signhere.services;
 public class Criteria {
     private int page;
     private int perPageNum;
+    private String senderId;
     
     public Criteria() {
         this.page = 1;
@@ -30,4 +31,12 @@ public class Criteria {
             this.perPageNum = pageCount;
         }
     }
+
+	public String getSenderId() {
+		return senderId;
+	}
+
+	public void setSenderId(String senderId) {
+		this.senderId = senderId;
+	}
 }
