@@ -79,6 +79,48 @@ public class Document {
 
 		return userList;
 	}
+	
+	public ModelAndView mTempDraft(DocumentBean db) {
+		mav = new ModelAndView();
+		
+		// Original (Approval & Document & Reference) Map
+		List<Map<String, Object>> ogAplMap = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> ogDocMap = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> ogRefMap = new ArrayList<Map<String, Object>>();	
+
+		int apSeqLoc = db.getAplSeq();
+		
+		for(int i=0; i<db.getRfBean().size(); i++) {
+			Map<String, Object> ogRefMapPut = new HashMap<String, Object>();
+			ogRefMapPut.put("rdId", db.getRfBean().get(i).getRdId());
+			ogRefMapPut.put("rdName", db.getRfBean().get(i).getRdName());
+			ogRefMap.add(ogRefMapPut);
+		}
+		
+		for(int i=0; i<apSeqLoc; i++) {
+			Map<String, Object> ogAplMapPut = new HashMap<String, Object>();
+			ogAplMapPut.put("aplId", db.getAplBean().get(i).getAplId());
+			ogAplMapPut.put("aplName", db.getAplBean().get(i).getAplName());
+			ogAplMap.add(ogAplMapPut);
+		}
+		
+		for(int i=apSeqLoc; i<db.getAplBean().size(); i++) {
+			Map<String, Object> ogDocMapPut = new HashMap<String, Object>();
+			ogDocMapPut.put("aplId", db.getAplBean().get(i).getAplId());
+			ogDocMapPut.put("aplName", db.getAplBean().get(i).getAplName());
+			ogDocMap.add(ogDocMapPut);
+		}
+		
+		try {
+			ssn.setAttribute("ogAplMap", ogAplMap);
+			ssn.setAttribute("ogDocMap", ogDocMap);
+			ssn.setAttribute("ogRefMap", ogRefMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return mav;
+	}
 
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();

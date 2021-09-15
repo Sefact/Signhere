@@ -32,6 +32,18 @@ public class DraftController {
 		return ulist;
 	}
 	
+	@PostMapping("/tempDraft")
+	@ResponseBody
+	public ModelAndView tempDraft(@RequestBody List<DocumentBean> db) {
+		mav = new ModelAndView();
+		
+		mav = doc.mTempDraft(db.get(0));
+		
+		mav.setViewName("jsonView");
+		
+		return mav;
+	}
+	
 	@PostMapping("/confirmDraft")
 	@ResponseBody
 	public ModelAndView confirmDraft(@RequestBody List<DocumentBean> db) {
