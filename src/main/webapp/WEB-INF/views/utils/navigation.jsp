@@ -186,7 +186,6 @@
 					})
 					.done(function(data) {
 						var orgLength = Object.keys(data).length;
-
 						$.each(data, function(index, value) {
 							modalHtml += '<option value=' + value.userId + '>';
 							modalHtml += value.userName;
@@ -266,7 +265,6 @@
 					})
 					.done(function(data) {
 						var orgLength = Object.keys(data).length;
-
 						$.each(data, function(index, value) {
 							otherDPHtml += '<option value=' + value.userId + '>';
 							otherDPHtml += value.userName;
@@ -350,7 +348,6 @@
 					})
 					.done(function(data) {
 						var orgLength = Object.keys(data).length;
-
 						$.each(data, function(index, value) {
 							referenceHtml += '<option value=' + value.userId + '>';
 							referenceHtml += value.userName;
