@@ -29,7 +29,7 @@
 				src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
 				width="200" height="200" class="img-responsive"
 				alt="Generic placeholder thumbnail">
-			<h4>Label</h4><canvas id="myChart"></canvas>
+			<h4>Label</h4><canvas id="myChart" height="300px" width="300px"></canvas>
 
 		</div>
 
@@ -52,15 +52,17 @@
 				
 			</thead>
 			<tbody>
+<%-- 			<c:forEach var="docList" items="${docList}">
 				<tr>
-				<c:forEach var="docList" items="${docList}">
-					<td></td>
-					<td><c:out value="${docList}"/></td>
-					<td>ipsum</td>
-					<td>dolor</td>
-					<td>sit</td>
-					</c:forEach>
+				
+					<td><c:out value="${docList.dmNum }"/></td>
+					<td><c:out value="${docList.dmTitle }"/></td>
+					<td><c:out value="${docList.dmCode }"/></td>				
+					<td><c:out value="${docList.dmWriter }"/></td>
+					<td><c:out value="${docList.size(); }"/></td>
+				
 				</tr>
+					</c:forEach> --%>
 				<tr>
 					<td>1,002</td>
 					<td>amet</td>
@@ -175,16 +177,19 @@
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');
 
+
+
 var chart = new Chart(ctx, {
-	type : 'doughnut',
+	type : 'bar',
 	data : {
-		labels : [ 'Red', 'Blue', 'Yellow' ],
+		labels : [ '내가 보낸 결재', '내가 보낸 시행', '처리해야 할 결재 (결재대기함))' ],
 		datasets : [ {
 			label : 'My First Dataset',
-			data : [ 300, 50, 100 ],
+			data : [ 2, 1, ${sessionScope.waitChart} ],
 			backgroundColor : [ 'rgb(255, 99, 132)', 'rgb(54, 162, 235)',
 					'rgb(255, 205, 86)' ],
-			hoverOffset : 4
+			hoverOffset : 10
+			
 		} ]
 	}
 });

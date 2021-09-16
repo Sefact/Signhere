@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.MvcNamespaceHandler;
@@ -65,7 +67,9 @@ public class Authentication implements AuthentInter {
 
 		//2.여기서 userId를 통해 비밀번호, pwInitial, cmCode,cmName, 부서,직급, 관리자권한, 가져옴 (+이름?)
 		List<AccessBean> tmplist;
+		List<AccessBean> testList;
 		tmplist = sqlSession.selectList("getLogInInfo",ab);
+		testList = sqlSession.selectList("getLogInInfo",ab);
 
 		try {
 			if(!(ssn.getAttribute("userId")==null)) {
@@ -80,6 +84,8 @@ public class Authentication implements AuthentInter {
 					System.out.println("로그인 성공");
 					//여기선 tomcat run configuration 변경 하였지만 실제 서버에서 설정을 또 바꿔 줘야함  https://admm.tistory.com/80
 					ab.setPrivateIp(req.getRemoteAddr());
+							
+	
 					//AccessHistory테이블에 로그인 기록 저장
 					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
 						//session에 저장 및 main.jsp이동
@@ -115,7 +121,9 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
 							ssn.setAttribute("userName",tmplist.get(0).getUserName());
 							DocumentBean db = new DocumentBean();
-							this.mainChart(db);
+							
+							//결제대기함의 수를 addObject해줌.
+							ssn.setAttribute("waitChart", this.waitApprovalChart(db));
 
 							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
 
@@ -145,27 +153,18 @@ public class Authentication implements AuthentInter {
 		}
 		return mav;
 	}
-	
-	public void mainChart(DocumentBean db) {
-		ModelAndView mav = new ModelAndView();
-		
-		mav = new ModelAndView();	
-		
-		List <DocumentBean> docList;
-		
+	//결제대기함의 문서수
+	public int waitApprovalChart(DocumentBean db) {	
+		List <DocumentBean> docList;	
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));
-		
+			db.setApId((String)ssn.getAttribute("userId"));	
 		} catch (Exception e) {
 			e.printStackTrace();
-		}	
+		}		
+		docList=sqlSession.selectList("waitApproval",db);		
+		int size = docList.size();
 		
-		docList=sqlSession.selectList("waitApproval",db);
-		
-		
-		//APPROVAL_ID=로그인 한 아이디 =>'202103003' / xml에서 where절에 입력.
-		mav.addObject("docList",docList);
-
+		return size;
 	}
 	
 	
@@ -175,9 +174,6 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mLogOut(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		mav = new ModelAndView();
 		String message="";
-
-
-
 		try {
 			if(ssn.getAttribute("userId")!=null) {
 				ab.setPwInitial((String)ssn.getAttribute("pwInitial"));
@@ -437,20 +433,26 @@ public class Authentication implements AuthentInter {
 
 	public String mHome(@ModelAttribute UserBean ub) {
 		String page= "login/home";
+		DocumentBean db = new DocumentBean();
+		ModelAndView mav =new ModelAndView();
+		Model model = null;
+		
 		
 		try {
 			if(ssn.getAttribute("userId") != null) {
 			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
 			//로그인한 상태에서 main으로 가면 자꾸 newInfo로감.. 심지어 pwInitial은 1로 잘 나옴	
 				
-				//equals가 실제값으로 비교하는거. ==하면 참조변수끼리 비교..
-				
-				System.out.println(((String)ssn.getAttribute("pwInitial")));
-				System.out.println(((String)ssn.getAttribute("pwInitialCheck")));
+			//equals가 실제값으로 비교하는거. ==하면 참조변수끼리 비교..
+	
+			
 			if(((String)ssn.getAttribute("pwInitial")).equals("1") || 				
 					((String)ssn.getAttribute("pwIntialCheck")).equals("1")) {
-				
-				page="login/main";	
+				ssn.getAttribute("waitChart");
+		
+				page="login/main";
+		
+	
 				System.out.println(ssn.getAttribute("pwInitial")+"메인으로타야지");
 			}else{			
 				System.out.println("여기라고? ");

@@ -36,8 +36,6 @@ public class HomeController {
 	public String home(@ModelAttribute UserBean ub) {
 		
 		
-		
-		
 		return auth.mHome(ub);
 
 
@@ -115,7 +113,7 @@ public class HomeController {
 	@PostMapping("/myInfoAccess")
 	public String myInfo() {
 		return "login/myInfoAccess";
-		
+	
 	}
 	
 	//비밀번호 2차확인
