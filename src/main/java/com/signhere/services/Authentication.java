@@ -33,6 +33,7 @@ import com.signhere.beans.CompanyBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.MailForm;
 import com.signhere.beans.UserBean;
+import com.signhere.main.ListController;
 import com.signhere.mapper.AuthentInter;
 import com.signhere.mapper.FriendsInter;
 import com.signhere.utils.Encryption;
@@ -54,11 +55,14 @@ public class Authentication implements AuthentInter {
 
 	@Autowired
 	JavaMailSenderImpl javaMail;
+	
+	@Autowired
+	ListController lc;
 
 	@Override
 	public ModelAndView mLogin(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		//세션 만료시 로그아웃 시켜주는거 1) 시간 초과 2) 브라우저 닫을때
-
+		
 
 		mav = new ModelAndView();
 
@@ -122,8 +126,11 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userName",tmplist.get(0).getUserName());
 							DocumentBean db = new DocumentBean();
 							
+							mav.addObject("waitChart", this.waitApprovalChart(db));
+							mav.addObject("docList", this.waitApprovalList(db));
+							mav.addObject("docList2", this.apIngList(db));
 							//결제대기함의 수를 addObject해줌.
-							ssn.setAttribute("waitChart", this.waitApprovalChart(db));
+						
 
 							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
 
@@ -135,6 +142,12 @@ public class Authentication implements AuthentInter {
 							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
 
 							ab.setUserId((String)ssn.getAttribute("userId"));
+							
+							
+						
+							
+							
+							
 							mav.setViewName("login/main");						
 						
 						} catch (Exception e) {
@@ -153,7 +166,7 @@ public class Authentication implements AuthentInter {
 		}
 		return mav;
 	}
-	//결제대기함의 문서수
+	//결제대기함의 문서수 차트에 담음
 	public int waitApprovalChart(DocumentBean db) {	
 		List <DocumentBean> docList;	
 		try {
@@ -166,6 +179,37 @@ public class Authentication implements AuthentInter {
 		
 		return size;
 	}
+	//결제대기함의 문서들 최근꺼부터 5개만 메인에 표시
+	public List<DocumentBean> waitApprovalList(DocumentBean db) {	
+		List <DocumentBean> docList;	
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		docList=sqlSession.selectList("waitApproval",db);		
+
+		
+		return docList;
+	}
+	
+	
+	
+	//결제진행함의 문서들 최근꺼부터 5개만 메인에 표시
+	public List<DocumentBean> apIngList(DocumentBean db) {	
+		List <DocumentBean> docList;	
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		docList=sqlSession.selectList("approvalProcced",db);		
+
+		
+		return docList;
+	}
+	
+	
 	
 	
 	
@@ -438,7 +482,8 @@ public class Authentication implements AuthentInter {
 		try {
 			if(ssn.getAttribute("userId") != null) {	
 			mav.addObject("waitChart", this.waitApprovalChart(db));
-			
+			mav.addObject("docList", this.waitApprovalList(db));
+			mav.addObject("docList2", this.apIngList(db));
 			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
 			//로그인한 상태에서 main으로 가면 자꾸 newInfo로감.. 심지어 pwInitial은 1로 잘 나옴	
 				

@@ -19,6 +19,7 @@ public interface DocumentInter {
 	public ModelAndView receiveList(DocumentBean db);
 	public ModelAndView myList(DocumentBean db);
 	public List<DocumentBean> searchText(@RequestBody DocumentBean db);
+	
 
 	
 }

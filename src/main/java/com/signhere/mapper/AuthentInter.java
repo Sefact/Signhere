@@ -12,4 +12,5 @@ import com.signhere.beans.DocumentBean;
 public interface AuthentInter {
 	public ModelAndView mLogin(HttpServletRequest req, AccessBean ab);
 	public int waitApprovalChart(DocumentBean db);
+	List<DocumentBean> waitApprovalList(DocumentBean db);
 }

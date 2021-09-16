@@ -107,7 +107,7 @@ public class ListController implements DocumentInter {
   	//결제대기함
 	@PostMapping("/apToDoList")
 	public ModelAndView apToDoList(DocumentBean db) {
-		mav = new ModelAndView();		
+		ModelAndView mav = new ModelAndView();
 		
 		mav.setViewName("document/waitApproval");
 	
