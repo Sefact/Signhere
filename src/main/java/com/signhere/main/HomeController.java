@@ -33,8 +33,7 @@ public class HomeController {
 	private ModelAndView mav;
 	
 	@RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
-	public String home(@ModelAttribute UserBean ub) {
-		
+	public ModelAndView home(@ModelAttribute UserBean ub) {
 		
 		
 		
@@ -115,7 +114,7 @@ public class HomeController {
 	@PostMapping("/myInfoAccess")
 	public String myInfo() {
 		return "login/myInfoAccess";
-		
+	
 	}
 	
 	//비밀번호 2차확인
