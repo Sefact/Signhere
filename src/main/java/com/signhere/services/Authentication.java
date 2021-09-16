@@ -431,15 +431,14 @@ public class Authentication implements AuthentInter {
 		return result==1 ? true: false;  
 	}
 
-	public String mHome(@ModelAttribute UserBean ub) {
-		String page= "login/home";
+	public ModelAndView mHome(@ModelAttribute UserBean ub) {
 		DocumentBean db = new DocumentBean();
 		ModelAndView mav =new ModelAndView();
-		Model model = null;
-		
-		
+		mav.setViewName("login/home");
 		try {
-			if(ssn.getAttribute("userId") != null) {
+			if(ssn.getAttribute("userId") != null) {	
+			mav.addObject("waitChart", this.waitApprovalChart(db));
+			
 			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
 			//로그인한 상태에서 main으로 가면 자꾸 newInfo로감.. 심지어 pwInitial은 1로 잘 나옴	
 				
@@ -448,21 +447,21 @@ public class Authentication implements AuthentInter {
 			
 			if(((String)ssn.getAttribute("pwInitial")).equals("1") || 				
 					((String)ssn.getAttribute("pwIntialCheck")).equals("1")) {
-				ssn.getAttribute("waitChart");
+				
 		
-				page="login/main";
+				mav.setViewName("login/main");
 		
 	
 				System.out.println(ssn.getAttribute("pwInitial")+"메인으로타야지");
 			}else{			
 				System.out.println("여기라고? ");
-				page="login/newInfo";
+				mav.setViewName("login/newInfo");
 			} 		
 		}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return page;
+		return mav;
 	}
 
 	protected String getBrowserInfo(HttpServletRequest req, String browser) {
