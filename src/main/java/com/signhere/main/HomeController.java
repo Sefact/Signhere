@@ -34,6 +34,8 @@ public class HomeController {
 	
 	@RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView home(@ModelAttribute UserBean ub) {
+		DocumentBean db = new DocumentBean();
+		System.out.println(db.getDmNum());
 		
 		
 		

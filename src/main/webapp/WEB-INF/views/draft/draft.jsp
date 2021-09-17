@@ -20,6 +20,18 @@
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
+<script type="text/javascript"> 
+
+
+window.onbeforeunload = function () {
+	return '메세지 내용';
+};
+
+
+
+</script>
+
+
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
 	
@@ -60,7 +72,7 @@
 					<!-- <input type="text" class="form-control" id="" value="${sessionScope.docBean.rfBean[0].rdId}" disabled/>  -->
 					<select class="form-control">
 						<option value="${sessionScope.docBean.rfBean[0].rdName}">${sessionScope.docBean.rfBean[0].rdName}</option>
-					</select>ㅌ
+					</select>
 				</div>
 				<div class="form-group col-md-4">
 					<label>문서종류</label>
@@ -500,4 +512,5 @@
 	});
 	</script>
 </body>
+
 </html>
