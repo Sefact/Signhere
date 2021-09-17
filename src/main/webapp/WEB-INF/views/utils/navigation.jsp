@@ -183,7 +183,8 @@
 					<span class="input-group-btn">
 						<button type="button" id="orgMsearch" class="btn btn-primary"><i class="fa fa-search"></i></button>
 					</span>
-				</div>				
+				</div>
+				<br>
 				<div id="organizationInfo">
 				
 				</div>
@@ -565,20 +566,31 @@
 			})
 			.done(function(data) {
 				var orgDpHtml = "";
-				
+				orgDpHtml += '<div>';
+				orgDpHtml += '<ul>';
 				$.each(data, function(index, value) {
-					orgDpHtml += '<div class="selDpMember" id=' + index + ' name="dpName" value=' + value.dpCode +'>';
+					/* orgDpHtml += '<div class="selDpMember" id=' + index + ' name="dpName" value=' + value.dpCode +'>';
 					orgDpHtml += '<a>' + value.dpName + '</a>';
 					orgDpHtml += '<div class=' + index + ' style="display:none">';
 					orgDpHtml += '</div>';
+					orgDpHtml += '</div>'; */
+					orgDpHtml += '<li>';
+					orgDpHtml += '<a class="selDpMember" id='+ index +' value='+ value.dpCode + ' name="dpName">' + value.dpName + '</a>';
+					orgDpHtml += '<div class=' + index + ' style="display:none">';
 					orgDpHtml += '</div>';
+					orgDpHtml += '</li>';
 				});
+				orgDpHtml += '</ul>';
+				orgDpHtml += '</div>';
+				
 				$('#organizationInfo').html(orgDpHtml);
 				$('#organizationModal').modal('show');
 				
 				$('.selDpMember').click(function(){
 					var dpCode = $(this).attr('value');
 					var orgLoc = $(this).attr('id');
+					
+					alert(dpCode + ":" + orgLoc);
 					
 					var orgMData = [{'cmCode':${sessionScope.cmCode}, 'dpCode':dpCode}];
 					
