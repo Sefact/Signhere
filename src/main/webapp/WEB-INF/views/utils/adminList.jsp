@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+	<script src="/resources/js/authentication.js"></script>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
@@ -99,11 +100,12 @@
           <div id="" class="modal-body">
             <div>
             	<label for ="userIdNew">아이디</label>
-            	<input id="userIdNewBox" name="userIdNew" placeholder="사번입력" />
+            	<input id="userIdNewBox" name="userIdNew" placeholder="사번입력" onBlur="userIdNewCheck(this)"/>
+            	<input type="button" value="중복체크" onClick="userIdNewDupCheck()">
             </div>
             <div>
             	<label for ="userNameNew">이름</label>
-            	<input id="userNameNewBox" name="userNameNew" placeholder="이름입력" />
+            	<input id="userNameNewBox" name="userNameNew" placeholder="이름입력" onBlur="nameCheck(this)" />
             </div>
             <div>
             	<label for ="grGradeNew">직급</label>
