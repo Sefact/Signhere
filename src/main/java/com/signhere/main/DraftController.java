@@ -73,6 +73,18 @@ public class DraftController {
 		
 		return tempList;
 	}
+	
+	@PostMapping("/tempRemove")
+	@ResponseBody
+	public List<DocumentBean> tempRemove(@RequestBody List<DocumentBean> dlist) {
+		List<DocumentBean> tempList;
+		
+		System.out.println(dlist.get(0));
+		
+		tempList = doc.mTempRemove(dlist.get(0));
+		
+		return tempList;
+	}
 
 	@PostMapping("/draftPage")
 	public ModelAndView draftPage(DocumentBean db) {

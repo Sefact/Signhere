@@ -23,6 +23,4 @@
 <!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
 	<script src="/resources/js/admin/aplistAdmin.js"></script>
-	<!-- Bootstrap Core JS -->
-	<script src="/webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </html>

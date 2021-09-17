@@ -41,6 +41,7 @@ public class ListController implements DocumentInter {
 	@PostMapping("/myDraft")
 	public ModelAndView myDraft(@ModelAttribute DocumentBean db) {
 		mav = new ModelAndView();
+		
 		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
 		// 항목들 get해서 myDraft 페이지로 이동
 		//page 이동

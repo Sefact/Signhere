@@ -175,7 +175,7 @@ public class Document {
 
 	public List<DocumentBean> mModifyDraft(DocumentBean db) {
 		List<DocumentBean> docList = null;
-
+		
 		List<Map<String, Object>> aplMap = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> docMap = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> refMap = new ArrayList<Map<String, Object>>();	
@@ -219,6 +219,14 @@ public class Document {
 			e.printStackTrace();
 		}
 
+		return docList;
+	}
+	
+	public List<DocumentBean> mTempRemove(DocumentBean db) {
+		List<DocumentBean> docList = null;
+		
+		docList = null;
+		
 		return docList;
 	}
 
