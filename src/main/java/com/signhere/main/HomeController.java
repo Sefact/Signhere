@@ -152,6 +152,26 @@ public class HomeController {
 		return orgChart;
 	}
 	
+	@PostMapping("/orgMemberChart")
+	@ResponseBody
+	public List<UserBean> orgMemberChart(@RequestBody List<UserBean> ulist) {
+		List<UserBean> orgChart;
+		
+		orgChart = auth.mOrgMemberChart(ulist.get(0));
+		
+		return orgChart;
+	}
+	
+	@PostMapping("/orgSearch")
+	@ResponseBody
+	public List<UserBean> orgSearch(@RequestBody List<UserBean> ulist) {
+		List<UserBean> orgChart;
+		
+		orgChart = auth.mOrgSearch(ulist.get(0));
+		
+		return orgChart;
+	}
+	
 	@PostMapping("/alarm")
 	public List<DocumentBean> alarm(@RequestBody List<DocumentBean> dlist) {
 		List<DocumentBean> alarm;

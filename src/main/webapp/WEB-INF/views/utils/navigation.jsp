@@ -14,6 +14,9 @@
           <a class="navbar-brand" href="/">Sign Here</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li><a id="modalOrgChart" href="#">조직도</a></li>
+          </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
@@ -29,6 +32,7 @@
 
     <div class="container-fluid">
       <div class="row">
+      
         <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a id="approvalModal" href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
@@ -57,7 +61,7 @@
       </div>
     </div>
     
-	<!-- modal -->
+	<!-- Approval modal -->
 	<div id="dummyModal" role="dialog" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -162,6 +166,33 @@
 					<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
 				</div>
 			</div>
+		</div>
+	</div>
+	
+	<!-- Organization Chart -->
+	<div id="organizationModal" role="dialog" class="modal fade">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" class="close">&times;</button>
+				<h4 class="modal-title">조직도</h4>
+			</div>
+			<div class="modal-body">
+				<div class="input-group">
+					<input type="text" name="orgMValue" class="form-control" placeholder="Search">
+					<span class="input-group-btn">
+						<button type="button" id="orgMsearch" class="btn btn-primary"><i class="fa fa-search"></i></button>
+					</span>
+				</div>
+				<br>
+				<div id="organizationInfo">
+				
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+			</div>
+		</div>
 		</div>
 	</div>
 	
@@ -514,5 +545,126 @@
 				console.log("Fail");
 			})
 		});
+	});
+	</script>
+	
+	<script type="text/javascript">
+	$('document').ready(function() {
+		$('#modalOrgChart').click(function() {
+			var orgData = [{'cmCode':${sessionScope.cmCode}}]
+			var orgJson = JSON.stringify(orgData);
+			
+			$.ajax({
+				type: 'POST',
+				url : '/orgChart',
+				data : orgJson,
+				contentType: "application/json;charset=UTF-8",
+				dataType: 'json'
+			})
+			.done(function(data) {
+				var orgDpHtml = "";
+				orgDpHtml += '<div>';
+				orgDpHtml += '<ul>';
+				$.each(data, function(index, value) {
+					/* orgDpHtml += '<div class="selDpMember" id=' + index + ' name="dpName" value=' + value.dpCode +'>';
+					orgDpHtml += '<a>' + value.dpName + '</a>';
+					orgDpHtml += '<div class=' + index + ' style="display:none">';
+					orgDpHtml += '</div>';
+					orgDpHtml += '</div>'; */
+					orgDpHtml += '<li>';
+					orgDpHtml += '<a class="selDpMember" id='+ index +' value='+ value.dpCode + ' name="dpName">' + value.dpName + '</a>';
+					orgDpHtml += '<div class=' + index + ' style="display:none">';
+					orgDpHtml += '</div>';
+					orgDpHtml += '</li>';
+				});
+				orgDpHtml += '</ul>';
+				orgDpHtml += '</div>';
+				
+				$('#organizationInfo').html(orgDpHtml);
+				$('#organizationModal').modal('show');
+				
+				$('.selDpMember').click(function(){
+					var dpCode = $(this).attr('value');
+					var orgLoc = $(this).attr('id');
+					
+					alert(dpCode + ":" + orgLoc);
+					
+					var orgMData = [{'cmCode':${sessionScope.cmCode}, 'dpCode':dpCode}];
+					
+					var orgMJson = JSON.stringify(orgMData);
+					
+					$.ajax({
+						type: 'POST',
+						url : '/orgMemberChart',
+						data : orgMJson,
+						contentType: "application/json;charset=UTF-8",
+						dataType: 'json'
+					})
+					.done(function(data) {
+						var orgDpMHtml = "";
+						
+						$.each(data, function(index, value) {
+							orgDpMHtml += '<div>';
+							orgDpMHtml += value.userName;
+							orgDpMHtml += '</div>';
+						});
+						$('.' + orgLoc).html(orgDpMHtml);						
+						
+						if($('.' + orgLoc).css("display") == "none"){
+							$('.' + orgLoc).show();
+						} else {
+							$('.' + orgLoc).hide();
+						}
+					})
+					.fail(function(data) {
+						console.log("Fail");
+					})
+				});
+			})
+			.fail(function(data) {
+				console.log("Fail");
+			})
+		})
+	});
+	</script>
+	
+	<!-- OrgChart Search -->
+	<script type="text/javascript">
+	$('document').ready(function() {
+		$('#orgMsearch').click(function() {
+			var inOrgMem = document.getElementsByName("orgMValue")[0].value;
+			var searchData = [{'message':inOrgMem, 'cmCode':${sessionScope.cmCode}}];
+			var searchJson = JSON.stringify(searchData);
+			
+			$.ajax({
+				type: 'POST',
+				url : '/orgSearch',
+				data : searchJson,
+				contentType: "application/json;charset=UTF-8",
+				dataType: 'json'
+			})
+			.done(function(data) {
+				var searchHtml = "";
+				
+				console.log(data.length);
+				
+				if(data.length > 0) {
+					$.each(data, function(index, value) {
+						searchHtml += '<div>';
+						searchHtml += value.userName;
+						searchHtml += '</div>';
+					});
+				} else {
+					searchHtml += '<div>';
+					searchHtml += "검색결과가 존재하지 않습니다.";
+					searchHtml += '</div>';
+				}
+				
+				$('#organizationInfo').html(searchHtml);
+			})
+			.fail(function(data) {
+				console.log("Fail");
+			})
+		})
 	});
 	</script>

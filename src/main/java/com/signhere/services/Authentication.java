@@ -443,7 +443,25 @@ public class Authentication implements AuthentInter {
 	/* Select Organization Chart */
 	public List<UserBean> mOrgChart(UserBean ub) {
 		List<UserBean> userList = null;
-
+		
+		userList = sqlSession.selectList("selOrgDepartment", ub);
+		
+		return userList;
+	}
+	
+	public List<UserBean> mOrgMemberChart(UserBean ub) {
+		List<UserBean> userList = null;
+		
+		userList = sqlSession.selectList("selOrgMember", ub);
+		
+		return userList;
+	}
+	
+	public List<UserBean> mOrgSearch(UserBean ub) {
+		List<UserBean> userList = null;
+		
+		userList = sqlSession.selectList("searchOrgMember", ub);
+		
 		return userList;
 	}
 

@@ -37,13 +37,13 @@ window.onbeforeunload = function () {
 	
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 		<h1 class="page-header">Approval</h1>
-		<form id="entForm">
+		<form method="POST" enctype="multipart/form-data" id="approvalForm">
 			<div class="form-row">
 				<div class="form-group col-md-8">
 					<button type="button" id="approvalModify" class="btn btn-primary btn-block" >문서 종류 및 결재선 수정</button>
 				</div>
 				<div class="form-group col-md-4">
-					<button type="button" class="btn btn-primary btn-block" id="">결재하기</button>
+					<button type="button" class="btn btn-primary btn-block" id="onAplModal">결재하기</button>
 				</div>
 			</div>
 			<div class="form-row">
@@ -81,7 +81,7 @@ window.onbeforeunload = function () {
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12">
-					<input type="file" class="form-control-file" id="" value="Upload"/>
+					<input type="file" class="form-control-file" id="docFile" value="Upload"/>
 				</div>
 			</div>
 			<div class="form-row">
@@ -245,6 +245,29 @@ window.onbeforeunload = function () {
 					<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
 				</div>
 			</div>
+		</div>
+	</div>
+	
+	<!-- Approval Request Modal -->
+	<div id="aplRequestModal" role="dialog" class="modal fade">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" class="close">&times;</button>
+				<h4 class="modal-title">결재의견</h4>
+			</div>
+			<div class="modal-body">
+			<form>
+				<div class="form-group">
+					<textarea class="form-control" id="commentTextArea" rows="3"></textarea>
+				</div>
+			</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="requestApproval" class="btn btn primary">Send</button>
+				<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+			</div>
+		</div>
 		</div>
 	</div>
 	
@@ -510,6 +533,47 @@ window.onbeforeunload = function () {
 			})
 		});
 	});
+	</script>
+	
+	<!-- Open Approval Comment(=Request) Modal -->
+	<script type="text/javascript">
+	$('document').ready(function() {
+		$('#onAplModal').click(function() {
+			$('#aplRequestModal').modal('show');
+		})
+	});
+	</script>
+	
+	<script type="text/javascript">
+	$('document').ready(function() {
+		$('#requestApproval').click(function() {
+			event.preventDefault();
+			
+			var form = $('#approvalForm')[0];
+			var data = new FormData(form);
+			
+			var acReason = document.getElementById("commentTextArea").value;
+			
+			
+			alert(acReason.value);
+			console.log(acReason);
+		})
+	});
+	</script>
+	
+	<script type="text/javascript">
+	    var checkUnload = true;
+	    var tempDmCode = [{'dmNum':${sessionScope.tempList[0].dmNum}}];
+	    var dmCodeJson = JSON.stringify(tempDmCode);
+	    
+	    $(window).on("beforeunload", function(){
+	        if(checkUnload) return false;
+	    });
+	   
+	    $(document).on("click", "#modifyApproval", function(event){
+	        // disable warning
+	        $(window).off('beforeunload');
+	    });
 	</script>
 </body>
 
