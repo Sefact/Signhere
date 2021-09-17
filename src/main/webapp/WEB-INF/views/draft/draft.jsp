@@ -20,6 +20,18 @@
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
+<script type="text/javascript"> 
+
+
+window.onbeforeunload = function () {
+	return '메세지 내용';
+};
+
+
+
+</script>
+
+
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
 	
@@ -564,4 +576,5 @@
 	    });
 	</script>
 </body>
+
 </html>

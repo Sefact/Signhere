@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.MvcNamespaceHandler;
@@ -31,6 +33,7 @@ import com.signhere.beans.CompanyBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.MailForm;
 import com.signhere.beans.UserBean;
+import com.signhere.main.ListController;
 import com.signhere.mapper.AuthentInter;
 import com.signhere.mapper.FriendsInter;
 import com.signhere.utils.Encryption;
@@ -49,14 +52,17 @@ public class Authentication implements AuthentInter {
 	ModelAndView mav;
 	private DefaultTransactionDefinition def;
 	private TransactionStatus status;
-	
+
 	@Autowired
 	JavaMailSenderImpl javaMail;
+	
+	@Autowired
+	ListController lc;
 
 	@Override
-	public ModelAndView mLogin(HttpServletRequest req, AccessBean ab) {
+	public ModelAndView mLogin(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		//세션 만료시 로그아웃 시켜주는거 1) 시간 초과 2) 브라우저 닫을때
-
+		
 
 		mav = new ModelAndView();
 
@@ -65,7 +71,9 @@ public class Authentication implements AuthentInter {
 
 		//2.여기서 userId를 통해 비밀번호, pwInitial, cmCode,cmName, 부서,직급, 관리자권한, 가져옴 (+이름?)
 		List<AccessBean> tmplist;
+		List<AccessBean> testList;
 		tmplist = sqlSession.selectList("getLogInInfo",ab);
+		testList = sqlSession.selectList("getLogInInfo",ab);
 
 		try {
 			if(!(ssn.getAttribute("userId")==null)) {
@@ -77,15 +85,27 @@ public class Authentication implements AuthentInter {
 					ab.setCmCode(tmplist.get(0).getCmCode());
 					ab.setBrowser(this.getBrowserInfo(req, "others"));
 					ab.setPwInitial(tmplist.get(0).getPwInitial());
+					System.out.println("로그인 성공");
 					//여기선 tomcat run configuration 변경 하였지만 실제 서버에서 설정을 또 바꿔 줘야함  https://admm.tistory.com/80
 					ab.setPrivateIp(req.getRemoteAddr());
+							
+	
 					//AccessHistory테이블에 로그인 기록 저장
 					if(this.convertToBoolean(sqlSession.insert("updateUserLog",ab))){
 						//session에 저장 및 main.jsp이동
 						try {
+
+							ssn.setAttribute("cmName",tmplist.get(0).getCmName());
+							ssn.setAttribute("userName",tmplist.get(0).getUserName());
+							ssn.setAttribute("dpName",tmplist.get(0).getDpName());
+							ssn.setAttribute("grName",tmplist.get(0).getGrName());
+							ssn.setAttribute("userMail",tmplist.get(0).getUserMail());
+
+
 							//최초로그인(pwIntial(최초기본설정여부)판단 후  ID,cmCode,Admin => Session 저장.)
 							if(tmplist.get(0).getPwInitial().equals("1")) {
-								mav.setViewName("login/main");								
+
+								//mav.setViewName("login/main");								
 							} else {
 								ssn.setAttribute("cmName",tmplist.get(0).getCmName());
 								ssn.setAttribute("userName",tmplist.get(0).getUserName());
@@ -103,18 +123,39 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userName", tmplist.get(0).getUserName());
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
+							ssn.setAttribute("userName",tmplist.get(0).getUserName());
+							DocumentBean db = new DocumentBean();
+							
+							mav.addObject("waitChart", this.waitApprovalChart(db));
+							mav.addObject("docList", this.waitApprovalList(db));
+							mav.addObject("docList2", this.apIngList(db));
+							//결제대기함의 수를 addObject해줌.
+						
+
+							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
+
+							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 추후에 세션을 리스트에 담아 뿌리기
+
 
 							ssn.setAttribute("apCheck", tmplist.get(0).getDpCode());
 
 							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
-							ab.setUserId((String)ssn.getAttribute("userId"));
 
+							ab.setUserId((String)ssn.getAttribute("userId"));
+							
+							
+						
+							
+							
+							
+							mav.setViewName("login/main");						
+						
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
 				}else {
-					System.out.println("로그인실패! 띠용!");
+					System.out.println("로그인실패! 띠용~!");
 					message = "아이디 비밀번호를 확인해주세요.";
 					mav.setViewName("login/home");
 				}
@@ -125,13 +166,58 @@ public class Authentication implements AuthentInter {
 		}
 		return mav;
 	}
+	//결제대기함의 문서수 차트에 담음
+	public int waitApprovalChart(DocumentBean db) {	
+		List <DocumentBean> docList;	
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		docList=sqlSession.selectList("waitApproval",db);		
+		int size = docList.size();
+		
+		return size;
+	}
+	//결제대기함의 문서들 최근꺼부터 5개만 메인에 표시
+	public List<DocumentBean> waitApprovalList(DocumentBean db) {	
+		List <DocumentBean> docList;	
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		docList=sqlSession.selectList("waitApproval",db);		
 
-	public ModelAndView mLogOut(HttpServletRequest req, AccessBean ab) {
+		
+		return docList;
+	}
+	
+	
+	
+	//결제진행함의 문서들 최근꺼부터 5개만 메인에 표시
+	public List<DocumentBean> apIngList(DocumentBean db) {	
+		List <DocumentBean> docList;	
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		docList=sqlSession.selectList("approvalProcced",db);		
+
+		
+		return docList;
+	}
+	
+	
+	
+	
+	
+	
+
+	public ModelAndView mLogOut(HttpServletRequest req, @ModelAttribute AccessBean ab) {
 		mav = new ModelAndView();
 		String message="";
-		
-		
-		
 		try {
 			if(ssn.getAttribute("userId")!=null) {
 				ab.setPwInitial((String)ssn.getAttribute("pwInitial"));
@@ -139,7 +225,14 @@ public class Authentication implements AuthentInter {
 				ab.setCmCode((String)ssn.getAttribute("cmCode"));
 				ab.setBrowser(this.getBrowserInfo(req, "others"));
 				ab.setPrivateIp(req.getRemoteAddr());
+				//ab.setPwinitial(ssn.getAttribute("pwIntial"));	
+				ab.setUserId((String)ssn.getAttribute("userId"));
+				ab.setPwInitial((String)ssn.getAttribute("pwInitial"));
+				ab.setCmCode((String)ssn.getAttribute("cmCode"));
 				sqlSession.insert("updateUserLogOut",ab);
+
+				System.out.println("로그아웃");
+
 			}else {
 				message="이미 로그아웃 하셨습니다";
 				mav.addObject("message",message);
@@ -211,11 +304,17 @@ public class Authentication implements AuthentInter {
 
 			e.printStackTrace();
 		}
-
 		//수정한 값들, 메일과 비번이 null이면 ""으로 수정해주는 메소드
 		this.handleNullValues(ub);
-		
-		if(this.convertToBoolean(sqlSession.update("updateNewInfo", ub))) {				
+
+
+		if(this.convertToBoolean(sqlSession.update("updateNewInfo", ub))) {
+			try {
+				ssn.setAttribute("pwIntialCheck", "1");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
 			mav.setViewName("login/main");		
 		}else {
 
@@ -239,19 +338,20 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mCallFindPwd(@ModelAttribute UserBean ub) {
 		mav = new ModelAndView();		
 		String message="";
-		
+
 		int info;	
 		info=sqlSession.selectOne("findInfo",ub);
 
 		// 1이면 이메일&아이디가 일치하는게 있다. 0이면 일치하는게 없다
 		if(this.convertToBoolean(info)){
-		
+
+			//home.jsp에 넘겨줌.
 			message="입력하신 이메일로 인증페이지를 전송했습니다.";
-			
+
 			mav.addObject("message",message);
 			this.mFindPwdMailForm(ub);
 			mav.setViewName("login/home");
-		
+
 		}else { 
 			message="아이디 혹은 이메일과 일치하는 정보가 없습니다.";
 			mav.setViewName("redirect:/");
@@ -262,27 +362,35 @@ public class Authentication implements AuthentInter {
 	}
 	//메일을 정상적으로 받고 사용자에게 제공되는 비밀번호 바꾸는 페이지에서 컨펌을 누르면 비밀번호 체인지~
 	public ModelAndView mConfirmPwd(UserBean ub)  {
+		String message="비밀번호가 성공적으로 변겅되었습니다.";
+
 		ModelAndView mav = new ModelAndView();
+
 		//비빌번호 바꾸기 MM테이블에 접근에서 일치하는 아이디의 비밀번호를 사용자가 입력한번호로 바꿔준다
-		System.out.println(enc.encode(ub.getUserPwd()));	
+
+		ub.setUserPwd(enc.encode(ub.getUserPwd()));
+		ub.setUserId(ub.getUserId());
+
 		sqlSession.update("changePwd",ub);	
+		mav.addObject("message",message);
 		mav.setViewName("login/home");
+
 		return mav;
 	}
-	
+
 	public void mFindPwdMailForm(UserBean ub) {
 		MailForm mf = new MailForm();
 
 		//이따가  to에 ub.usermail 저장하기
-		mf.setTo("glassrain00@gmail.com");
-		mf.setFrom("telecaster0naver.com");
-		
+		System.out.println(ub.getUserMail());
+		mf.setTo(ub.getUserMail());
+		mf.setFrom("telecaster0@naver.com");		
 		mf.setSubject("사인히어 비밀번호 찾기");
-		mf.setContents("비밀번호 바꾸는 링크 페이지");
+		mf.setContents("<a href='http://localhost/confirmPwd'>비빌번호 변경 </a>");
 		this.mFindPwdMailSend(mf, ub);
-		
+
 	}
-	
+
 	public void mFindPwdMailSend(MailForm mf,UserBean ub) {
 		MimeMessage mail = javaMail.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mail,"UTF-8");	
@@ -294,17 +402,35 @@ public class Authentication implements AuthentInter {
 			javaMail.send(mail);
 		} catch (MessagingException e) {
 			e.printStackTrace();	}
-	
+
 	}
 
+	//내정보 들어갔을때 비번2차인증페이지에서 확인 버튼 눌렀을때.!
 	public ModelAndView mMyInfoConfirm(UserBean ub) {
 		mav = new ModelAndView();
+		String pwdCheck;
+		String message="비밀번호가 일치하지 않습니다.";
 
-		mav.setViewName("myInfo");
-		//mav.setViewName("redirect:/");
+
+		//비번확인하고  직접적 내 정보를 수정하는 페이지로 고	
+		pwdCheck = sqlSession.selectOne("checkPwd",ub);
+		System.out.println(ub.getUserId());
+		System.out.println(ub.getUserPwd());
+
+		if(enc.matches(ub.getUserPwd(), pwdCheck)) {
+			mav.setViewName("login/myInfo");
+
+		}else {
+			mav.addObject("message",message);
+			mav.addObject("redirect:/");
+
+		}
 
 		return mav;
 	}
+
+
+
 
 	public ModelAndView mMyInfoDup(UserBean ub) {
 		mav = new ModelAndView();
@@ -341,9 +467,7 @@ public class Authentication implements AuthentInter {
 
 	public List<DocumentBean> mAlarm(DocumentBean db) {
 		List<DocumentBean> docList;
-
 		docList = null;
-
 		return docList;
 	}
 
@@ -369,19 +493,38 @@ public class Authentication implements AuthentInter {
 		return result==1 ? true: false;  
 	}
 
-	public String mHome() {
-		String page= "login/home";
-
+	public ModelAndView mHome(@ModelAttribute UserBean ub) {
+		DocumentBean db = new DocumentBean();
+		ModelAndView mav =new ModelAndView();
+		mav.setViewName("login/home");
 		try {
-
-			if(ssn.getAttribute("userId") != null) {
-				page = "login/main";
-			}
+			if(ssn.getAttribute("userId") != null) {	
+			mav.addObject("waitChart", this.waitApprovalChart(db));
+			mav.addObject("docList", this.waitApprovalList(db));
+			mav.addObject("docList2", this.apIngList(db));
+			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
+			//로그인한 상태에서 main으로 가면 자꾸 newInfo로감.. 심지어 pwInitial은 1로 잘 나옴	
+				
+			//equals가 실제값으로 비교하는거. ==하면 참조변수끼리 비교..
+	
+			
+			if(((String)ssn.getAttribute("pwInitial")).equals("1") || 				
+					((String)ssn.getAttribute("pwIntialCheck")).equals("1")) {
+				
+		
+				mav.setViewName("login/main");
+		
+	
+				System.out.println(ssn.getAttribute("pwInitial")+"메인으로타야지");
+			}else{			
+				System.out.println("여기라고? ");
+				mav.setViewName("login/newInfo");
+			} 		
+		}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return page;
+		return mav;
 	}
 
 	protected String getBrowserInfo(HttpServletRequest req, String browser) {

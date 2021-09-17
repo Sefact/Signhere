@@ -46,6 +46,7 @@ public class ListController implements DocumentInter {
 		// 항목들 get해서 myDraft 페이지로 이동
 		//page 이동
 		mav.setViewName("document/myDraft");
+	
 		
 		//DocumentBean을 List에 생성?
 		List<DocumentBean> docList;
@@ -107,9 +108,10 @@ public class ListController implements DocumentInter {
   	//결제대기함
 	@PostMapping("/apToDoList")
 	public ModelAndView apToDoList(DocumentBean db) {
-		mav = new ModelAndView();		
+		ModelAndView mav = new ModelAndView();
 		
 		mav.setViewName("document/waitApproval");
+	
 		
 		List <DocumentBean> docList;
 		
@@ -125,6 +127,7 @@ public class ListController implements DocumentInter {
 		
 		//APPROVAL_ID=로그인 한 아이디 =>'202103003' / xml에서 where절에 입력.
 		mav.addObject("docList",docList);
+	
 		
 		
 		return mav;

@@ -17,7 +17,7 @@
 	</insert>
 	
 	<select id="getLogInInfo" parameterType="AccessBean" resultType="AccessBean"> 
-		SELECT MM.ID AS userId, 
+	   SELECT MM.ID AS userId, 
        MM.PW AS userPwd, 
        MM.NAME AS userName,
        MM.PWINITIAL as pwInitial, 
@@ -25,6 +25,7 @@
        CM.COMPANY_NAME AS cmName,
        GR.GRADE_NAME AS grName,
        DP.DEPARTMENT_NAME AS dpName,
+       MM.MAIL AS userMail,
        DP.DEPARTMENT_CODE AS dpCode,
        MM.ADMIN as admin      
        FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
@@ -53,6 +54,12 @@
 			UPDATE MM SET PW=#{userPwd} WHERE ID=#{userId}
 	
 		</update>
+		
+		<update id="changePwdd" parameterType="AccessBean">
+	
+			UPDATE MM SET PW=#{userPwd} WHERE ID=#{userId}
+	
+		</update>
 	
 	<select id="findInfo" parameterType="userBean" resultType="int">
 		SELECT COUNT(*) 
@@ -76,5 +83,12 @@
 	
 	<select id="searchOrgMember" parameterType="userBean" resultType="userBean">
 		SELECT NAME AS "userName" FROM MM WHERE NAME LIKE '%'|| #{message} ||'%' AND COMPANY_CODE = #{cmCode}
+	</select>
+
+	<select id="checkPwd" parameterType="userBean" resultType="String">
+		SELECT PW
+		FROM MM 
+		WHERE ID=#{userId}
+	
 	</select>
 </mapper>

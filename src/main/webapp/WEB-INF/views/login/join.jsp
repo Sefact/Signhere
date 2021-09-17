@@ -42,11 +42,13 @@
         </div>
        <div id="pwdMsg"></div>
         <div class="form-group">
-            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호 확인" onBlur="pwdConfirm()">
+            <input type="password" class="form-control" name="userPwd2" placeholder="비밀번호 확인" onBlur="pwdConfirm()">
         </div>
          <div id="pwdMsg2"></div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userMail" placeholder="이메일" required="required">
+            <input type="text" class="form-control" name="userMail" placeholder="이메일" onBlur="mailValidate()" > 
+             <input id="dupBtnMail" type="button" value="중복체크" onClick="dupUserMailCheck()" />
+             <div id="dupBtnUserMail2"></div>
         </div>       
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="requestSignUp()">확인</button>
