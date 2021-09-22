@@ -22,11 +22,14 @@
 </head>
 <script type="text/javascript"> 
 
-
-window.onbeforeunload = function () {
-	return '메세지 내용';
-};
-
+function test2(){
+	
+	var list = document.getElementsByTag("li");
+	alert(list);
+	console.log(list);
+	
+	
+}
 
 
 </script>

@@ -139,7 +139,7 @@ public class Authentication implements AuthentInter {
 
 							ssn.setAttribute("apCheck", tmplist.get(0).getDpCode());
 
-							// 1)ab userId를 세션 저장. 2)db dmWriteId를 세션 저장. 3)
+						
 
 							ab.setUserId((String)ssn.getAttribute("userId"));
 							

@@ -34,7 +34,7 @@
             <li class="active"><a id="approvalModal" href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav nav-sidebar"> 
-            <li ><a onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
+            <li id="sent"><a onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
             <li><a onclick="myEnforceMent();">내가보낸 시행문</a></li>
           </ul>
           <ul class="nav nav-sidebar">
@@ -56,6 +56,7 @@
         </div>
       </div>
     </div>
+  
     
 	<!-- modal -->
 	<div id="dummyModal" role="dialog" class="modal fade">
