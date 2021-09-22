@@ -7,7 +7,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.signhere.beans.DocumentBean;
 
 public interface DocumentInter {
- 
 	public ModelAndView myDraft(DocumentBean db); 
 	public ModelAndView myEnforceMent(DocumentBean db); 
 	public ModelAndView apToDoList(DocumentBean db);
@@ -19,6 +18,4 @@ public interface DocumentInter {
 	public ModelAndView receiveList(DocumentBean db);
 	public ModelAndView myList(DocumentBean db);
 	public List<DocumentBean> searchText(@RequestBody DocumentBean db);
-
-	
 }
