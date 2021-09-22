@@ -1,8 +1,12 @@
 package com.signhere.services;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +14,7 @@ import java.util.Map;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
@@ -23,8 +28,10 @@ public class Document {
 	ModelAndView mav;
 	@Autowired
 	Session ssn;
-
-
+	
+	private String uploadPath = "C:\\Company\\Document\\";
+	private String signPath = "C:\\Company\\Signature\\";
+	
 	public List<DocumentBean> mSearchText(DocumentBean db){
 
 		//여기서 sessino에 들어간 cmCode 저장
@@ -126,6 +133,7 @@ public class Document {
 		mav = new ModelAndView();
 		
 		List<DocumentBean> tempList = null;
+		String dmCodeCheck = null;
 		
 		List<Map<String, Object>> aplMap = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> docMap = new ArrayList<Map<String, Object>>();
@@ -160,8 +168,10 @@ public class Document {
 
 			sqlSession.insert("insTemporary", db);
 			tempList = sqlSession.selectList("selTemporary", db);
+			dmCodeCheck = sqlSession.selectOne("selDmCode", db);
 
 			ssn.setAttribute("tempList", tempList);
+			ssn.setAttribute("dmCheck", dmCodeCheck);
 			ssn.setAttribute("docBean", db);
 			ssn.setAttribute("aplMap", aplMap);
 			ssn.setAttribute("docMap", docMap);
@@ -221,6 +231,62 @@ public class Document {
 
 		return docList;
 	}
+	
+	public boolean uploadFile(MultipartFile[] uploadFiles) throws IOException {
+		Map<String, Object> fileMap = new HashMap<String, Object>();
+		
+		for (MultipartFile multipartFile : uploadFiles) {
+			try {
+				//String fileName = "" + generateFileName(multipartFile);
+				String fileName = multipartFile.getOriginalFilename();
+				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
+				File tmp = new File(uploadPath + fileName);
+
+				fileMap.put("fileName", fileName);
+				fileMap.put("fileSize", multipartFile.getSize());
+				multipartFile.transferTo(tmp);
+				ssn.setAttribute("fileLoc", fileLoc);
+				System.out.println(ssn.getAttribute("fileLoc"));
+				// sqlSession.insertFiles(fileMap);
+			} catch (Exception e) {
+				System.out.println("Error");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	public boolean uploadSign(MultipartFile[] uploadSigns) throws IOException {
+		Map<String, Object> signMap = new HashMap<String, Object>();
+		
+		System.out.println(uploadSigns);
+		
+		for (MultipartFile multipartFile : uploadSigns) {
+			try {
+				//String fileName = "" + generateFileName(multipartFile);
+				String fileName = ssn.getAttribute("userId") + ".png";
+				File tmp = new File(signPath + fileName);
+
+				signMap.put("fileName", fileName);
+				signMap.put("fileSize", multipartFile.getSize());
+				System.out.println(signMap);
+				multipartFile.transferTo(tmp);
+			} catch (Exception e) {
+				System.out.println("Error");
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private String generateFileName(MultipartFile multipartFile) {
+        Calendar cal=Calendar.getInstance();
+        Date date=cal.getTime();
+        String fileName=new SimpleDateFormat("yyyyMMdd").format(date)+"_"+multipartFile.getOriginalFilename();
+        return fileName;
+    }
 	
 	public List<DocumentBean> mTempRemove(DocumentBean db) {
 		List<DocumentBean> docList = null;

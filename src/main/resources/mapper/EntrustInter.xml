@@ -34,4 +34,7 @@
 	<delete id="delEntrust">
 		DELETE FROM ENTRUST WHERE ENTRUST_NUM = #{etNum}
 	</delete>
+	<delete id="delTemporaryEnt">
+		DELETE FROM TEMPORARYLIST WHERE DOCUMENT_NUM = #{senderId}
+	</delete>
 </mapper>
