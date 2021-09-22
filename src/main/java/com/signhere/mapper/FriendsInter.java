@@ -5,4 +5,5 @@ import com.signhere.beans.UserBean;
 
 public interface FriendsInter {
 	public ModelAndView insUser(UserBean ub); 
+	
 }

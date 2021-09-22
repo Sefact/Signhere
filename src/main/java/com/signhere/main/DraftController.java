@@ -3,11 +3,17 @@ package com.signhere.main;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.services.Document;
@@ -17,8 +23,9 @@ public class DraftController {
 	@Autowired
 	private Document doc;
 	private ModelAndView mav;
-
+	
 	@PostMapping("/writeDraft")
+	@ResponseBody
 	public List<UserBean> writeDraft(@RequestBody List<UserBean> ulist) {
 		ulist = doc.mWriteDraft(ulist.get(0));
 		
@@ -26,10 +33,21 @@ public class DraftController {
 	}
 	
 	@PostMapping("/confirmDraft")
-	public ModelAndView confirmDraft(DocumentBean db) {
-		mav = doc.mConfirmDraft(db);
+	@ResponseBody
+	public ModelAndView confirmDraft(@RequestBody List<DocumentBean> db) {
+		mav = new ModelAndView();
+		
+		mav = doc.mConfirmDraft(db.get(0));
+		
+		mav.setViewName("jsonView");
 		
 		return mav;
+	}
+	
+	@RequestMapping("/draftMove")
+	public String draftMove() {
+		
+		return "draft/draft";
 	}
 	
 	@PostMapping("/modifyDraft")

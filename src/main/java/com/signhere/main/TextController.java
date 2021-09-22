@@ -65,7 +65,6 @@ public class TextController {
 		
 		return mav;
 	}
-	
 	@PostMapping("/viewDrafter")
 	public List<UserBean> viewDrafter(@RequestBody List<UserBean> ulist) {
 		List<UserBean> userList;
