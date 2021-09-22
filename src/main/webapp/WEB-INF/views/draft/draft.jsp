@@ -22,6 +22,18 @@
 	<!-- Signature Library -->
 	<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 </head>
+<script type="text/javascript"> 
+
+
+window.onbeforeunload = function () {
+	return '메세지 내용';
+};
+
+
+
+</script>
+
+
 <body>
 	<jsp:include page="../utils/navigation.jsp" />
 	
@@ -808,4 +820,5 @@
 	}); */
 	</script>
 </body>
+
 </html>

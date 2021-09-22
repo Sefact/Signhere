@@ -98,18 +98,6 @@
         		INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
         		WHERE DM.APPROVAL_CODE = 'C' AND AL.APPROVAL_ID = #{apId}
 	</select>
-	  
-	<select id="compaionApproval" parameterType="DocumentBean" resultType="DocumentBean">
-				SELECT DM.DOCUMENT_NUM AS "dmNum",
-        	           DM.DOCUMENT_TITLE AS "dmTitle",
-        			   DS.DOCUMENT_TITLE AS "dmCode",
-                       MM.NAME AS "dmWriter",
-                       DOCUMENT_DATE AS "dmDate"
-                       FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
-                       INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
-                       INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
-                       WHERE DM.APPROVAL_CODE = 'R' AND AL.APPROVAL_ID = #{apId}
-	</select>
 	  		
 	<select id="deferList" parameterType="DocumentBean" resultType="DocumentBean">
 				SELECT  DM.DOCUMENT_NUM AS "dmNum",
@@ -123,19 +111,18 @@
         				WHERE DM.APPROVAL_CODE = 'D' AND AL.APPROVAL_ID = #{apId}
 	</select>
         
-	<select id="referenceApproval" parameterType="DocumentBean" resultType="DocumentBean">
-			SELECT
-        			DM.DOCUMENT_NUM AS "dmNum",
-        			DM.DOCUMENT_TITLE AS "dmTitle",
-        			DS.DOCUMENT_TITLE AS "dmCode",
-        			MM.NAME AS "dmWriter",
-        			DOCUMENT_DATE AS "dmDate"
-        			FROM DM 
-        			INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
-        			INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
-        			INNER JOIN RF ON DM.DOCUMENT_NUM=RF.DOCUMENT_NUM
-        			INNER JOIN RD ON DM.DOCUMENT_NUM=RD.DOCUMENT_NUM
-        			WHERE RF.REFERENCE_ID=#{refpId} OR RD.READER_ID=#{readingId}    	
+  <select id="referenceApproval" parameterType="DocumentBean" resultType="DocumentBean">
+        SELECT  DM.DOCUMENT_NUM AS "dmNum",
+        			  DM.DOCUMENT_TITLE AS "dmTitle",
+        			  DS.DOCUMENT_TITLE AS "dmCode",
+        			  MM.NAME AS "dmWriter",
+        			  DOCUMENT_DATE AS "dmDate"
+        			  FROM DM 
+        			  INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        			  INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        			  INNER JOIN RF ON DM.DOCUMENT_NUM=RF.DOCUMENT_NUM
+        			  INNER JOIN RD ON DM.DOCUMENT_NUM=RD.DOCUMENT_NUM
+        			  WHERE RF.REFERENCE_ID=#{refpId} OR RD.READER_ID=#{readingId}    	
 	</select>
         	
 	<insert id="insTemporary" parameterType="DocumentBean">
@@ -158,7 +145,3 @@
 		DELETE FROM TEMPORARYLIST WHERE DOCUMENT_NUM = #{dmNum}
 	</delete>
 </mapper>
-
-
-	
-	

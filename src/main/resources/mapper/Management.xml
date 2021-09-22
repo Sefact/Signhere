@@ -22,6 +22,13 @@
 		WHERE DM.COMPANY_CODE=#{cmCode} AND DM.APPROVAL_CODE='C' ORDER BY DM.document_date DESC
 	</select>
 	
+	
+	<select id="mailDupCheck" parameterType="UserBean" resultType="int">
+		SELECT COUNT(*)
+		FROM MM
+		WHERE MAIL=#{userMail}		
+	</select>
+	
 	<select id="cmCodeDupCheck" parameterType="CompanyBean" resultType="int">
 		SELECT COUNT(*)
 		FROM CM

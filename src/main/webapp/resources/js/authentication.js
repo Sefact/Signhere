@@ -28,8 +28,6 @@ fetch(action,{
 }
 
 
-
-
 function sendUserInfo() {
 	const userId = document.getElementsByName("userId")[0];
 	const userPwd = document.getElementsByName("userPwd")[0];
@@ -40,7 +38,7 @@ function sendUserInfo() {
 	form.appendChild(userPwd);
 	
 	document.body.appendChild(form);
-	
+
 	form.submit();
 }
 
@@ -132,6 +130,33 @@ function logOut(){
 	
 	let form = makeForm("logOut","get");
 	
+	document.body.appendChild(form);
+	
+	form.submit();
+}
+
+
+function myInfoAccess(){
+	
+	let form = makeForm("myInfoAccess","post");
+	
+	document.body.appendChild(form);
+	
+	form.submit();
+}
+
+
+
+function myInfo(){
+	
+	let userId = document.getElementsByName("userId")[0];
+	let userPwd = document.getElementsByName("userPwd")[0];
+	
+	let form = makeForm("myInfoConfirm","post");
+	
+	form.appendChild(userId);
+	form.appendChild(userPwd);
+		
 	document.body.appendChild(form);
 	
 	form.submit();
@@ -251,9 +276,55 @@ function dupUserIdCheckBlur(){
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
 
+//이메일 중복체크
+function dupUserMailCheck(){
+	
+	let userMail = document.getElementsByName("userMail")[0];
+	
+	let jsonData={userMail:userMail.value};
+			fetchAjax('/mailDup','post',jsonData,dupUserMailCheck2);
+	}
+	
+//innerHTML. 아이디 중복체크하여 이상없을시 input type을 readOnly로 바꿔줌. 사용가능 alert창 띄워 줌.
+function dupUserMailCheck2(jsonData){
+	jsonData = JSON.parse(jsonData);
+	
+	let dupBtnUserMail2 = document.getElementById("dupBtnUserMail2");
+	let userMail = document.getElementsByName("userMail")[0];
+
+	if(jsonData.message=="사용가능"){
+	userMail.setAttribute("readOnly",true);
+
+	dupBtnUserMail2.innerHTML="<input type='button' value='재입력' onClick='reDupUserMailCheck()'>";
+
+	alert("사용가능한 메일입니다.");
+	 }
+	   else
+		{
+			alert("이미 존재하는 메일입니다");
+			userMail.value="";
+			userMail.focus();
+}
+}
+//메일 재입력 button
+function reDupUserMailCheck(){
+	let userMail = document.getElementsByName("userMail")[0];
+	userMail.readOnly=false;
+	userMail.value="";
+	userMail.focus();
+}
 
 
+function mailValidate(){
+	
+	let userMail = document.getElementsByName("userMail")[0].value;
 
+	
+	//구체적인  유효성 조건은 나중에 다시 정리하겠습니다..
+	if(userMail.indexOf('@')<0){		
+		alert("이메일을 입력해주세요.");		
+	}
+}
 
 //아이디중복체크. 유효성 = 영문으로 시작 12자 이상//
 function dupUserIdCheck(){
@@ -300,7 +371,6 @@ function dupUserIdCheck2(jsonData){
 			userId.focus();
 }
 }
-
 //아이디 재입력 button
 function reDupUserIdCheck(){
 	let userId = document.getElementsByName("userId")[0];
@@ -335,21 +405,67 @@ function pwdValidate(obj){
 function pwdConfirm(){
 	let pwdMsg2=document.getElementById("pwdMsg2");
 	let userPwd=document.getElementsByName("userPwd");
-	if(!(userPwd[0].value==userPwd[1].value)){
+	let userPwd2=document.getElementsByName("userPwd2");
+	if(!(userPwd[0].value==userPwd2[0].value)){
 		pwdMsg2.innerHTML="<span style='font-size:1.3em; color: red;'>비밀번호가 일치하지 않습니다. </span>";
-		userPwd[1].value="";
-		userPwd[1].focus();	
+		userPwd2[0].value="";
+		userPwd2[0].focus();	
 	}else{
 		pwdMsg2.innerText="비밀번호가 맞... 습ㄴ..니다";	
 	}	
 }
+
+
+
+//직원추가 아이디 유효성체크
+function userIdNewCheck(obj){
+	
+	if(!isValidateCheck(1,obj.value)){
+		alert("ID는 영소 문자로 시작하여 영소 문자+숫자 포함 12자 이하 여야 합니다. ");
+		
+	}
+}
+
+//fetchAjax(action,method,data,afterfunction)
+//직원추가 아이디 중복체크
+function userIdNewDupCheck(){
+	
+	const userId=document.getElementsByName("userIdNew")[0];
+	
+	data={userId:userId.value};
+	
+fetchAjax('/employeeDup','post',data,userIdNewDupCheck2);
+
+}
+
+function userIdNewDupCheck2(data){
+	data = JSON.parse(data);
+	
+	const userId=document.getElementsByName("userIdNew")[0];
+	
+	if(data.message=="사용불가"){
+		alert("이미 존재하는 ID입니다.")
+		userId.value="";
+		userid.focus();
+	;
+	}
+	
+}
+
+
+
+
+
+
+
+
 
 //이름 글자수 유효성체크
 function nameCheck(obj){
 	
 	if(charCount(obj.value,2,5)){
 		if(!krCheck(obj.value))	{			
-			alert("한글쓰셈");		
+			alert("한글로 입력해주세요.");		
 		}
 	}else{
 		alert("이름은 2-5글자로 입력해주세요");
@@ -381,10 +497,26 @@ function confirmPassword(message){
 
 //confirmPwd.jsp에서 비밀번호 변경을 하는 function. (button)
 function reConfirmPassword(message){
-
-	let all = document.getElementsByName("all");	
-	all.submit();
+	let userId=document.getElementsByName("userId")[0];
+	let userPwd=document.getElementsByName("userPwd")[0];
 	
+	let form = makeForm("callConfirmPwd","post");
+	
+	form.appendChild(userId);
+	form.appendChild(userPwd);
+	
+	document.body.appendChild(form);
+	
+	form.submit();
 	alert(message);
+}
+
+
+function cancelPassword(){
+	
+	let form = makeForm("login","get");
+	form.appendChild
+	form.submit();
+	
 }
 
