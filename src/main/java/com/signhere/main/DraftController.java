@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -110,18 +111,19 @@ public class DraftController {
 		return base64Image;
 	}
 	
-	@PostMapping("/upLoadDocFiles")
+	@PostMapping(value="/upLoadDocFiles", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseBody
-	public String upLoadDocFiles(@RequestParam MultipartFile[] fileList) {
+	public String upLoadDocFiles(@RequestParam("fileList") MultipartFile fileList,
+			@RequestParam("apComment") String apComment, @RequestParam("signature") String signature) {
 		
-		System.out.println(fileList.toString());
+		MultipartFile item = fileList;
 		
-		for(MultipartFile mf: fileList) {
-			String ogFileName = mf.getOriginalFilename();
-			System.out.println("파일이름"+ ogFileName);
-		}
+		System.out.println("파일"+ item.getName());
+		System.out.println(apComment);
+		System.out.println(signature);
 		
-		return null;
+		
+		return "1";
 	}
 	
 }

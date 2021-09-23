@@ -1,5 +1,7 @@
 package com.signhere.beans;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -11,4 +13,7 @@ public class ApprovalBean {
 	private String aplLocation;
 	private String aplReceiverId;
 	private String aplReceiver;
+	private MultipartFile fileList;
+	private String apComment;
+	private String signature;
 }

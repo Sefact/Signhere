@@ -34,8 +34,7 @@ public class DocumentBean {
 	private String[] dmNumArr;
 	private List<ApprovalBean> aplBean;
 	private List<ReadingReferenceBean> rfBean;
-	private String[] signiture;
 	private String[] filePath;
 	//springframework multipartFile
-	private MultipartFile fileList;
+	
 }

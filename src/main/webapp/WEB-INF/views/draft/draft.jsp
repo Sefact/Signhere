@@ -72,11 +72,11 @@
 			</div>
 			
 			<div class="form-row" >
-			<form name ="fileList" enctype="multipart/form-data" action="/upLoadDocFiles" method="post">
-				<div class="form-group col-md-12">
-					<input type="file"  name="file" id="upLoadedFile"  onChange="setThumbnail(event)" multiple="multiple" />				
+				<div class="form-group col-md-12 fileBox">
+					<label for ="file">파일업로드</label>
+					<button value="" onClick="addFile()">추가</button>
+								
 				</div>
-			</form>
 			</div>
 			<div class="form-row">
 				<div id="image_container"></div>
@@ -103,7 +103,7 @@
 				<button id="clear">지우기</button>
 				<button id="confirm">확인</button> -->
 				
-	<!-- add Department modal -->
+	<!-- approval comment modal -->
 	<div id="apCommentModal" role="dialog" class="modal fade">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -121,6 +121,28 @@
         </div>
       </div>
     </div>
+    
+    <!-- add Department modal -->
+	<div id="apSignatureModal" role="dialog" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" data-dismiss="modal" class="close">&times;</button>
+            <h4 class="modal-title">SignHere</h4>
+          </div>
+          <div class="modal-body">
+         	<canvas style="border: 1px solid black; width:200px; height:200px;" id="inputCanvas">
+				</canvas>
+				<button id="clear">지우기</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="confirm" data-dismiss="modal" class="btn btn primary">확인</button>
+            <button type="button" data-dismiss="modal" class="btn btn-default">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
 </body>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 <script src="/resources/js/document/myDraft.js"></script>  

@@ -18,10 +18,14 @@
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
+	<!-- websocket -->
+	<script src="/resources/js/index.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 </head>
 <body>
 	<!-- fix -->
 	<jsp:include page="../utils/navigation.jsp" />
 	<jsp:include page="../utils/chart.jsp" />
+	<button id="notifySendBtn">웹소켓 테스트</button>
 </body>
 </html>

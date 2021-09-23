@@ -43,6 +43,66 @@ function makeForm(action, method, name = null) {
 	return form;
 }
 
+
+
+function addFile(){
+	let fileNum = document.querySelectorAll(".fileInputBox").length;
+	
+	if(fileNum<3){
+		console.log("왜또안와");
+	
+	let fileBox = document.querySelector(".fileBox");
+	
+	let fileInputBox = document.createElement("input");
+	
+	fileInputBox.type="file";
+	fileInputBox.style.display="none";
+	fileInputBox.name="file";
+	
+	fileInputBox.classList.add("fileInputBox");
+
+	console.log(fileNum);
+	
+	fileInputBox.classList.add("fileBox"+ fileNum);
+	
+	console.log(fileBox);
+	console.dir(fileBox);
+	
+	fileBox.appendChild(fileInputBox);
+	
+	fileInputBox.click();
+	
+	fileInputBox.addEventListener('change',setThumbnail = (e) =>{
+		
+	for(var image of event.target.files){
+	
+	var reader = new FileReader();
+	
+	
+	reader.onload = function (event){
+		var img = document.createElement("img");
+		img.setAttribute("src",event.target.result);
+		img.width="200px";
+		img.height="200px"
+		document.querySelector("div#image_container").appendChild(img);
+	
+		
+	};
+	
+	console.log(image);
+	reader.readAsDataURL(image);
+	
+	}
+	})
+	
+	}else{
+		alert("최대 3개까지만 추가 가능합니다");
+	}
+}
+
+
+
+/*
 function setThumbnail(event){
 	//파일삭제기능 고려해야 함..
 	for(var image of event.target.files){
@@ -65,11 +125,10 @@ function setThumbnail(event){
 	
 	}
 }
+*/
 
 function saveDocFiles(){
-	let fileList = document.getElementsByName("fileList")[0];
-	
-	fileList.submit();	
+	$('#apCommentModal').modal('show');
 
 }
 
@@ -77,12 +136,13 @@ function showSignatureModal(){
 	$('#apSignatureModal').modal('show');
 }
 
-function requestDraft(){
-	
+function handleSignature(){
+	alert("문서 기안완료!");
 }
 
-let canvas = document.querySelector("#iputCanvas");
+let canvas = document.querySelector("#inputCanvas");
 let signaturePad = new SignaturePad(canvas);
+signaturePad.clear();
 //let readCanvas = document.queryselector("#readCanvas");
 //let readPad = new SignaturePad(readCanvas);
 
@@ -113,9 +173,11 @@ signaturePad.toDataURL("image/svg+xml"); // save image as SVG
 // Rebinds all event handlers
 //signaturePad.on();
 
+
 // Clears the canvas
 document.getElementById('clear').addEventListener('click', function () {
-  	signaturePad.clear();
+  	console.log(signaturePad);
+	signaturePad.clear();
 	var ctx = canvas.getContext('2d');
 	ctx.globalCompositeOperation = 'source-over'; 
 });
@@ -125,17 +187,42 @@ document.getElementById('confirm').addEventListener('click', function(){
 	if (signaturePad.isEmpty()) {
     return alert("Please provide a signature first.");
   }
+	//empty formData object. JS FormData API
+	let formData = new FormData();
+
+	let file = document.getElementsByName("file")[0];
+	let apComment = document.getElementsByName("acReason")[0].value;
+
+	//signature file binaryData 
 	const data = signaturePad.toDataURL('image/png');
-	alert(data);
 	
-	let jsonSignature = {signature:data};
+	console.log("폼 API"+formData);
+	console.log("업로드 문서파일"+file);
+	console.log(file.value);
+	console.log("결재의견"+apComment);
+	console.log("사인파일"+data);
 	
-	fetchAjax('/saveSignature','post',jsonSignature, handleSignature);
+	formData.append('fileList', file);
+	formData.append('apComment',apComment);
+	formData.append('signature',data);
+	
+	
+	fetch('upLoadDocFiles',{
+		method:'POST',
+		body: formData,
+	})
+	.then(res => res.json())
+	.then(data => {
+		alert("성공!");
+		console.log(data);
+	})
+	.catch(err => {
+		alert("실패");
+		console.log("Error:" + err);
+	})
+	
 });
 
-function handleSignature(data){
-	alert(data);
-}
 
 function resizeCanvas() {
     var ratio =  Math.max(window.devicePixelRatio || 1, 1);
