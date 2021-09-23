@@ -125,7 +125,6 @@ public class Document {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return mav;
 	}
 
@@ -153,6 +152,7 @@ public class Document {
 			aplMapPut.put("aplId", db.getAplBean().get(i).getAplId());
 			aplMapPut.put("aplName", db.getAplBean().get(i).getAplName());
 			aplMap.add(aplMapPut);
+			
 		}
 		
 		for(int i=apSeqLoc; i<db.getAplBean().size(); i++) {
