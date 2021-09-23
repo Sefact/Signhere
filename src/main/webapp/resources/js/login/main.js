@@ -24,14 +24,7 @@ function myDraft() {
 	}
 	
 	
-	
-function clicktest(data){
-	alert(data);
-	
-	
-	
-}	
-	
+
 
 
 // 내가보낸시행
