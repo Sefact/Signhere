@@ -240,7 +240,14 @@ public class Document {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = multipartFile.getOriginalFilename();
 				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
+				File tmpDir = new File(uploadPath);
 				File tmp = new File(uploadPath + fileName);
+				
+				if(!tmpDir.exists()) {
+					 if(tmpDir.mkdirs()) {
+					 }
+					System.out.println(tmpDir.getPath());
+				}
 
 				fileMap.put("fileName", fileName);
 				fileMap.put("fileSize", multipartFile.getSize());
@@ -266,8 +273,13 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = ssn.getAttribute("userId") + ".png";
+				File tmpDir = new File(signPath);
 				File tmp = new File(signPath + fileName);
-
+				
+				if(!tmpDir.exists()) {
+					tmpDir.mkdirs();
+				}
+				
 				signMap.put("fileName", fileName);
 				signMap.put("fileSize", multipartFile.getSize());
 				System.out.println(signMap);

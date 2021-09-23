@@ -180,7 +180,6 @@ function test2(){
 												<option value="<c:out value="${aplList.aplId}"></c:out>"><c:out value="${aplList.aplName}"></c:out></option>
 										</c:forEach>
 									</select>
-								
 								</div>
 							</div>
 							<div class="form-row">
