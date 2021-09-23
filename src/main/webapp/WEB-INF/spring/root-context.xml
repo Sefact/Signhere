@@ -19,11 +19,11 @@
 		<property name="username" value="${spring.datasource.username}" />
 		<property name="password" value="${spring.datasource.password}" />
 	</bean>
-
+	<!-- mybatis connect -->
 	<bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" >
         <property name="dataSource" ref="dataSource" />
         <property value="classpath:mybatis-config.xml" name="configLocation" />
-        <property value="classpath:/mapper/**/*.xml" name="mapperLocations" />
+        <property value="classpath*:/mapper/*.xml" name="mapperLocations" />
     </bean>
 
 	<mybatis-spring:scan base-package="com.signhere.mapper"/>
