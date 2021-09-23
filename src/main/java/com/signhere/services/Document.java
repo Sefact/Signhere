@@ -240,6 +240,7 @@ public class Document {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = multipartFile.getOriginalFilename();
 				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
+				uploadPath += "//"+(String)ssn.getAttribute("cmCode")+"//";
 				File tmpDir = new File(uploadPath);
 				File tmp = new File(uploadPath + fileName);
 				
@@ -273,6 +274,7 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = ssn.getAttribute("userId") + ".png";
+				signPath += "//"+(String)ssn.getAttribute("cmCode")+"//";
 				File tmpDir = new File(signPath);
 				File tmp = new File(signPath + fileName);
 				
