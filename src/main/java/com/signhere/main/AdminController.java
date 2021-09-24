@@ -47,6 +47,15 @@ public class AdminController {
 	
 
 	
+
+	//새로운 직원 추가시 id 중복 체크  
+	//최초 회원가입시에도 사용.(Authentication.class) join 메소드
+	@PostMapping("/mailDup")
+	@ResponseBody
+	public UserBean mailDup(@RequestBody UserBean ub) {
+		
+		return mag.mailDup(ub);
+	}
 	
 	
 	//새로운 직원 추가시 id 중복 체크  
