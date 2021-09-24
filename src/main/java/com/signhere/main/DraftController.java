@@ -146,6 +146,24 @@ public class DraftController {
 		return new ResponseEntity<>("deleted", HttpStatus.OK);
 	}
 	
+	@PostMapping("/deleteSign")
+	@ResponseBody
+	public ResponseEntity<String> deleteSign(String signName) throws IOException {
+		
+		try {
+			signName = (String) ssn.getAttribute("signLoc");
+			if(new File(signName).delete()) {
+				ssn.removeAttribute("signLoc");
+			} else {
+				System.out.println("Sign Already Delete");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<>("deleted", HttpStatus.OK);
+	}
+	
 	/*
 	 * @PostMapping("/saveSign")
 	 * 
