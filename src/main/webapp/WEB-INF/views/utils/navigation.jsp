@@ -11,7 +11,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Sign Here</a>
+          <a class="navbar-brand" href="/">Sign Here</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-left">
@@ -20,7 +20,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
+            <li><a onClick="myInfoAccess()">My Info</a></li>
             <li><a onClick="logOut()">Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right">
@@ -38,7 +38,7 @@
             <li class="active"><a id="approvalModal" href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
           </ul>
           <ul class="nav nav-sidebar"> 
-            <li><a onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
+            <li id="sent"><a onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
             <li><a onclick="myEnforceMent();">내가보낸 시행문</a></li>
           </ul>
           <ul class="nav nav-sidebar">
@@ -60,6 +60,7 @@
         </div>
       </div>
     </div>
+  
     
 	<!-- Approval modal -->
 	<div id="dummyModal" role="dialog" class="modal fade">
@@ -217,7 +218,6 @@
 					})
 					.done(function(data) {
 						var orgLength = Object.keys(data).length;
-
 						$.each(data, function(index, value) {
 							modalHtml += '<option value=' + value.userId + '>';
 							modalHtml += value.userName;
@@ -297,7 +297,6 @@
 					})
 					.done(function(data) {
 						var orgLength = Object.keys(data).length;
-
 						$.each(data, function(index, value) {
 							otherDPHtml += '<option value=' + value.userId + '>';
 							otherDPHtml += value.userName;
@@ -381,7 +380,6 @@
 					})
 					.done(function(data) {
 						var orgLength = Object.keys(data).length;
-
 						$.each(data, function(index, value) {
 							referenceHtml += '<option value=' + value.userId + '>';
 							referenceHtml += value.userName;
