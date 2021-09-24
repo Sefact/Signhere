@@ -264,21 +264,17 @@ public class Document {
 	public boolean uploadSign(MultipartFile[] uploadSigns) throws IOException {
 		Map<String, Object> signMap = new HashMap<String, Object>();
 		
-		System.out.println(uploadSigns);
-		
 		for (MultipartFile multipartFile : uploadSigns) {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = ssn.getAttribute("userId") + ".png";
-				String signLoc = uploadPath + fileName;
+				String signLoc = signPath + fileName;
 				File tmp = new File(signPath + fileName);
 
 				signMap.put("fileName", fileName);
 				signMap.put("fileSize", multipartFile.getSize());
-				System.out.println(signMap);
 				multipartFile.transferTo(tmp);
 				ssn.setAttribute("signLoc", signLoc);
-				System.out.println(ssn.getAttribute("signLoc"));
 			} catch (Exception e) {
 				System.out.println("Error");
 				return false;
