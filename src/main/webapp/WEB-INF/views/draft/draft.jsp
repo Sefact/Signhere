@@ -39,23 +39,23 @@
 			<div class="form-row">
 				<div class="form-group col-md-12">
 					<label>문서제목</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmTitle}" disabled/>
+					<input type="text" class="form-control" id="dmTitle" value="${sessionScope.docBean.dmTitle}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-6">
 					<label>문서번호</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmNum}" disabled/>
+					<input type="text" class="form-control" id="dmNum" value="${sessionScope.tempList[0].dmNum}" disabled/>
 				</div>
 				<div class="form-group col-md-6">
 					<label>날짜</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmDate}" disabled/>
+					<input type="text" class="form-control" id="dmDate" value="${sessionScope.tempList[0].dmDate}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
 					<label>작성자</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmWriter}" disabled/>
+					<input type="text" class="form-control" id="dmWriter" value="${sessionScope.docBean.dmWriter}" disabled/>
 				</div>
 				<div class="form-group col-md-4">
 					<label>참조자</label>
@@ -66,7 +66,7 @@
 				</div>
 				<div class="form-group col-md-4">
 					<label>문서종류</label>
-					<input type="text" class="form-control" id="" placeholder="${sessionScope.docBean.dmCode}" disabled/>
+					<input type="text" class="form-control" id="dmCode" value="${sessionScope.docBean.dmCode}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
@@ -667,12 +667,6 @@
 			.fail(function(data) {
 				alert("Upload Failed");
 			})
-			
-			/* var acReason = document.getElementById("commentTextArea").value;
-			
-			
-			alert(acReason.value);
-			console.log(acReason); */
 		})
 	});
 	</script>
@@ -698,19 +692,6 @@
 			})
 		});
 	});
-	</script>
-	
-	<script type="text/javascript">
-	    var checkUnload = true;
-	    
-	    $(window).on("beforeunload", function(){
-	        if(checkUnload) return false;
-	    });
-	   
-	    $(document).on("click", "#modifyApproval", function(event){
-	        // disable warning
-	        $(window).off('beforeunload');
-	    });
 	</script>
 	
 	<script type="text/javascript">
@@ -750,7 +731,7 @@
     		        contentType : false,
                     success : function(r){
                         alert("저장완료");
-                        sign.clear();
+                       //sign.clear();
                     },
                     error : function(res){
                         console.log("failed");
@@ -774,38 +755,83 @@
     });
 
     resizeCanvas();
-    
-    /* $('document').ready(function() {
-		$('#saveSign').click(function() {
-			var canvasData = atob(sign.toDataURL('image/png').split(",")[1]);
+	</script>
+	
+	<script type="text/javascript">
+	$('document').ready(function() {
+		$('#requestApproval').click(function() {
+			var dmTitle = document.getElementById("dmTitle").value;
+			var dmNum =document.getElementById("dmNum").value;
+			var dmDate = document.getElementById("dmDate").value;
+			//var dmWriter = document.getElementById("dmWriter").value;
+			var dmCode = document.getElementById("dmCode").value;
+			var acReason = document.getElementById("commentTextArea").value;
 			
-			var array = [];
+			var approvalSize = '${sessionScope.aplMap.size()}';
+			var departmentSize = '${sessionScope.docMap.size()}';
+			var referenceSize = '${sessionScope.refMap.size()}';
 			
-			for (var i=0; i < canvasData.length; i++) {
-		        array.push(canvasData.charCodeAt(i));
-		    }
+			alert(approvalSize + ":" + departmentSize + ":" + referenceSize);
 			
-		    var file = new Blob([new Uint8Array(array)], {type: 'image/png'});	// Blob 생성
-		    var formdata = new FormData();	// formData 생성
-		    formdata.append("file", file);
-		    
-		    console.log(formdata);
-		    
-		    $.ajax({
-		    	type : 'POST',
-		        url : '/saveSign',
-		        data : formdata,
-		        processData : false,
-		        contentType : false
-		    })
-		    .done(function(data) {
+			var aplBean = new Array();
+			var refBean = new Array();
+			
+			<c:forEach items='${sessionScope.aplMap}' var ='aplMap'>
+				aplBean.push({aplId:'${aplMap.aplId}', aplSeq:'${aplMap.aplSeq}'});
+			</c:forEach>
+			
+			<c:forEach items='${sessionScope.docMap}' var ='docMap'>
+				aplBean.push({aplId:'${docMap.aplId}', aplSeq:'${docMap.aplSeq}'});
+			</c:forEach>
+			
+			<c:forEach items='${sessionScope.refMap}' var ='refMap'>
+				refBean.push({rdId:'${refMap.rdId}', rfSeq:'${refMap.rfSeq}'});
+			</c:forEach>
+			
+			/* for(var i=0; i<approvalSize; i++) {
+				aplInit = {'aplSeq':i+1, 'aplId':'${sessionScope.aplMap[i].aplId}'}
+				aplBean.push(aplInit);
+			} */
+			
+			var draftData = [{'dmTitle':dmTitle, 'dmNum':dmNum, 'dmDate':dmDate, 'dmWriter':'${sessionScope.userId}', 'dmCode':dmCode, 'aplComment':acReason, aplBean, refBean}];
+			var draftJson = JSON.stringify(draftData);
+			
+			alert(draftJson);
+			
+			$.ajax({
+				type: 'POST',
+				url : '/requestDraft',
+				data : draftJson,
+				contentType: "application/json;charset=UTF-8",
+				dataType: 'json'
+			})
+			.done(function(data) {
+				location.href = "/myDraft";
 				console.log("Success");
 			})
 			.fail(function(data) {
-				console.log("Failed");
+				console.log("Fail");
 			})
 		})
-	}); */
+	});
+	</script>
+	
+	<script type="text/javascript">
+	    var checkUnload = true;
+	    
+	    $(window).on("beforeunload", function(){
+	        if(checkUnload) return false;
+	    });
+	   
+	    $(document).on("click", "#modifyApproval", function(event){
+	        // disable warning
+	        $(window).off('beforeunload');
+	    });
+	    
+	    /* $(document).on("click", "#requestApproval", function(event){
+	        // disable warning
+	        $(window).off('beforeunload');
+	    }); */
 	</script>
 </body>
 </html>

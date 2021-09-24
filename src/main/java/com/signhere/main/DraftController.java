@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
+import com.signhere.beans.WriteBean;
 import com.signhere.services.Document;
 import com.signhere.utils.Session;
 
@@ -173,5 +174,15 @@ public class DraftController {
 		}
 		
 		return result;
+	}
+	
+	@PostMapping("/requestDraft")
+	@ResponseBody
+	public List<WriteBean> requestDraft(@RequestBody List<WriteBean> wlist) {
+		List<WriteBean> writeList;
+		
+		writeList = doc.mRequestDraft(wlist.get(0));
+		
+		return writeList;
 	}
 }
