@@ -9,5 +9,6 @@
 		<typeAlias type="com.signhere.beans.EntrustBean" alias="EntrustBean"/>
 		<typeAlias type="com.signhere.beans.DepartmentBean" alias="DepartmentBean"/>
 		<typeAlias type="com.signhere.beans.GradeBean" alias="GradeBean"/>
+		<typeAlias type="com.signhere.beans.WriteBean" alias="WriteBean"/>
 	</typeAliases>
 </configuration>
