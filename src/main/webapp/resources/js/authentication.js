@@ -415,12 +415,57 @@ function pwdConfirm(){
 	}	
 }
 
+
+
+//직원추가 아이디 유효성체크
+function userIdNewCheck(obj){
+	
+	if(!isValidateCheck(1,obj.value)){
+		alert("ID는 영소 문자로 시작하여 영소 문자+숫자 포함 12자 이하 여야 합니다. ");
+		
+	}
+}
+
+//fetchAjax(action,method,data,afterfunction)
+//직원추가 아이디 중복체크
+function userIdNewDupCheck(){
+	
+	const userId=document.getElementsByName("userIdNew")[0];
+	
+	data={userId:userId.value};
+	
+fetchAjax('/employeeDup','post',data,userIdNewDupCheck2);
+
+}
+
+function userIdNewDupCheck2(data){
+	data = JSON.parse(data);
+	
+	const userId=document.getElementsByName("userIdNew")[0];
+	
+	if(data.message=="사용불가"){
+		alert("이미 존재하는 ID입니다.")
+		userId.value="";
+		userid.focus();
+	;
+	}
+	
+}
+
+
+
+
+
+
+
+
+
 //이름 글자수 유효성체크
 function nameCheck(obj){
 	
 	if(charCount(obj.value,2,5)){
 		if(!krCheck(obj.value))	{			
-			alert("한글쓰셈");		
+			alert("한글로 입력해주세요.");		
 		}
 	}else{
 		alert("이름은 2-5글자로 입력해주세요");
@@ -474,4 +519,6 @@ function cancelPassword(){
 	form.submit();
 	
 }
+
+
 

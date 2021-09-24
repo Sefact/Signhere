@@ -27,9 +27,16 @@ public class Entrust {
 	public ModelAndView mSetEntrust(Criteria cri) {
 		mav = new ModelAndView();
 		
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Pagination pagination = new Pagination();
 		pagination.setCri(cri);
-		pagination.setTotalCount((Integer) sqlSession.selectOne("countEntrustList"));
+		pagination.setTotalCount((Integer) sqlSession.selectOne("countEntrustList", cri));
 		
 		List<Map<String, Object>> entrustList = sqlSession.selectList("selEntrustList", cri);
 		
@@ -80,8 +87,14 @@ public class Entrust {
 	public ModelAndView mDisCheckEntrust(EntrustBean eb) {
 		mav = new ModelAndView();
 		List<EntrustBean> entrustList = null;
-		
-		String etNum = eb.getEtNum();	
+
+		String etNum = eb.getEtNum();
+		try {
+			eb.setEtSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if(etNum != null) {
 			sqlSession.delete("delEntrust", eb);

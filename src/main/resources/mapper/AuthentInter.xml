@@ -67,12 +67,28 @@
 		WHERE ID=#{userId} AND MAIL=#{userMail}	
 	</select>
 	
+	<select id="selOrgDepartment" parameterType="userBean" resultType="userBean">
+		SELECT DEPARTMENT_NAME AS "dpName", DEPARTMENT_CODE AS "dpCode" 
+		FROM CM INNER JOIN DP ON CM.COMPANY_CODE = DP.COMPANY_CODE 
+		WHERE CM.COMPANY_CODE = #{cmCode}
+	</select>
+	
+	<select id="selOrgMember" parameterType="userBean" resultType="userBean">
+		SELECT ID AS "userId",
+			   NAME AS "userName"
+		FROM MM INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE 
+                     		 AND MM.COMPANY_CODE = DP.COMPANY_CODE
+		WHERE MM.COMPANY_CODE = #{cmCode} AND DP.DEPARTMENT_CODE = #{dpCode}
+	</select>
+	
+	<select id="searchOrgMember" parameterType="userBean" resultType="userBean">
+		SELECT NAME AS "userName" FROM MM WHERE NAME LIKE '%'|| #{message} ||'%' AND COMPANY_CODE = #{cmCode}
+	</select>
+
 	<select id="checkPwd" parameterType="userBean" resultType="String">
 		SELECT PW
 		FROM MM 
 		WHERE ID=#{userId}
 	
 	</select>
-	
-
 </mapper>

@@ -38,7 +38,11 @@ public class HomeController {
 		return "login/main"; */
 
 	@RequestMapping(value = "/", method = {RequestMethod.GET, RequestMethod.POST})
-	public String home(@ModelAttribute UserBean ub) {
+	public ModelAndView home(@ModelAttribute UserBean ub) {
+		DocumentBean db = new DocumentBean();
+		System.out.println(db.getDmNum());
+		
+		
 		
 		return auth.mHome(ub);
 
@@ -116,7 +120,7 @@ public class HomeController {
 	@PostMapping("/myInfoAccess")
 	public String myInfo() {
 		return "login/myInfoAccess";
-		
+	
 	}
 	
 	//비밀번호 2차확인
@@ -148,6 +152,26 @@ public class HomeController {
 		List<UserBean> orgChart;
 		
 		orgChart = auth.mOrgChart(ulist.get(0));
+		
+		return orgChart;
+	}
+	
+	@PostMapping("/orgMemberChart")
+	@ResponseBody
+	public List<UserBean> orgMemberChart(@RequestBody List<UserBean> ulist) {
+		List<UserBean> orgChart;
+		
+		orgChart = auth.mOrgMemberChart(ulist.get(0));
+		
+		return orgChart;
+	}
+	
+	@PostMapping("/orgSearch")
+	@ResponseBody
+	public List<UserBean> orgSearch(@RequestBody List<UserBean> ulist) {
+		List<UserBean> orgChart;
+		
+		orgChart = auth.mOrgSearch(ulist.get(0));
 		
 		return orgChart;
 	}

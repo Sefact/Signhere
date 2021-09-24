@@ -85,16 +85,6 @@
 			<input type="button" class="form-control" value="직원삭제" />
 		</div>
 	</form>
-	<h2 class="sub-header">직원 관리</h2>
-		<button type="button" id="addEmpModal_btn">+직원추가</button>
-		<div class="black_bg"></div>
-		<div class="modal_wrap">
-			<div class="modal_close"><a href="#">X</a></div>
-				<div class="modal_header">직원 추가</div>
-					<div class="modal_body">
-					
-					</div>
-		</div>
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>

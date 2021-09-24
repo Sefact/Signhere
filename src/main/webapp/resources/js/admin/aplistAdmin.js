@@ -54,6 +54,8 @@ function requestAddNewEmp(){
 	
 	const jsonData = {userId:userId,userName:userName,grCode:grCode,dpCode:dpCode};
 	
+	
+	
 	fetchAjax('/addEmployee','post',jsonData,afterAddEmp);
 }
 

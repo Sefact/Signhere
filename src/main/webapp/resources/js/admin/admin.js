@@ -71,10 +71,6 @@ function makeForm(action, method, name = null) {
 	return form;
 	}
 }
-// Modal
-function showAddModal(){
-	$('#addModal').modal('show');
-}
 
 function requestAddNewEmp(){
 	const userId = document.querySelector("#newEmpId").value;
@@ -96,7 +92,4 @@ function afterAddEmp(data){
 	}
 	location.reload();
 }
-
-
-
 

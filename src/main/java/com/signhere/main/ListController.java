@@ -35,16 +35,21 @@ public class ListController implements DocumentInter {
 	@Autowired
 	Session ssn;
 	
-		
+	private int chechkNum = 11;
   
 	//내가 보낸 기안
 	@PostMapping("/myDraft")
 	public ModelAndView myDraft(@ModelAttribute DocumentBean db) {
 		mav = new ModelAndView();
+		
 		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
 		// 항목들 get해서 myDraft 페이지로 이동
 		//page 이동
 		mav.setViewName("document/myDraft");
+	
+		
+		// Temporary Check 있을 시 비워주고 없는 경우 콘솔에 에러메시지 출력
+		this.tempCheck(db);
 		
 		//DocumentBean을 List에 생성?
 		List<DocumentBean> docList;
@@ -83,6 +88,8 @@ public class ListController implements DocumentInter {
 		//페이지이동
 		mav.setViewName("document/myEnforceMent");
 		
+		this.tempCheck(db);
+		
 		//DocumentBean을 List에 생성
 		List<DocumentBean> docList;
 		
@@ -106,9 +113,12 @@ public class ListController implements DocumentInter {
   	//결제대기함
 	@PostMapping("/apToDoList")
 	public ModelAndView apToDoList(DocumentBean db) {
-		mav = new ModelAndView();		
+		ModelAndView mav = new ModelAndView();
 		
 		mav.setViewName("document/waitApproval");
+	
+		
+		this.tempCheck(db);
 		
 		List <DocumentBean> docList;
 		
@@ -124,6 +134,7 @@ public class ListController implements DocumentInter {
 		
 		//APPROVAL_ID=로그인 한 아이디 =>'202103003' / xml에서 where절에 입력.
 		mav.addObject("docList",docList);
+	
 		
 		
 		return mav;
@@ -136,6 +147,9 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/approvalProcced");
+		
+		this.tempCheck(db);
+		
 		List <DocumentBean> docList;
 
 		try {
@@ -164,6 +178,8 @@ public class ListController implements DocumentInter {
 		
 		mav.setViewName("document/completeApproval");
 		
+		this.tempCheck(db);
+		
 		List <DocumentBean> docList;
 		
 
@@ -188,6 +204,8 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();		
 		mav.setViewName("document/companionApproval");
 		
+		this.tempCheck(db);
+		
 		List <DocumentBean> docList;
 
 		try {
@@ -210,6 +228,8 @@ public class ListController implements DocumentInter {
 	public ModelAndView deferList(DocumentBean db) {
 		mav = new ModelAndView();		
 		mav.setViewName("document/deferList");
+		
+		this.tempCheck(db);
 		
 		List <DocumentBean> docList;
 		
@@ -238,6 +258,8 @@ public class ListController implements DocumentInter {
 		
 		mav.setViewName("document/referenceApproval");
 		
+		this.tempCheck(db);
+		
 		List <DocumentBean> docList;
 		
 		try {
@@ -262,7 +284,8 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
     	mav.setViewName("document/myList");
-   
+    	
+    	this.tempCheck(db);   
     	
     	return mav;
 	}
@@ -274,6 +297,8 @@ public class ListController implements DocumentInter {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/myList");
+		
+		this.tempCheck(db);
 		
 		return mav;
 	}
@@ -310,6 +335,8 @@ public class ListController implements DocumentInter {
 		
 		mav.setViewName("document/receiveNotice");
 		
+		this.tempCheck(db);
+		
 		List <DocumentBean> docList;
 		
 		docList=sqlSession.selectList("receiveNotice",db);
@@ -317,5 +344,26 @@ public class ListController implements DocumentInter {
 		mav.addObject("docList",docList);
 		
 		return mav;
+	}
+	
+	public void tempCheck(DocumentBean db) {
+		try {
+			db.setDmNum((String) ssn.getAttribute("dmCheck"));
+			if(ssn.getAttribute("dmCheck") != null) {
+				if(this.convertToBoolean(sqlSession.delete("delTemporary", db))) {
+					ssn.removeAttribute("dmCheck");
+				} else {
+					System.out.println("Temporary is not Found");
+				}
+			} else {
+				System.out.println("Document Code Session is not Found");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean convertToBoolean(int result) {
+		return result==1 ? true: false;  
 	}
 }
