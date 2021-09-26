@@ -22,19 +22,6 @@
 	<!-- Signature Library -->
 	<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 </head>
-<script type="text/javascript"> 
-
-function test2(){
-	
-	var list = document.getElementsByTag("li");
-	alert(list);
-	console.log(list);
-	
-	
-}
-
-
-</script>
 
 
 <body>

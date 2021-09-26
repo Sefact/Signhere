@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class DocumentBean {
 	private String dmNum;
+	private String dmNumCheck;
 	private String apCode;
 	private String apName;
 	private String cmCode;

@@ -28,6 +28,7 @@
 					</tr>
 				</thead>
 				<tbody>
+				<!-- Authentication.java 130번째줄 참조. -->
 			<c:forEach var="docList" items="${docList}">
 				<tr>
 					<td><c:out value="${docList.dmNum }"/></td>
