@@ -41,23 +41,23 @@
 			<div class="form-row">
 				<div class="form-group col-md-12">
 					<label>문서제목</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmTitle}" disabled/>
+					<input type="text" class="form-control" id="dmTitle" value="${sessionScope.docBean.dmTitle}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-6">
 					<label>문서번호</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmNum}" disabled/>
+					<input type="text" class="form-control" id="dmNum" value="${sessionScope.tempList[0].dmNum}" disabled/>
 				</div>
 				<div class="form-group col-md-6">
 					<label>날짜</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmDate}" disabled/>
+					<input type="text" class="form-control" id="dmDate" value="${sessionScope.tempList[0].dmDate}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
 					<label>작성자</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmWriter}" disabled/>
+					<input type="text" class="form-control" id="dmWriter" value="${sessionScope.docBean.dmWriter}" disabled/>
 				</div>
 				<div class="form-group col-md-4">
 					<label>참조자</label>
@@ -68,7 +68,7 @@
 				</div>
 				<div class="form-group col-md-4">
 					<label>문서종류</label>
-					<input type="text" class="form-control" id="" placeholder="${sessionScope.docBean.dmCode}" disabled/>
+					<input type="text" class="form-control" id="dmCode" value="${sessionScope.docBean.dmCode}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
@@ -78,7 +78,7 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12">
-					<img id="imgPreview" />
+					<img id="imgPreview" src="" />
 				</div>
 			</div>
 			<div class="form-row">
@@ -110,9 +110,9 @@
 				        <div class="m-signature-pad--body">
 				            <canvas id="signature-canvas"></canvas>
 				        </div>
-				        <div class="m-signature-pad--footer">
-				            <button type="button" class="button clear" data-action="clear">지우기</button>
-				            <button type="button" class="button save" data-action="save">저장</button>
+				        <div class="m-signature-pad--footer" id="signUpClear">
+				            <button type="button" id="signClear" class="button clear" data-action="clear">지우기</button>
+				            <button type="button" id="signUpload" class="button save" data-action="save">저장</button>
 				        </div>
 				    </div>
 				</div>
@@ -170,6 +170,7 @@
 								
 								</div>
 							</div>
+							<!-- 결재선(타부서) 타이틀 -->
 							<div class="form-row">
 								<div class="form-group col-md-12">	
 									<label>
@@ -177,6 +178,7 @@
 									</label>
 								</div>
 							</div>
+							<!-- 결재선(타부서) -->
 							<div class="form-row" id="modifyDepartment" style="display:none">
 								<div class="form-group col-md-5">
 									<select id="otherModifyLine" class="form-control" size="4">
@@ -185,11 +187,13 @@
 										</c:forEach>
 									</select>
 								</div>
+								<!-- 결재선(타부서) 저장, 삭제 -->
 								<div class="form-group col-md-2">
 									<button type="button" id="dpModifySave" class="btn btn-primary btn-block">저장</button>
 									<br>
 									<button type="button" id="dpModifyDel" class="btn btn-primary btn-block">삭제</button>
 								</div>
+								<!-- 결재선(타부서) 선택된 -->
 								<div class="form-group col-md-5">
 									<select id="seldpModify" class="form-control" size="4">
 										<c:forEach var="docList" items="${sessionScope.docMap}">
@@ -198,6 +202,7 @@
 									</select>
 								</div>
 							</div>
+							<!-- 결재선(참조자) 타이틀 -->
 							<div class="form-row">
 								<div class="form-group col-md-12">	
 									<label>
@@ -205,6 +210,7 @@
 									</label>
 								</div>
 							</div>
+							<!-- 결재선(참조자) -->
 							<div class="form-row" id="rfModifyForm" style="display:none">
 								<div class="form-group col-md-5">
 									<select id="rfModifyLine" class="form-control" size="4">
@@ -213,11 +219,13 @@
 										</c:forEach>
 									</select>
 								</div>
+								<!-- 참조자(저장, 삭제) -->
 								<div class="form-group col-md-2">
 									<button type="button" id="rfModifySave" class="btn btn-primary btn-block">저장</button>
 									<br>
 									<button type="button" id="rfModifyDel" class="btn btn-primary btn-block">삭제</button>
 								</div>
+								<!-- 결재선 선택된(참조자) -->
 								<div class="form-group col-md-5">
 									<select id="selRfModifyLine" class="form-control" size="4">
 										<c:forEach var="refList" items="${sessionScope.refMap}">
@@ -314,7 +322,6 @@
 			selectedAp += selMyApCheck;
 			selectedAp += '</option>';
 			
-			
 			// #1 Remove Selected Modify Approval 
 			$("#selMyModifyLine option[value="+ selMyApValue +"]").remove();
 			
@@ -328,9 +335,39 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#modifyDPOnOff').click(function() {
-			if($("#modifyDepartment").css("display") == "none"){				
-		        $('#modifyDepartment').show();  
-		    } else {  
+			var otMdData = [{'apCheck': 'D', 'cmCode': ${sessionScope.cmCode}}];
+			var otMdLineLength = $('#otherModifyLine option').length;
+			var otMdDataJson = JSON.stringify(otMdData);
+			var otMdHtml = "";			
+			
+			if($("#modifyDepartment").css("display") == "none"){
+				if(otMdLineLength > 0) {
+					$('#modifyDepartment').show();
+				} else {
+					$.ajax({
+						type: 'POST',
+						url : '/writeDraft',
+						data : otMdDataJson,
+						contentType: "application/json;charset=UTF-8",
+						dataType: 'json'
+					})
+					.done(function(data) {
+						var orgLength = Object.keys(data).length;
+
+						$.each(data, function(index, value) {
+							otMdHtml += '<option value=' + value.userId + '>';
+							otMdHtml += value.userName;
+							otMdHtml += '</option>';
+						});
+						$('#otherModifyLine').html(otMdHtml);
+					})
+					.fail(function(data) {
+						console.log("Fail");
+					})
+					
+			        $('#modifyDepartment').show();
+			    }
+			} else {  
 		        $('#modifyDepartment').hide();  
 		    }
 		})
@@ -381,9 +418,39 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#rfModifyOnOff').click(function() {
+			var rfMdData = [{'apCheck': 'R', 'cmCode': ${sessionScope.cmCode}}];
+			var rfMdLineLength = $('#rfModifyLine option').length;
+			var rfMdDataJson = JSON.stringify(rfMdData);
+			var rfMdHtml = "";		
+			
 			if($("#rfModifyForm").css("display") == "none"){
-				$('#rfModifyForm').show();  
-		    } else {  
+				if(rfMdLineLength > 0) {
+					$('#rfModifyForm').show();
+				} else {
+					$.ajax({
+						type: 'POST',
+						url : '/writeDraft',
+						data : rfMdDataJson,
+						contentType: "application/json;charset=UTF-8",
+						dataType: 'json'
+					})
+					.done(function(data) {
+						var orgLength = Object.keys(data).length;
+
+						$.each(data, function(index, value) {
+							rfMdHtml += '<option value=' + value.userId + '>';
+							rfMdHtml += value.userName;
+							rfMdHtml += '</option>';
+						});
+						$('#rfModifyLine').html(rfMdHtml);
+					})
+					.fail(function(data) {
+						console.log("Fail");
+					})
+					
+			        $('#rfModifyForm').show();
+			    }
+			} else {  
 		        $('#rfModifyForm').hide();  
 		    }
 		})
@@ -544,7 +611,15 @@
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#onAplModal').click(function() {
-			$('#aplRequestModal').modal('show');
+			// undefined
+			var docCheck = $('#docDelete').attr("value");
+			var signCheck = $('#signDelete').attr("value");
+			
+			if(typeof docCheck == "undefined" || docCheck == "" || docCheck == null && typeof signCheck == "undefined" || signCheck == "" || signCheck == null) {
+					alert("파일 혹은 사인을 업로드 부탁드립니다.");
+			} else {
+				$('#aplRequestModal').modal('show');	
+			}
 		})
 	});
 	</script>
@@ -592,41 +667,13 @@
 			}
 			reader.readAsDataURL(imageFile);
 		}
-	});
-	
-	/* var sel_file;
-	
-	$('document').ready(function() {
-		$("input[name='docFile']").on("change", handleImgFileSelect);
-	});
-	
-	function handleImgFileSelect(e) {
-        var files = e.target.files;
-        var filesArr = Array.prototype.slice.call(files);
- 
-        var reg = /(.*?)\/(jpg|jpeg|png|bmp)$/;
- 
-        filesArr.forEach(function(f) {
-            if (!f.type.match(reg)) {
-                alert("확장자는 이미지 확장자만 가능합니다.");
-                return;
-            }
- 
-            sel_file = f;
- 
-            var reader = new FileReader();
-            reader.onload = function(e) {
-                $("#imgPreview").attr("src", e.target.result);
-            }
-            reader.readAsDataURL(f);
-        });
-    } */
+	});	
 	</script>
 	
 	<!-- File Send -->
 	<script type="text/javascript">
 	$('document').ready(function() {
-		$('#docUpload').click(function() {
+		$('#docUploadForm').on('click', '#docUpload', function() {
 			var formData = new FormData();
 			var inputFiles = $('input[name="docFile"]');
 			var files = inputFiles[0].files;
@@ -656,7 +703,7 @@
 				if($("#docDelete").length > 0) {
 					console.log("Delete Button already");
 				} else {
-					$('#docUploadForm').append(delHtml);
+					$('#docUploadForm').html(delHtml);
 				}
 				
 				/* if($("#docDelete").css("visibility") == "hidden") {
@@ -669,12 +716,6 @@
 			.fail(function(data) {
 				alert("Upload Failed");
 			})
-			
-			/* var acReason = document.getElementById("commentTextArea").value;
-			
-			
-			alert(acReason.value);
-			console.log(acReason); */
 		})
 	});
 	</script>
@@ -693,6 +734,13 @@
 			})
 			.done(function(data) {
 				$("input[name='docFile']").val("");
+				$("#imgPreview").attr("src", "");
+				
+				var uploadHtml = "";
+				uploadHtml += "<input type='button' id='docUpload' value='Submit' />";
+				
+				$('#docUploadForm').html(uploadHtml);
+				
 				console.log("Success");
 			})
 			.fail(function(data) {
@@ -703,64 +751,77 @@
 	</script>
 	
 	<script type="text/javascript">
-	    var checkUnload = true;
-	    
-	    $(window).on("beforeunload", function(){
-	        if(checkUnload) return false;
-	    });
-	   
-	    $(document).on("click", "#modifyApproval", function(event){
-	        // disable warning
-	        $(window).off('beforeunload');
-	    });
-	</script>
-	
-	<script type="text/javascript">
 	var canvas = $("#signature-pad canvas")[0];
     var sign = new SignaturePad(canvas, {
         minWidth: 2,
         maxWidth: 8,
         penColor: "rgb(0, 0, 0)"
     });
-     
-    $("[data-action]").on("click", function(){
-        if ( $(this).data("action")=="clear" ){
-            sign.clear();
-        }
-        else if ( $(this).data("action")=="save" ){
-            if (sign.isEmpty()) {
-                alert("사인해 주세요!!");
-            } else {
-            	var canvasData = atob(sign.toDataURL('image/png').split(",")[1]);
-            	
-            	var array = [];
-            	for(var i=0 ; i<canvasData.length ; i++){
-            		//문자열을 아스키코드로 변환하여 array배열에 저장
-            		array.push(canvasData.charCodeAt(i));
-            	}
-            	
-            	var file = new Blob([new Uint8Array(array)], {type: 'image/png'});
 
-                var formdata = new FormData();	// formData 생성
-                formdata.append("file", file);	// file data 추가
-            	
-                $.ajax({
-                	type : 'POST',
-    		        url : '/saveSign',
-    		        data : formdata,
-    		        processData : false,
-    		        contentType : false,
-                    success : function(r){
-                        alert("저장완료");
-                        sign.clear();
-                    },
-                    error : function(res){
-                        console.log("failed");
-                    }
-                });
-            }
+    $('#signUpClear').on('click', '#signClear', function() {
+    	sign.clear();
+    });
+    
+    $('#signUpClear').on('click', '#signUpload', function() {
+    	if (sign.isEmpty()) {
+            alert("사인해 주세요!!");
+        } else {
+        	var canvasData = atob(sign.toDataURL('image/png').split(",")[1]);
+        	
+        	var array = [];
+        	for(var i=0 ; i<canvasData.length ; i++){
+        		//문자열을 아스키코드로 변환하여 array배열에 저장
+        		array.push(canvasData.charCodeAt(i));
+        	}
+        	
+        	var file = new Blob([new Uint8Array(array)], {type: 'image/png'});
+
+            var formdata = new FormData();	// formData 생성
+            formdata.append("file", file);	// file data 추가
+            
+            $.ajax({
+            	type : 'POST',
+		        url : '/saveSign',
+		        data : formdata,
+		        processData : false,
+		        contentType : false,
+                success : function(r){
+                    alert("저장완료");
+                    
+                    var signHtml = "";
+                    signHtml += '<button type="button" id="signDelete" value="signDelete" class="button save" data-action="delete">삭제</button>'
+                    
+                    $('#signUpClear').html(signHtml);
+                    
+                   //sign.clear();
+                },
+                error : function(res){
+                    console.log("failed");
+                }
+            });
         }
-    });   
+    });
+    
+    $('#signUpClear').on('click', '#signDelete', function() {
+    	$.ajax({
+			type : "POST",
+			url : "/deleteSign"
+		})
+		.done(function(data) {
+			var signInitHtml = "";
+			signInitHtml += '<button type="button" id="signClear" class="button clear" data-action="clear">지우기</button> ';
+			signInitHtml += '<button type="button" id="signUpload" class="button save" data-action="save">저장</button>';
+			
+			$('#signUpClear').html(signInitHtml);
+			
+			sign.clear();
+			
+			alert("Sign Delete Success");
+		})
+		.fail(function(data) {
+			console.log("Failed");
+		})
+    });
      
     function resizeCanvas(){
         var canvas = $("#signature-pad canvas")[0];
@@ -776,38 +837,83 @@
     });
 
     resizeCanvas();
-    
-    /* $('document').ready(function() {
-		$('#saveSign').click(function() {
-			var canvasData = atob(sign.toDataURL('image/png').split(",")[1]);
+	</script>
+	
+	<script type="text/javascript">
+	$('document').ready(function() {
+		$('#requestApproval').click(function() {
+			var dmTitle = document.getElementById("dmTitle").value;
+			var dmNum =document.getElementById("dmNum").value;
+			var dmDate = document.getElementById("dmDate").value;
+			//var dmWriter = document.getElementById("dmWriter").value;
+			var dmCode = document.getElementById("dmCode").value;
+			var acReason = document.getElementById("commentTextArea").value;
 			
-			var array = [];
+			var approvalSize = '${sessionScope.aplMap.size()}';
+			var departmentSize = '${sessionScope.docMap.size()}';
+			var referenceSize = '${sessionScope.refMap.size()}';
 			
-			for (var i=0; i < canvasData.length; i++) {
-		        array.push(canvasData.charCodeAt(i));
-		    }
+			alert(approvalSize + ":" + departmentSize + ":" + referenceSize);
 			
-		    var file = new Blob([new Uint8Array(array)], {type: 'image/png'});	// Blob 생성
-		    var formdata = new FormData();	// formData 생성
-		    formdata.append("file", file);
-		    
-		    console.log(formdata);
-		    
-		    $.ajax({
-		    	type : 'POST',
-		        url : '/saveSign',
-		        data : formdata,
-		        processData : false,
-		        contentType : false
-		    })
-		    .done(function(data) {
+			var aplBean = new Array();
+			var refBean = new Array();
+			
+			<c:forEach items='${sessionScope.aplMap}' var ='aplMap'>
+				aplBean.push({aplId:'${aplMap.aplId}', aplSeq:'${aplMap.aplSeq}'});
+			</c:forEach>
+			
+			<c:forEach items='${sessionScope.docMap}' var ='docMap'>
+				aplBean.push({aplId:'${docMap.aplId}', aplSeq:'${docMap.aplSeq}'});
+			</c:forEach>
+			
+			<c:forEach items='${sessionScope.refMap}' var ='refMap'>
+				refBean.push({rdId:'${refMap.rdId}', rfSeq:'${refMap.rfSeq}'});
+			</c:forEach>
+			
+			/* for(var i=0; i<approvalSize; i++) {
+				aplInit = {'aplSeq':i+1, 'aplId':'${sessionScope.aplMap[i].aplId}'}
+				aplBean.push(aplInit);
+			} */
+			
+			var draftData = [{'dmTitle':dmTitle, 'dmNum':dmNum, 'dmDate':dmDate, 'dmWriter':'${sessionScope.userId}', 'dmCode':dmCode, 'aplComment':acReason, aplBean, refBean}];
+			var draftJson = JSON.stringify(draftData);
+			
+			alert(draftJson);
+			
+			$.ajax({
+				type: 'POST',
+				url : '/requestDraft',
+				data : draftJson,
+				contentType: "application/json;charset=UTF-8",
+				dataType: 'json'
+			})
+			.done(function(data) {
+				location.href = "/myDraft";
 				console.log("Success");
 			})
 			.fail(function(data) {
-				console.log("Failed");
+				console.log("Fail");
 			})
 		})
-	}); */
+	});
+	</script>
+	
+	<script type="text/javascript">
+	    var checkUnload = true;
+	    
+	    $(window).on("beforeunload", function(){
+	        if(checkUnload) return false;
+	    });
+	   
+	    $(document).on("click", "#modifyApproval", function(event){
+	        // disable warning
+	        $(window).off('beforeunload');
+	    });
+	    
+	    /* $(document).on("click", "#requestApproval", function(event){
+	        // disable warning
+	        $(window).off('beforeunload');
+	    }); */
 	</script>
 </body>
 

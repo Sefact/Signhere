@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -40,7 +42,7 @@ public class ListController implements DocumentInter {
 	private int chechkNum = 11;
   
 	//내가 보낸 기안
-	@PostMapping("/myDraft")
+	@RequestMapping(value="/myDraft", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView myDraft(@ModelAttribute DocumentBean db) {
 		mav = new ModelAndView();
 		

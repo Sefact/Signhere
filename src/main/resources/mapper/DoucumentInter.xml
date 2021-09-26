@@ -150,7 +150,7 @@
 	</select>
         	
 	<insert id="insTemporary" parameterType="DocumentBean">
-		INSERT INTO TL (DOCUMENT_NUM, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES(CONCAT(#{cmCode}, TEMP_SEQ.NEXTVAL), #{dmWriteId}, #{dmTitle}, TO_CHAR(SYSDATE), #{cmCode}, #{dmCode})
+		INSERT INTO TL (DOCUMENT_NUM, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES(CONCAT(#{cmCode}, TEMP_SEQ.NEXTVAL), #{dmWriteId}, #{dmTitle}, SYSDATE, #{cmCode}, #{dmCode})
 	</insert>
         	
 	<select id="selTemporary" parameterType="DocumentBean" resultType="DocumentBean">
@@ -168,4 +168,20 @@
 	<delete id="delTemporary">
 		DELETE FROM TEMPORARYLIST WHERE DOCUMENT_NUM = #{dmNum}
 	</delete>
+
+	<insert id="insDocument" parameterType="WriteBean">
+		INSERT INTO DOCUMENT (DOCUMENT_NUM, APPROVAL_CODE, FILE_LOCATION, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES (#{dmNum}, 'P', #{fileLoc}, #{dmWriter}, #{dmTitle}, TO_DATE(TO_CHAR(TO_timestamp(#{dmDate}), 'yyyymmddhh24miss'), 'yyyymmddhh24miss'), #{cmCode}, #{dmCode})
+	</insert>
+	
+	<insert id="insApprovalComment" parameterType="WriteBean">
+		INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM, SIGN_LOCATION) VALUES(#{dmWriter}, '1', #{dmNum}, #{signLoc})
+	</insert>
+	
+	<insert id="insApprovalOther" parameterType="WriteBean">
+		INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM) VALUES(#{dmWriter}, #{aplSeq}, #{dmNum})
+	</insert>
+	
+	<insert id="insReference" parameterType="WriteBean">
+		INSERT INTO RF (DOCUMENT_NUM, REFERENCE_ID) VALUES(#{dmNum}, #{refId})
+	</insert>
 </mapper>

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
+import com.signhere.beans.WriteBean;
 import com.signhere.utils.Session;
 
 @Service
@@ -144,6 +145,7 @@ public class Document {
 			Map<String, Object> refMapPut = new HashMap<String, Object>();
 			refMapPut.put("rdId", db.getRfBean().get(i).getRdId());
 			refMapPut.put("rdName", db.getRfBean().get(i).getRdName());
+			refMapPut.put("rfSeq", i+1);
 			refMap.add(refMapPut);
 		}
 		
@@ -151,6 +153,7 @@ public class Document {
 			Map<String, Object> aplMapPut = new HashMap<String, Object>();
 			aplMapPut.put("aplId", db.getAplBean().get(i).getAplId());
 			aplMapPut.put("aplName", db.getAplBean().get(i).getAplName());
+			aplMapPut.put("aplSeq", i);
 			aplMap.add(aplMapPut);
 			
 		}
@@ -159,6 +162,7 @@ public class Document {
 			Map<String, Object> docMapPut = new HashMap<String, Object>();
 			docMapPut.put("aplId", db.getAplBean().get(i).getAplId());
 			docMapPut.put("aplName", db.getAplBean().get(i).getAplName());
+			docMapPut.put("aplSeq", i);
 			docMap.add(docMapPut);
 		}
 		
@@ -260,18 +264,17 @@ public class Document {
 	public boolean uploadSign(MultipartFile[] uploadSigns) throws IOException {
 		Map<String, Object> signMap = new HashMap<String, Object>();
 		
-		System.out.println(uploadSigns);
-		
 		for (MultipartFile multipartFile : uploadSigns) {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = ssn.getAttribute("userId") + ".png";
+				String signLoc = signPath + fileName;
 				File tmp = new File(signPath + fileName);
 
 				signMap.put("fileName", fileName);
 				signMap.put("fileSize", multipartFile.getSize());
-				System.out.println(signMap);
 				multipartFile.transferTo(tmp);
+				ssn.setAttribute("signLoc", signLoc);
 			} catch (Exception e) {
 				System.out.println("Error");
 				return false;
@@ -287,6 +290,55 @@ public class Document {
         String fileName=new SimpleDateFormat("yyyyMMdd").format(date)+"_"+multipartFile.getOriginalFilename();
         return fileName;
     }
+	
+	public List<WriteBean> mRequestDraft(WriteBean wb) {
+		List<WriteBean> writeList = new ArrayList<WriteBean>();
+		writeList.add(wb);
+		
+		int aplineSize = wb.getAplBean().size();
+		int rflineSize = wb.getRefBean().size();
+		
+		try {
+			wb.setCmCode((String) ssn.getAttribute("cmCode"));
+			wb.setFileLoc((String) ssn.getAttribute("fileLoc"));
+			wb.setSignLoc((String) ssn.getAttribute("signLoc"));
+			
+			System.out.println(ssn.getAttribute("aplMap"));
+			System.out.println(ssn.getAttribute("docMap"));
+			System.out.println(ssn.getAttribute("refMap"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println(wb);
+		
+		if(this.convertToBoolean(sqlSession.insert("insDocument", wb))) {
+			sqlSession.delete("delTemporary", wb);
+			if(this.convertToBoolean(sqlSession.insert("insApprovalComment", wb))) {
+				for(int i=0; i<aplineSize; i++) {
+					wb.setDmWriter(wb.getAplBean().get(i).getAplId());
+					wb.setAplSeq(wb.getAplBean().get(i).getAplSeq()+1);
+					
+					sqlSession.insert("insApprovalOther", wb);
+				}
+				if(rflineSize > 0) {
+					for(int i=0; i<rflineSize; i++) {
+						wb.setRefId(wb.getRefBean().get(i).getRdId());
+						
+						sqlSession.insert("insReference", wb);
+					}
+				} else {
+					System.out.println("Reference Line is not found");
+				}
+				System.out.println("Success");
+			}
+		} else {
+			System.out.println("Error");
+		}
+		
+		return writeList;
+	}
 	
 	public List<DocumentBean> mTempRemove(DocumentBean db) {
 		List<DocumentBean> docList = null;
@@ -337,6 +389,7 @@ public class Document {
 		}
 	}
 	
+
 	public ModelAndView documentBoxDetail(DocumentBean db) {
 		
 		ModelAndView mav = new ModelAndView();
@@ -380,7 +433,8 @@ public class Document {
 		return mav;
 	}
 	
-	
-	
-	
+	private boolean convertToBoolean(int result) {
+		return result==1 ? true: false;  
+	}
+
 }
