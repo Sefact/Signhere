@@ -447,113 +447,118 @@
 	$('document').ready(function() {
 		$('#sendApproval').click(function() {
 			var navDmTitle = document.getElementsByName("dmTitle")[0].value;
-			
-			/* Origin Approval Info */
-			var navApSize = $("#myApprovalLine option").length;
-			var navDpSize = $("#otherApprovalLine option").length;
-			var navRfSize = $("#referenceLine option").length;
-			
-			var pushNavAp = document.getElementById("myApprovalLine");
-			var pushNavDp = document.getElementById("otherApprovalLine");
-			var pushNavRf = document.getElementById("referenceLine");
-			
-			var navApInital = "";
-			var navDpInital = "";
-			var navRfInital = "";
-			
-			var docBean = [];
-			var aplBean = [];
-			var rfBean = [];
-			
-			// Origin Approval Inital & Push
-			for(var i=0; i<navApSize; i++) {
-				navApInital = {'aplSeq':i+1, 'aplId':pushNavAp[i].value, 'aplName':pushNavAp[i].text};
-				aplBean.push(navApInital);
-			}
-			
-			// Original Department Inital & Push
-			for(var i=0; i<navDpSize; i++) {
-				navDpInital = {'aplSeq':navApSize+1+i, 'aplId':pushNavDp[i].value, 'aplName':pushNavDp[i].text};
-				aplBean.push(navDpInital);
-			}
-			
-			// Original Reference Inital & Push
-			for(var i=0; i<navRfSize; i++) {
-				navRfInital = {'rdId':pushNavRf[i].value, 'rdName':pushNavRf[i].text};
-				rfBean.push(navRfInital);
-			}
-			
-			var originDocInital = {'dmTitle':navDmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':navApSize, aplBean, rfBean};
-			docBean.push(originDocInital);
-			
-			var temp = JSON.stringify(docBean);
-			
-			//alert(navApSize + ":" + navDpSize + ":" + navRfSize);
-			
- 			$.ajax({
-				type: 'POST',
-				url : '/tempDraft',
-				data : temp,
-				contentType: "application/json;charset=UTF-8",
-				dataType: 'json'
-			})
-			.done(function(data) {
-				console.log("loc this");
-				/* Selected Approval Info */
-				var mAplSize = $("#selMyApprovalLine option").length;
-				var oAplSize = $("#selOtApprovalLine option").length;
-				var rAplSize = $("#selReferencelLine option").length;
+			/* Approval Null Check */
+			var selApSize = $("#selMyApprovalLine option").length
+			var dmCodeCheck = $('input[name=dmCode]:checked').val();
+
+			if(navDmTitle == "" || selApSize <= 0 || typeof dmCodeCheck == "undefined") {
+				alert("값을 추가해주세요");
+			} else {
+				/* Origin Approval Info */
+				var navApSize = $("#myApprovalLine option").length;
+				var navDpSize = $("#otherApprovalLine option").length;
+				var navRfSize = $("#referenceLine option").length;
 				
-				var pushApline = document.getElementById("selMyApprovalLine");
-				var pushOtApline = document.getElementById("selOtApprovalLine");
-				var pushRfApline = document.getElementById("selReferencelLine");
+				var pushNavAp = document.getElementById("myApprovalLine");
+				var pushNavDp = document.getElementById("otherApprovalLine");
+				var pushNavRf = document.getElementById("referenceLine");
 				
-				var radioDmCode = $('input[name="dmCode"]:checked').val();
+				var navApInital = "";
+				var navDpInital = "";
+				var navRfInital = "";
 				
 				var docBean = [];
 				var aplBean = [];
 				var rfBean = [];
 				
-				var rfInital = "";
-				
-				// Draft Writer Initalize & Push aplBean
-				var aplInital = {'aplSeq':'1', 'aplId':'${sessionScope.userId}', 'aplName':'${sessionScope.userName}'};
-				aplBean.push(aplInital);
-				for(var i=0; i<mAplSize; i++) {
-					aplInital = {'aplSeq':i+2, 'aplId':pushApline[i].value, 'aplName':pushApline[i].text};
-					aplBean.push(aplInital);
+				// Origin Approval Inital & Push
+				for(var i=0; i<navApSize; i++) {
+					navApInital = {'aplSeq':i+1, 'aplId':pushNavAp[i].value, 'aplName':pushNavAp[i].text};
+					aplBean.push(navApInital);
 				}
 				
-				// Department Approval Line Push aplBean
-				for(var i=0; i<oAplSize; i++) {
-					aplInital = {'aplSeq':mAplSize+2, 'aplId':pushOtApline[i].value, 'aplName':pushOtApline[i].text};
-					aplBean.push(aplInital);
-				}	
-				
-				// Reference Line Push
-				for(var i=0; i<rAplSize; i++) {
-					rfInital = {'rdId':pushRfApline[i].value, 'rdName':pushRfApline[i].text};
-					rfBean.push(rfInital);
+				// Original Department Inital & Push
+				for(var i=0; i<navDpSize; i++) {
+					navDpInital = {'aplSeq':navApSize+1+i, 'aplId':pushNavDp[i].value, 'aplName':pushNavDp[i].text};
+					aplBean.push(navDpInital);
 				}
 				
-				var docInital = {'dmCode':radioDmCode, 'dmTitle':navDmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':mAplSize, aplBean, rfBean};
-				docBean.push(docInital);
+				// Original Reference Inital & Push
+				for(var i=0; i<navRfSize; i++) {
+					navRfInital = {'rdId':pushNavRf[i].value, 'rdName':pushNavRf[i].text};
+					rfBean.push(navRfInital);
+				}
 				
-				var json = JSON.stringify(docBean);
+				var originDocInital = {'dmTitle':navDmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':navApSize, aplBean, rfBean};
+				docBean.push(originDocInital);
 				
-				$.ajax({
+				var temp = JSON.stringify(docBean);
+				
+	 			$.ajax({
 					type: 'POST',
-					url : '/confirmDraft',
-					data : json,
+					url : '/tempDraft',
+					data : temp,
 					contentType: "application/json;charset=UTF-8",
 					dataType: 'json'
 				})
-				console.log("Success");
-				setTimeout("location.href = '/draftMove'", 2000);
-			})
-			.fail(function(data) {
-				console.log("Fail");
-			})
+				.done(function(data) {
+					console.log("loc this");
+					// Selected Approval Info
+					var mAplSize = $("#selMyApprovalLine option").length;
+					var oAplSize = $("#selOtApprovalLine option").length;
+					var rAplSize = $("#selReferencelLine option").length;
+					
+					var pushApline = document.getElementById("selMyApprovalLine");
+					var pushOtApline = document.getElementById("selOtApprovalLine");
+					var pushRfApline = document.getElementById("selReferencelLine");
+					
+					var radioDmCode = $('input[name="dmCode"]:checked').val();
+					
+					var docBean = [];
+					var aplBean = [];
+					var rfBean = [];
+					
+					var rfInital = "";
+					
+					// Draft Writer Initalize & Push aplBean
+					var aplInital = {'aplSeq':'1', 'aplId':'${sessionScope.userId}', 'aplName':'${sessionScope.userName}'};
+					aplBean.push(aplInital);
+					for(var i=0; i<mAplSize; i++) {
+						aplInital = {'aplSeq':i+2, 'aplId':pushApline[i].value, 'aplName':pushApline[i].text};
+						aplBean.push(aplInital);
+					}
+					
+					// Department Approval Line Push aplBean
+					for(var i=0; i<oAplSize; i++) {
+						aplInital = {'aplSeq':mAplSize+2, 'aplId':pushOtApline[i].value, 'aplName':pushOtApline[i].text};
+						aplBean.push(aplInital);
+					}	
+					
+					// Reference Line Push
+					for(var i=0; i<rAplSize; i++) {
+						rfInital = {'rdId':pushRfApline[i].value, 'rdName':pushRfApline[i].text};
+						rfBean.push(rfInital);
+					}
+					
+					var docInital = {'dmCode':radioDmCode, 'dmTitle':navDmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':mAplSize, aplBean, rfBean};
+					docBean.push(docInital);
+					
+					var json = JSON.stringify(docBean);
+					
+					$.ajax({
+						type: 'POST',
+						url : '/confirmDraft',
+						data : json,
+						contentType: "application/json;charset=UTF-8",
+						dataType: 'json'
+					})
+					console.log("Success");
+					setTimeout("location.href = '/draftMove'", 2000);
+				})
+				.fail(function(data) {
+					console.log("Fail");
+				})
+			}
 		});
 	});
 	</script>
