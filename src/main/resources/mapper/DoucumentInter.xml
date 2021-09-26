@@ -6,6 +6,29 @@
 
 <mapper namespace="com.signhere.mapper.DocumentInter">
 
+	<select id="getLogInInfo2" parameterType="AccessBean" resultType="DocumentBean"> 
+	   SELECT MM.ID AS userId, 
+       MM.PW AS userPwd, 
+       MM.NAME AS userName,
+       MM.PWINITIAL as pwInitial, 
+       MM.COMPANY_CODE AS cmCode,
+       CM.COMPANY_NAME AS cmName,
+       GR.GRADE_NAME AS grName,
+       DP.DEPARTMENT_NAME AS dpName,
+       MM.MAIL AS userMail,
+       DP.DEPARTMENT_CODE AS dpCode,
+       MM.ADMIN as admin      
+       FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
+       INNER JOIN GR ON GR.GRADE_CODE=MM.GRADE_CODE
+       INNER JOIN DP ON DP.COMPANY_CODE=MM.COMPANY_CODE 
+       AND DP.DEPARTMENT_CODE = MM.DEPARTMENT_CODE
+       WHERE ID=#{userId}
+	</select>
+
+
+
+
+
 	<select id="searchCompletedDocs" parameterType="DocumentBean" resultType="DocumentBean">
 		SELECT DM.DOCUMENT_NUM AS dmNum,
 		DM.COMPANY_CODE AS cmCode,

@@ -336,4 +336,51 @@ public class Document {
 			e.printStackTrace();
 		}
 	}
+	
+	public ModelAndView documentBoxDetail(DocumentBean db) {
+		
+		ModelAndView mav = new ModelAndView();
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));
+			db.getDmNumCheck();
+		} catch (Exception e) {
+		
+			e.printStackTrace();
+		}
+		
+		
+		mav.addObject("title",db.getDmTitle());
+		//이거 그냥 위에서 dmNum으로 저장해두 됨. 헷갈릴수도 있으니 일단 다른걸로 저장.
+		mav.addObject("title",db.getDmNumCheck());
+		mav.addObject("dmDate",db.getDmDate());
+		mav.addObject("dmWriteId",db.getDmWriteId());
+		mav.addObject("dmRefId",db.getRefId());
+		mav.addObject("dmCode",db.getDmCode());
+		
+		//DOCUMENT,APPROVALLINE,APCOMMENT(결재의견) ,COMMENT(그냥의견 이건 완료문서함에 한해서),REF,READING,
+		
+		
+		
+		//결재선에 있는 사람들 (부서포함) , 사인 파일 위치,   AL테이블 
+		
+		
+		//dm테이블에 있는 문서(jpg)에 관한 파일 위치  DM테이블
+		
+		
+		
+		//REF,READING아이디는 REF테이블,READING테이블에있음
+		
+	
+	
+		
+		
+		mav.setViewName("document/documentBox");
+		
+		
+		return mav;
+	}
+	
+	
+	
+	
 }

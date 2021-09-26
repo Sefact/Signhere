@@ -27,13 +27,16 @@
 	
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 		<h1 class="page-header">Approval</h1>
-		<form method="POST" enctype="multipart/form-data" id="approvalForm">
+		
 			<div class="form-row">
 				<div class="form-group col-md-8">
-					<button type="button" id="approvalModify" class="btn btn-primary btn-block" >문서 종류 및 결재선 수정</button>
+					
 				</div>
-				<div class="form-group col-md-4">
-					<button type="button" class="btn btn-primary btn-block" id="onAplModal">결재하기</button>
+				<div class="form-group col-md-2">
+					<button type="button" class="btn btn-primary btn-block" id="onAplModal">결재</button>
+				</div>
+				<div class="form-group col-md-2">
+					<button type="button" class="btn btn-primary btn-block" id="onAplModal">반려</button>
 				</div>
 			</div>
 			<div class="form-row">
@@ -70,9 +73,7 @@
 				</div>
 			</div>
 			<div class="form-row">
-				<div class="form-group col-md-12">
-					<input type="file" class="form-control-file" name="docFile" id="docFile" value="Upload"/>
-				</div>
+				<!-- 그림, 문서파일 출력 -->
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12">
@@ -119,7 +120,7 @@
 				<div class="form-group col-md-4">
 				</div>
 			</div>
-		</form>
+		
 	</div>
 	
 	<!-- modal -->
@@ -272,273 +273,6 @@
 		</div>
 	</div>
 	
-	<!-- Load MyModifyModal -->
-	<script type="text/javascript">
-		$('document').ready(function() {
-			$('#approvalModify').click(function() {
-				$('#modifyModal').modal('show');
-			})
-		});
-	</script>
-	
-	<!-- Add MyModifyLine -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#mModifyLineSave').click(function() {
-			var myApCheck = $("#myModifyLine option:selected").text();
-			var myApValue = $("#myModifyLine option:selected").val();
-			var selMyAplHtml = '';
-			selMyAplHtml += '<option value=' + myApValue + '>';
-			selMyAplHtml += myApCheck;
-			selMyAplHtml += '</option>';
-			
-			// #1 Modify Approval Append
-			$('#selMyModifyLine').append(selMyAplHtml);
-			
-			// #2 Remove Modify Approval
-			$("#myModifyLine option[value="+ myApValue +"]").remove();
-		})
-	});
-	</script>
-	
-	<!-- Remove MyModifyLine -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#mModifyLineDel').click(function() {
-			var selMyApCheck = $("#selMyModifyLine option:selected").text();
-			var selMyApValue = $("#selMyModifyLine option:selected").val();
-			var selectedAp = '';
-			selectedAp += '<option value=' + selMyApValue + '>';
-			selectedAp += selMyApCheck;
-			selectedAp += '</option>';
-			
-			
-			// #1 Remove Selected Modify Approval 
-			$("#selMyModifyLine option[value="+ selMyApValue +"]").remove();
-			
-			// #2 Append Selected Modify Approval
-			$('#myModifyLine').append(selectedAp);
-		})
-	});
-	</script>
-	
-	<!-- Show & Hide Other Department Modify Line -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#modifyDPOnOff').click(function() {
-			if($("#modifyDepartment").css("display") == "none"){				
-		        $('#modifyDepartment').show();  
-		    } else {  
-		        $('#modifyDepartment').hide();  
-		    }
-		})
-	});
-	</script>
-	
-	<!-- Add Department Modify Line -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#dpModifySave').click(function() {
-			var otApCheck = $("#otherModifyLine option:selected").text();
-			var otApValue = $("#otherModifyLine option:selected").val();
-			var selOtAplHtml = '';
-			selOtAplHtml += '<option value=' + otApValue + '>';
-			selOtAplHtml += otApCheck;
-			selOtAplHtml += '</option>';
-			
-			// #1 Append Modify Department
-			$('#seldpModify').append(selOtAplHtml);
-			
-			// #2 Remove Modify Department
-			$("#otherModifyLine option[value="+ otApValue +"]").remove();
-		})
-	});
-	</script>
-	
-	<!-- Remove Department Modify Line -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#dpModifyDel').click(function() {
-			var selOtApValue = $("#seldpModify option:selected").val();
-			var selOtApCheck = $("#seldpModify option:selected").text();
-			var selectedDp = '';
-			selectedDp += '<option value=' + selOtApValue + '>';
-			selectedDp += selOtApCheck;
-			selectedDp += '</option>';
-			
-			// #1 Remove Modify Dpeartment
-			$("#seldpModify option[value="+ selOtApValue +"]").remove();
-			
-			// #1 Append Modify Department
-			$('#otherModifyLine').append(selectedDp);
-		})
-	});
-	</script>
-	
-	<!-- Show & Hide Reference Modify -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#rfModifyOnOff').click(function() {
-			if($("#rfModifyForm").css("display") == "none"){
-				$('#rfModifyForm').show();  
-		    } else {  
-		        $('#rfModifyForm').hide();  
-		    }
-		})
-	});
-	</script>
-	
-	<!-- Add Reference Modify -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#rfModifySave').click(function() {
-			var referenceCheck = $("#rfModifyLine option:selected").text();
-			var referenceValue = $("#rfModifyLine option:selected").val();
-			var appendRfMd = '';
-			appendRfMd += '<option value=' + referenceValue + '>';
-			appendRfMd += referenceCheck;
-			appendRfMd += '</option>';
-			
-			// #1 Append Modify Reference
-			$('#selRfModifyLine').append(appendRfMd);
-			
-			// #2 Remove Modify Reference
-			$("#rfModifyLine option[value="+ referenceValue +"]").remove();
-		})
-	});
-	</script>
-	
-	<!-- Remove Reference Modify -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#rfModifyDel').click(function() {
-			var selRfValue = $("#selRfModifyLine option:selected").val();
-			var selRfCheck = $("#selRfModifyLine option:selected").text();
-			
-			var selectedRfMd = '';
-			selectedRfMd += '<option value=' + selRfValue + '>';
-			selectedRfMd += selRfCheck;
-			selectedRfMd += '</option>';
-			
-			// #1 Remove Selected Modify Reference
-			$("#selRfModifyLine option[value="+ selRfValue +"]").remove();
-			
-			// #2 Append Selected Modify Reference
-			$('#rfModifyLine').append(selectedRfMd);
-		})
-	});
-	</script>
-	
-	<!-- Modify Draft -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#modifyApproval').click(function() {
-			var modifyTitle = document.getElementsByName("modifyTitle")[0].value;
-			
-			/* Origin Approval Info */
-			var originApSize = $("#myModifyLine option").length;
-			var originDpSize = $("#otherModifyLine option").length;
-			var originRfSize = $("#rfModifyLine option").length;
-			
-			var pushOriginAp = document.getElementById("myModifyLine");
-			var pushOriginDp = document.getElementById("otherModifyLine");
-			var pushOriginRf = document.getElementById("rfModifyLine");
-			
-			var docBean = [];
-			var aplBean = [];
-			var rfBean = [];
-			
-			// Origin Approval Inital & Push
-			for(var i=0; i<originApSize; i++) {
-				originApInital = {'aplSeq':i+1, 'aplId':pushOriginAp[i].value, 'aplName':pushOriginAp[i].text};
-				aplBean.push(originApInital);
-			}
-			
-			// Original Department Inital & Push
-			for(var i=0; i<originDpSize; i++) {
-				originDpInital = {'aplSeq':originApSize+1+i, 'aplId':pushOriginDp[i].value, 'aplName':pushOriginDp[i].text};
-				aplBean.push(originDpInital);
-			}
-			
-			// Original Reference Inital & Push
-			for(var i=0; i<originRfSize; i++) {
-				originRfInital = {'rdId':pushOriginRf[i].value, 'rdName':pushOriginRf[i].text};
-				rfBean.push(originRfInital);
-			}
-			
-			var originDocInital = {'dmTitle':modifyTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':originApSize, aplBean, rfBean};
-			docBean.push(originDocInital);
-			
-			var temp = JSON.stringify(docBean);
-			
- 			$.ajax({
-				type: 'POST',
-				url : '/tempDraft',
-				data : temp,
-				contentType: "application/json;charset=UTF-8",
-				dataType: 'json'
-			})
-			.done(function(data) {
-				// Original Member & Other(=Department) & Reference
-				var originMAplSize = $("#selMyModifyLine option").length;
-				var originOAplSize = $("#seldpModify option").length;
-				var originRAplSize = $("#selRfModifyLine option").length;
-				
-				// Origin push Approval & Other(=Department) & Reference
-				var oPushApline = document.getElementById("selMyModifyLine");
-				var oPushOtApline = document.getElementById("seldpModify");
-				var oPushRfApline = document.getElementById("selRfModifyLine");
-				
-				var originRadioDmCode = $('input[name="dmCode"]:checked').val();
-				
-				var docBean = [];
-				var aplBean = [];
-				var rfBean = [];
-				
-				var rfInital = "";
-				
-				// Draft Writer Initalize & Push aplBean
-				var aplInital = {'aplSeq':'1', 'aplId':'${sessionScope.userId}', 'aplName':'${sessionScope.userName}'};
-				aplBean.push(aplInital);
-				for(var i=0; i<originMAplSize; i++) {
-					aplInital = {'aplSeq':i+2, 'aplId':oPushApline[i].value, 'aplName':oPushApline[i].text};
-					aplBean.push(aplInital);
-				}
-				
-				// Department Approval Line Push aplBean
-				for(var i=0; i<originOAplSize; i++) {
-					aplInital = {'aplSeq':originMAplSize+2, 'aplId':oPushOtApline[i].value, 'aplName':oPushOtApline[i].text};
-					aplBean.push(aplInital);
-				}	
-				
-				// Reference Line Push
-				for(var i=0; i<originRAplSize; i++) {
-					rfInital = {'rdId':oPushRfApline[i].value, 'rdName':oPushRfApline[i].text};
-					rfBean.push(rfInital);
-				}
-				
-				var docInital = {'dmCode':originRadioDmCode, 'dmTitle':modifyTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':originMAplSize, 'dmNum':'${sessionScope.tempList[0].dmNum}', aplBean, rfBean};
-				docBean.push(docInital);
-				
-				var json = JSON.stringify(docBean);
-				
-				$.ajax({
-					type: 'POST',
-					url : '/modifyDraft',
-					data : json,
-					contentType: "application/json;charset=UTF-8",
-					dataType: 'json'
-				})
-				setTimeout("location.reload()", 2000);
-			})
-			.fail(function(data) {
-				console.log("Fail");
-			})
-		});
-	});
-	</script>
-	
-	<!-- Open Approval Comment(=Request) Modal -->
 	<script type="text/javascript">
 	$('document').ready(function() {
 		$('#onAplModal').click(function() {
@@ -807,5 +541,9 @@
 		})
 	}); */
 	</script>
+	
+
+	
+	
 </body>
 </html>

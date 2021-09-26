@@ -25,7 +25,7 @@
 
 	<h1 class="page-header">결제대기함</h1>
 
-	<form>
+	
 		<div class="form-row">
 			<div class="form-group col-md-1">
 				<label for="inputDocumentNum">문서번호</label>
@@ -84,7 +84,7 @@
 			</div>
 		</div>
 		
-	</form>
+
 	
 
 		<h2 class="sub-header">문서 목록</h2>
@@ -102,11 +102,12 @@
 				<tbody>
 			<c:forEach var="docList" items="${docList}">
 				<tr>
-					<td><c:out value="${docList.dmNum }"/></td>
-					<td><c:out value="${docList.dmTitle }"/></td>
-					<td><c:out value="${docList.dmCode }"/></td>				
-					<td><c:out value="${docList.dmWriter }"/></td>
-					<td><c:out value="${docList.dmDate }"/></td>
+					
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}" /></a></td>
+					<td><c:out value="${docList.dmTitle}"/></td>
+					<td><c:out value="${docList.dmCode}"/></td>				
+					<td><c:out value="${docList.dmWriter}"/></td>
+					<td><c:out value="${docList.dmDate}"/></td>
 				</tr>
 			</c:forEach>	
 			
@@ -114,13 +115,8 @@
 			</table>
 		</div>
 	</div>
-	
 		<jsp:include page="../utils/navigation.jsp" />
 	</body>
 	</html>
 
-	<jsp:include page="../utils/navigation.jsp" />
-	
-</body>
-</html>
 
