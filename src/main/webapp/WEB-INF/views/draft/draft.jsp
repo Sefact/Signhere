@@ -724,7 +724,6 @@
 	$('document').ready(function() {
 		$('#docUploadForm').on('click', '#docDelete', function() {
 			var that = $(this);
-			alert(that.attr("data-src"));
 			
 			$.ajax({
 				type : "POST",
@@ -853,8 +852,6 @@
 			var departmentSize = '${sessionScope.docMap.size()}';
 			var referenceSize = '${sessionScope.refMap.size()}';
 			
-			alert(approvalSize + ":" + departmentSize + ":" + referenceSize);
-			
 			var aplBean = new Array();
 			var refBean = new Array();
 			
@@ -878,8 +875,6 @@
 			var draftData = [{'dmTitle':dmTitle, 'dmNum':dmNum, 'dmDate':dmDate, 'dmWriter':'${sessionScope.userId}', 'dmCode':dmCode, 'aplComment':acReason, aplBean, refBean}];
 			var draftJson = JSON.stringify(draftData);
 			
-			alert(draftJson);
-			
 			$.ajax({
 				type: 'POST',
 				url : '/requestDraft',
@@ -898,6 +893,7 @@
 	});
 	</script>
 	
+	<!-- BeforeUnload Page Move Locked -->
 	<script type="text/javascript">
 	    var checkUnload = true;
 	    
@@ -906,14 +902,16 @@
 	    });
 	   
 	    $(document).on("click", "#modifyApproval", function(event){
-	        // disable warning
+	        $(window).off('beforeunload');
+	    });
+
+	    $(document).on("click", "#sendApproval", function(event){
 	        $(window).off('beforeunload');
 	    });
 	    
-	    /* $(document).on("click", "#requestApproval", function(event){
-	        // disable warning
+	    $(document).on("click", "#requestApproval", function(event){
 	        $(window).off('beforeunload');
-	    }); */
+	    });	    
 	</script>
 </body>
 
