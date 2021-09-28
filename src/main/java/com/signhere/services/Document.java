@@ -437,18 +437,10 @@ public class Document {
 		signList=sqlSession.selectList("signLocation",ab);
 		
 		
-	
-		System.out.println(signList);
-		//db에 저장된 location(파일위치를) 짤라야 함... 근데 이걸 짤라서 리스트에 다시담아서,,, 그럼 빈에 다시 리스트로 담ㅇ,,? 아이씨 머지
-		
-		int beginIndex2 = signList.get(0).getAplLocation().indexOf("/img");
-	
-
-		
-		
+		//사인로케이션에 /img 부터의 경로를 저장하는 메소드
 		List<Map<String, Object>> signLocList = new ArrayList<Map<String, Object>>();
 		
-		
+		int beginIndex2 = signList.get(0).getAplLocation().indexOf("/img");
 		for(int i=0; i<signList.size(); i++) {
 			Map<String, Object> signLocListPut = new HashMap<String, Object>();
 			if(signList.get(i).getAplLocation()!=null) {
@@ -458,21 +450,11 @@ public class Document {
 			signLocList.add(signLocListPut);
 		}
 		}
-
 		mav.addObject("signList",signLocList);
 		
 		
 		
 	
-		if(rrb.getRdId()!=null) {
-			
-		}
-		
-
-	
-		
-		
-		
 		
 		
 
