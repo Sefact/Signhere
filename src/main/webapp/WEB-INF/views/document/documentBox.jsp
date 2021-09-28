@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +20,8 @@
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
+	<!-- Signature Library -->
+	<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 </head>
 
 
@@ -39,37 +42,41 @@
 					<button type="button" class="btn btn-primary btn-block" id="onAplModal">반려</button>
 				</div>
 			</div>
+			<c:set var="docList" value="${docList}" />
+			
 			<div class="form-row">
 				<div class="form-group col-md-12">
 					<label>문서제목</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmTitle}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmTitle}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-6">
 					<label>문서번호</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmNum}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmNum}" disabled/>
 				</div>
 				<div class="form-group col-md-6">
 					<label>날짜</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmDate}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmDate}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
 					<label>작성자</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmWriter}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmWriter}" disabled/>
 				</div>
 				<div class="form-group col-md-4">
 					<label>참조자</label>
 					<!-- <input type="text" class="form-control" id="" value="${sessionScope.docBean.rfBean[0].rdId}" disabled/>  -->
 					<select class="form-control">
-						<option value="${sessionScope.docBean.rfBean[0].rdName}">${sessionScope.docBean.rfBean[0].rdName}</option>
+					<c:forEach var="refList" items="${refList}">
+						<option value="${refList.rdName}"><c:out value="${refList.rdName}"/></option>
+						</c:forEach>	
 					</select>
 				</div>
 				<div class="form-group col-md-4">
 					<label>문서종류</label>
-					<input type="text" class="form-control" id="" placeholder="${sessionScope.docBean.dmCode}" disabled/>
+					<input type="text" class="form-control" id="" placeholder="" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
@@ -77,13 +84,12 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12">
-					<img id="imgPreview" />
+					<img id="imgPreview" src="${fileLoc}"/>
+				
 				</div>
 			</div>
 			<div class="form-row">
-				<div class="form-group col-md-12" id="docUploadForm">
-					<input type="button" id="docUpload" value="Submit" />
-				</div>
+
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
@@ -103,11 +109,16 @@
 				</div>
 			</div>
 			<!-- Signature Form -->
+		<c:forEach var="signList" items="${signList}">
+										<img height="200px" width="200px" src="<c:out value="${signList.signLocation}" />">
+										</c:forEach>
+
+			
 			<div class="form-row">
 				<div class="form-group col-md-4">
 					<div id="signature-pad" class="m-signature-pad">
 				        <div class="m-signature-pad--body">
-				            <canvas id="signature-canvas"></canvas>
+				            <canvas id="signature-canvas" style="border: 2px solid black"></canvas>
 				        </div>
 				        <div class="m-signature-pad--footer">
 				            <button type="button" class="button clear" data-action="clear">지우기</button>
@@ -135,10 +146,7 @@
 					<form>
 						<div class="container-fluid">
 							<div class="form-row">
-								<div class="col-md-12">
-									<label>Title</label>	
-									<input type="text"class="form-control" name="modifyTitle" value="${sessionScope.docBean.dmTitle}"><br>
-								</div>
+
 							</div>
 							<div class="form-row">
 								<div class="form-group col-md-12">	
@@ -153,7 +161,7 @@
 										<c:forEach var="ogAplList" items="${sessionScope.ogAplMap}">
 												<option value="<c:out value="${ogAplList.aplId}"></c:out>"><c:out value="${ogAplList.aplName}"></c:out></option>
 										</c:forEach>
-									</select>
+									</select>	
 								</div>
 								<div class="form-group col-md-2">
 									<button type="button" id="mModifyLineSave" class="btn btn-primary btn-block">저장</button>

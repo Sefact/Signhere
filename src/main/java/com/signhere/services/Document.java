@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.DocumentBean;
+import com.signhere.beans.ReadingReferenceBean;
 import com.signhere.beans.UserBean;
 import com.signhere.beans.WriteBean;
 import com.signhere.utils.Session;
@@ -30,8 +32,8 @@ public class Document {
 	@Autowired
 	Session ssn;
 	
-	private String uploadPath = "C:\\Company\\Document\\";
-	private String signPath = "C:\\Company\\Signature\\";
+	private String uploadPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
+	private String signPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
 	
 	public List<DocumentBean> mSearchText(DocumentBean db){
 
@@ -291,7 +293,10 @@ public class Document {
 				String fileName = multipartFile.getOriginalFilename();
 				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
 				File tmp = new File(uploadPath + fileName);
-
+				
+				System.out.println("fileName"+fileLoc);
+				System.out.println("fileLoc"+fileName);
+				
 				fileMap.put("fileName", fileName);
 				fileMap.put("fileSize", multipartFile.getSize());
 				multipartFile.transferTo(tmp);
@@ -436,25 +441,74 @@ public class Document {
 	}
 	
 
-	public ModelAndView documentBoxDetail(DocumentBean db) {
+	public ModelAndView documentBoxDetail(WriteBean wb) {
 		
 		ModelAndView mav = new ModelAndView();
+		ReadingReferenceBean rrb = new ReadingReferenceBean();
+		ApprovalBean ab = new ApprovalBean();
+			
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));
-			db.getDmNumCheck();
-		} catch (Exception e) {
+			wb.setLogId((String)ssn.getAttribute("userId"));
 		
+		} catch (Exception e) {		
 			e.printStackTrace();
 		}
 		
+		List<WriteBean> docList;
 		
-		mav.addObject("title",db.getDmTitle());
+		docList=sqlSession.selectList("detailDocument",wb);
+		
+		mav.addObject("docList",docList.get(0));	
+		List<ReadingReferenceBean> refList;	
+		
+		rrb.setDmNum(wb.getDmNumCheck());
+		refList=sqlSession.selectList("detailRefer",rrb);
+		
+		mav.addObject("refList",refList);
+
+		System.out.println("splitTest"+docList.get(0).getFileLoc().split("resources").toString());
+		/* 문서img파일 저장경로를 /img/*.jpg(file) 형식으로 자름*/
+		String fileLoc= docList.get(0).getFileLoc();
+		int beginIndex = fileLoc.indexOf("/img");
+		int lastIndex = fileLoc.length();	
+		String fileLocResult=fileLoc.substring(beginIndex,lastIndex);
+		
+		mav.addObject("fileLoc",fileLocResult);
+		
+		
+		
+		List<ApprovalBean> signList;
+	
+		ab.setDmNum(wb.getDmNumCheck());
+		signList=sqlSession.selectList("signLocation",ab);
+		
+		
+		//사인로케이션에 /img 부터의 경로를 저장하는 메소드
+		List<Map<String, Object>> signLocList = new ArrayList<Map<String, Object>>();
+		
+		int beginIndex2 = signList.get(0).getAplLocation().indexOf("/img");
+		for(int i=0; i<signList.size(); i++) {
+			Map<String, Object> signLocListPut = new HashMap<String, Object>();
+			if(signList.get(i).getAplLocation()!=null) {
+
+			int lastIndex2 = signList.get(i).getAplLocation().length();
+			signLocListPut.put("signLocation", signList.get(i).getAplLocation().substring(beginIndex2,lastIndex2));		
+			signLocList.add(signLocListPut);
+		}
+		}
+		mav.addObject("signList",signLocList);
+		
+		
+		
+	
+		
+		
+
+		
+		
+//		mav.addObject("dmTitle",wb.getDmTitle());
 		//이거 그냥 위에서 dmNum으로 저장해두 됨. 헷갈릴수도 있으니 일단 다른걸로 저장.
-		mav.addObject("title",db.getDmNumCheck());
-		mav.addObject("dmDate",db.getDmDate());
-		mav.addObject("dmWriteId",db.getDmWriteId());
-		mav.addObject("dmRefId",db.getRefId());
-		mav.addObject("dmCode",db.getDmCode());
+	
 		
 		//DOCUMENT,APPROVALLINE,APCOMMENT(결재의견) ,COMMENT(그냥의견 이건 완료문서함에 한해서),REF,READING,
 		
@@ -471,8 +525,6 @@ public class Document {
 		
 	
 	
-		
-		
 		mav.setViewName("document/documentBox");
 		
 		
