@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.AccessBean;
 import com.signhere.beans.DocumentBean;
+import com.signhere.beans.WriteBean;
 import com.signhere.mapper.DocumentInter;
 import com.signhere.services.Document;
 import com.signhere.services.Management;
@@ -381,10 +382,10 @@ public class ListController implements DocumentInter {
 	//예를들면 내가 waitApproval함의 sql조건에 일치판단(참/거짓)하여 트루라면 버튼들이 보여야하고 false면 버튼들이 보이지 않아야 함.
 	
 	@GetMapping("/documentBox")
-	public ModelAndView documentBox(@ModelAttribute DocumentBean db) {
+	public ModelAndView documentBox(@ModelAttribute WriteBean wb) {
 
 			
-			mav = doc.documentBoxDetail(db);
+			mav = doc.documentBoxDetail(wb);
 			
 			return mav;
 	}
