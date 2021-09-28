@@ -63,7 +63,9 @@
 					<label>참조자</label>
 					<!-- <input type="text" class="form-control" id="" value="${sessionScope.docBean.rfBean[0].rdId}" disabled/>  -->
 					<select class="form-control">
-						<option value="${sessionScope.docBean.rfBean[0].rdName}">${sessionScope.docBean.rfBean[0].rdName}</option>
+						<c:forEach var="rfBean" items="${sessionScope.docBean.rfBean}">
+							<option value="<c:out value="${rfBean.rdName}"></c:out>"><c:out value="${rfBean.rdName}"></c:out></option>
+						</c:forEach>
 					</select>
 				</div>
 				<div class="form-group col-md-4">
@@ -87,19 +89,30 @@
 				</div>
 			</div>
 			<div class="form-row">
+				<div class="form-group col-md-12">
+					<label>결재자</label>
+				</div>
+			</div>
+			<div class="form-row">
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select class="form-control" size="3">
+						<option>부서: ${sessionScope.apDpMap[0].aplDpName}</option>
+						<option>직급: ${sessionScope.apDpMap[0].aplGrade}</option>
+						<option>이름: ${sessionScope.apDpMap[0].aplName}</option>
 					</select>
 				</div>
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select class="form-control" size="3">
+						<option>부서: ${sessionScope.apDpMap[1].aplDpName}</option>
+						<option>직급: ${sessionScope.apDpMap[1].aplGrade}</option>
+						<option>이름: ${sessionScope.apDpMap[1].aplName}</option>
 					</select>
 				</div>
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select class="form-control" size="3">
+						<option>부서: ${sessionScope.apDpMap[2].aplDpName}</option>
+						<option>직급: ${sessionScope.apDpMap[2].aplGrade}</option>
+						<option>이름: ${sessionScope.apDpMap[2].aplName}</option>
 					</select>
 				</div>
 			</div>

@@ -184,4 +184,17 @@
 	<insert id="insReference" parameterType="WriteBean">
 		INSERT INTO RF (DOCUMENT_NUM, REFERENCE_ID) VALUES(#{dmNum}, #{refId})
 	</insert>
+	
+	<select id="selGrInfo" parameterType="String" resultType="String">
+		SELECT GR.GRADE_NAME AS "grName"
+		FROM MM INNER JOIN GR ON MM.GRADE_CODE = GR.GRADE_CODE
+		WHERE ID = #{apId}
+	</select>
+	
+	<select id="selDpInfo" parameterType="String" resultType="String">
+		SELECT DP.DEPARTMENT_NAME AS "dpName"
+		FROM MM INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND
+                         MM.COMPANY_CODE = DP.COMPANY_CODE
+		WHERE ID = #{apId}
+	</select>
 </mapper>
