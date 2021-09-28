@@ -164,15 +164,6 @@ public class DraftController {
 		return new ResponseEntity<>("deleted", HttpStatus.OK);
 	}
 	
-	/*
-	 * @PostMapping("/saveSign")
-	 * 
-	 * @ResponseBody public String saveSign(@RequestParam(value="file",
-	 * required=true) MultipartFile [] file) {
-	 * 
-	 * return null; }
-	 */
-	
 	@PostMapping("/saveSign")
 	@ResponseBody
 	public Map<String, Object> saveSign(@RequestParam(value="file", required=true) MultipartFile [] file) throws IOException {

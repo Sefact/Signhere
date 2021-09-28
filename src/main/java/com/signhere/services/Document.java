@@ -134,12 +134,15 @@ public class Document {
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();
 		
+		System.out.println(db);
+		
 		List<DocumentBean> tempList = null;
 		String dmCodeCheck = null;
 		
 		List<Map<String, Object>> aplMap = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> docMap = new ArrayList<Map<String, Object>>();
-		List<Map<String, Object>> refMap = new ArrayList<Map<String, Object>>();	
+		List<Map<String, Object>> refMap = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> apDpMap = new ArrayList<Map<String, Object>>();
 
 		int apSeqLoc = db.getAplSeq() + 1;
 		
@@ -153,19 +156,39 @@ public class Document {
 		
 		for(int i=1; i<apSeqLoc; i++) {
 			Map<String, Object> aplMapPut = new HashMap<String, Object>();
+			
+			db.setApId(db.getAplBean().get(i).getAplId());
+			String grSession = sqlSession.selectOne("selGrInfo", db);
+			String dpSession = sqlSession.selectOne("selDpInfo", db);
+			
 			aplMapPut.put("aplId", db.getAplBean().get(i).getAplId());
 			aplMapPut.put("aplName", db.getAplBean().get(i).getAplName());
 			aplMapPut.put("aplSeq", i);
+			aplMapPut.put("aplGrade", grSession);
+			aplMapPut.put("aplDpName", dpSession);
 			aplMap.add(aplMapPut);
 			
+			// 결재선에서 불러와줄 Map
+			apDpMap.add(aplMapPut);
 		}
 		
 		for(int i=apSeqLoc; i<db.getAplBean().size(); i++) {
 			Map<String, Object> docMapPut = new HashMap<String, Object>();
+			
+			db.setApId(db.getAplBean().get(i).getAplId());
+			String grSession = sqlSession.selectOne("selGrInfo", db);
+			String dpSession = sqlSession.selectOne("selDpInfo", db);
+			
 			docMapPut.put("aplId", db.getAplBean().get(i).getAplId());
 			docMapPut.put("aplName", db.getAplBean().get(i).getAplName());
 			docMapPut.put("aplSeq", i);
+			docMapPut.put("aplGrade", grSession);
+			docMapPut.put("aplDpName", dpSession);
+			
 			docMap.add(docMapPut);
+			
+			// 결재선에서 불러와줄 Map
+			apDpMap.add(docMapPut);
 		}
 		
 		try {
@@ -180,6 +203,7 @@ public class Document {
 			ssn.setAttribute("dmCheck", dmCodeCheck);
 			ssn.setAttribute("docBean", db);
 			ssn.setAttribute("aplMap", aplMap);
+			ssn.setAttribute("apDpMap", apDpMap);
 			ssn.setAttribute("docMap", docMap);
 			ssn.setAttribute("refMap", refMap);
 		} catch (Exception e) {
@@ -194,7 +218,8 @@ public class Document {
 		
 		List<Map<String, Object>> aplMap = new ArrayList<Map<String, Object>>();
 		List<Map<String, Object>> docMap = new ArrayList<Map<String, Object>>();
-		List<Map<String, Object>> refMap = new ArrayList<Map<String, Object>>();	
+		List<Map<String, Object>> refMap = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> apDpMap = new ArrayList<Map<String, Object>>();
 
 		int apSeqLoc = db.getAplSeq() + 1;
 		
@@ -207,16 +232,36 @@ public class Document {
 		
 		for(int i=1; i<apSeqLoc; i++) {
 			Map<String, Object> aplMapPut = new HashMap<String, Object>();
+			
+			db.setApId(db.getAplBean().get(i).getAplId());
+			String grSession = sqlSession.selectOne("selGrInfo", db);
+			String dpSession = sqlSession.selectOne("selDpInfo", db);
+			
 			aplMapPut.put("aplId", db.getAplBean().get(i).getAplId());
 			aplMapPut.put("aplName", db.getAplBean().get(i).getAplName());
+			aplMapPut.put("aplGrade", grSession);
+			aplMapPut.put("aplDpName", dpSession);
 			aplMap.add(aplMapPut);
+			
+			// 문서종류 및 결재선 수정시 결재자 정보를 저장할 Map
+			apDpMap.add(aplMapPut);
 		}
 		
 		for(int i=apSeqLoc; i<db.getAplBean().size(); i++) {
 			Map<String, Object> docMapPut = new HashMap<String, Object>();
+			db.setApId(db.getAplBean().get(i).getAplId());
+			String grSession = sqlSession.selectOne("selGrInfo", db);
+			String dpSession = sqlSession.selectOne("selDpInfo", db);
+			
 			docMapPut.put("aplId", db.getAplBean().get(i).getAplId());
 			docMapPut.put("aplName", db.getAplBean().get(i).getAplName());
+			docMapPut.put("aplGrade", grSession);
+			docMapPut.put("aplDpName", dpSession);
+			
 			docMap.add(docMapPut);
+			
+			// 문서종류 및 결재선 수정시 결재자 정보를 저장할 Map
+			apDpMap.add(docMapPut);
 		}
 		
 		try {
@@ -230,6 +275,7 @@ public class Document {
 			ssn.setAttribute("docBean", db);
 			ssn.setAttribute("aplMap", aplMap);
 			ssn.setAttribute("docMap", docMap);
+			ssn.setAttribute("apDpMap", apDpMap);
 			ssn.setAttribute("refMap", refMap);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -34,4 +34,7 @@ public class DocumentBean {
 	private String[] dmNumArr;
 	private List<ApprovalBean> aplBean;
 	private List<ReadingReferenceBean> rfBean;
+	// 사원의 직급과 부서명
+	private String grName;
+	private String dpName;
 }

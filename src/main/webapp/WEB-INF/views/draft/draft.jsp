@@ -63,7 +63,9 @@
 					<label>참조자</label>
 					<!-- <input type="text" class="form-control" id="" value="${sessionScope.docBean.rfBean[0].rdId}" disabled/>  -->
 					<select class="form-control">
-						<option value="${sessionScope.docBean.rfBean[0].rdName}">${sessionScope.docBean.rfBean[0].rdName}</option>
+						<c:forEach var="rfBean" items="${sessionScope.docBean.rfBean}">
+							<option value="<c:out value="${rfBean.rdName}"></c:out>"><c:out value="${rfBean.rdName}"></c:out></option>
+						</c:forEach>
 					</select>
 				</div>
 				<div class="form-group col-md-4">
@@ -87,19 +89,30 @@
 				</div>
 			</div>
 			<div class="form-row">
+				<div class="form-group col-md-12">
+					<label>결재자</label>
+				</div>
+			</div>
+			<div class="form-row">
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select class="form-control" size="3">
+						<option>부서: ${sessionScope.apDpMap[0].aplDpName}</option>
+						<option>직급: ${sessionScope.apDpMap[0].aplGrade}</option>
+						<option>이름: ${sessionScope.apDpMap[0].aplName}</option>
 					</select>
 				</div>
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select class="form-control" size="3">
+						<option>부서: ${sessionScope.apDpMap[1].aplDpName}</option>
+						<option>직급: ${sessionScope.apDpMap[1].aplGrade}</option>
+						<option>이름: ${sessionScope.apDpMap[1].aplName}</option>
 					</select>
 				</div>
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select class="form-control" size="3">
+						<option>부서: ${sessionScope.apDpMap[2].aplDpName}</option>
+						<option>직급: ${sessionScope.apDpMap[2].aplGrade}</option>
+						<option>이름: ${sessionScope.apDpMap[2].aplName}</option>
 					</select>
 				</div>
 			</div>
@@ -724,7 +737,6 @@
 	$('document').ready(function() {
 		$('#docUploadForm').on('click', '#docDelete', function() {
 			var that = $(this);
-			alert(that.attr("data-src"));
 			
 			$.ajax({
 				type : "POST",
@@ -853,8 +865,6 @@
 			var departmentSize = '${sessionScope.docMap.size()}';
 			var referenceSize = '${sessionScope.refMap.size()}';
 			
-			alert(approvalSize + ":" + departmentSize + ":" + referenceSize);
-			
 			var aplBean = new Array();
 			var refBean = new Array();
 			
@@ -878,8 +888,6 @@
 			var draftData = [{'dmTitle':dmTitle, 'dmNum':dmNum, 'dmDate':dmDate, 'dmWriter':'${sessionScope.userId}', 'dmCode':dmCode, 'aplComment':acReason, aplBean, refBean}];
 			var draftJson = JSON.stringify(draftData);
 			
-			alert(draftJson);
-			
 			$.ajax({
 				type: 'POST',
 				url : '/requestDraft',
@@ -898,6 +906,7 @@
 	});
 	</script>
 	
+	<!-- BeforeUnload Page Move Locked -->
 	<script type="text/javascript">
 	    var checkUnload = true;
 	    
@@ -906,14 +915,16 @@
 	    });
 	   
 	    $(document).on("click", "#modifyApproval", function(event){
-	        // disable warning
+	        $(window).off('beforeunload');
+	    });
+
+	    $(document).on("click", "#sendApproval", function(event){
 	        $(window).off('beforeunload');
 	    });
 	    
-	    /* $(document).on("click", "#requestApproval", function(event){
-	        // disable warning
+	    $(document).on("click", "#requestApproval", function(event){
 	        $(window).off('beforeunload');
-	    }); */
+	    });	    
 	</script>
 </body>
 
