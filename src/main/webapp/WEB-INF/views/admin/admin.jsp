@@ -20,6 +20,7 @@
 <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
 <!-- popper.js -->
 <script src="/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
+<script src="/resources/js/admin/aplistAdmin.js"></script>
 <!-- Font-Awesome -->
 <link
 	href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css"
