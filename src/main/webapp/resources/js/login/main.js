@@ -2,6 +2,28 @@
  * 
  */
 
+function documentBox(num){
+	
+
+	//let abc = num;
+	
+		
+	let form = makeForm("documentBox","post");
+	
+	let abc = document.createElement(num);
+	
+	alert(abc);
+	
+
+	form.appendChild(abc);
+	document.body.append(form);
+
+	
+	form.submit();
+	
+	
+}
+
 
 function changePage(pageName,method){
 	let form = makeForm(pageName, method);

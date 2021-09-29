@@ -42,8 +42,7 @@ public class HomeController {
 		DocumentBean db = new DocumentBean();
 		System.out.println(db.getDmNum());
 		
-		
-		
+	
 		return auth.mHome(ub);
 
 	}

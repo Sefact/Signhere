@@ -11,13 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.AccessBean;
 import com.signhere.beans.DocumentBean;
+import com.signhere.beans.WriteBean;
 import com.signhere.mapper.DocumentInter;
 import com.signhere.services.Document;
 import com.signhere.services.Management;
@@ -38,7 +43,7 @@ public class ListController implements DocumentInter {
 	private int chechkNum = 11;
   
 	//내가 보낸 기안
-	@PostMapping("/myDraft")
+	@RequestMapping(value="/myDraft", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView myDraft(@ModelAttribute DocumentBean db) {
 		mav = new ModelAndView();
 		
@@ -58,6 +63,7 @@ public class ListController implements DocumentInter {
 		//Autowired가 제대로 안되서 세션값이 안넘어오는 실수를 저지름! (09.11)
 		try {
 			db.setDmWriteId((String)ssn.getAttribute("userId"));
+			ssn.setAttribute("docNum",2);
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,6 +74,8 @@ public class ListController implements DocumentInter {
 		//현재 ID(DM테이블의 WRITER)는 interface.xml에 임의값 where절에 집어넣음.
 	
 		mav.addObject("docList",docList);
+	
+		
 
 	
 //		실수... db 통해서 쓴 sql System.out.println(db.get(0).getDmNum());
@@ -123,8 +131,7 @@ public class ListController implements DocumentInter {
 		List <DocumentBean> docList;
 		
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));
-		
+			db.setApId((String)ssn.getAttribute("userId"));		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -134,8 +141,7 @@ public class ListController implements DocumentInter {
 		
 		//APPROVAL_ID=로그인 한 아이디 =>'202103003' / xml에서 where절에 입력.
 		mav.addObject("docList",docList);
-	
-		
+		System.out.println(docList.size());
 		
 		return mav;
 	}
@@ -366,4 +372,24 @@ public class ListController implements DocumentInter {
 	private boolean convertToBoolean(int result) {
 		return result==1 ? true: false;  
 	}
+	
+	
+	
+	
+	//세션에서 ID가져오고  도큐먼트 넘버를 documentBox.jsp를 통해 가져옴. 그리고 DocumentBean의 dmNumCheck이라느 bean에 담음.
+	//dmNumCheck에 담긴 문서번호를 통해 DM,APL테이블에 접근해 dmTitle,Date,signlocation,doclocation등을 가져옴.
+	//내가 결재진행함 혹은 결재완료함에 있는 문서라면 결재나 반려 보류 등의 버튼이 없어야 함. 
+	//예를들면 내가 waitApproval함의 sql조건에 일치판단(참/거짓)하여 트루라면 버튼들이 보여야하고 false면 버튼들이 보이지 않아야 함.
+	
+	@GetMapping("/documentBox")
+	public ModelAndView documentBox(@ModelAttribute WriteBean wb) {
+
+			
+			mav = doc.documentBoxDetail(wb);
+			
+			return mav;
+	}
+	
+	
+
 }
