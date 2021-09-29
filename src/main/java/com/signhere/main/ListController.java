@@ -14,11 +14,13 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
 import com.signhere.mapper.DocumentInter;
+import com.signhere.services.Criteria;
 import com.signhere.services.Document;
 import com.signhere.services.Management;
 import com.signhere.utils.Session;
@@ -38,273 +40,129 @@ public class ListController implements DocumentInter {
 	private int chechkNum = 11;
   
 	//내가 보낸 기안
-	@PostMapping("/myDraft")
-	public ModelAndView myDraft(@ModelAttribute DocumentBean db) {
+	@RequestMapping("/myDraft")
+	public ModelAndView myDraft(Criteria cri) {
 		mav = new ModelAndView();
 		
-		// UserId를 참고로 내가 보낸기안들(Documnet 테이블 접근)을 가져오는 쿼리를 쓰고, 각 DocumentBean에 
-		// 항목들 get해서 myDraft 페이지로 이동
-		//page 이동
-		mav.setViewName("document/myDraft");
-	
+		mav = doc.myDraft(cri);
 		
 		// Temporary Check 있을 시 비워주고 없는 경우 콘솔에 에러메시지 출력
-		this.tempCheck(db);
+		this.tempCheck(cri);
 		
-		//DocumentBean을 List에 생성?
-		List<DocumentBean> docList;
-		
-		//작성자ID(로그인한 사용자) 임의저장
-		//Autowired가 제대로 안되서 세션값이 안넘어오는 실수를 저지름! (09.11)
-		try {
-			db.setDmWriteId((String)ssn.getAttribute("userId"));
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-		//DoucmentInter.xml, query 참조
-		docList=sqlSession.selectList("myDraft", db);
-				
-		//현재 ID(DM테이블의 WRITER)는 interface.xml에 임의값 where절에 집어넣음.
-	
-		mav.addObject("docList",docList);
-
-	
-//		실수... db 통해서 쓴 sql System.out.println(db.get(0).getDmNum());
-//		System.out.println(db.get(0).getDmTitle());		
-				
-//		 Map<String, Object> map = new HashMap<String, Object>();
-//		 map.put("docList", docList);
-//		 mav.addObject("map",map);
 	
 		return mav;
 	}
 	
 	//내가 보낸 시행
-	@PostMapping("/myEnforceMent")
-	public ModelAndView myEnforceMent(DocumentBean db) {
+	@RequestMapping("/myEnforceMent")
+	public ModelAndView myEnforceMent(Criteria cri) {
 		mav = new ModelAndView();
 		
-		//페이지이동
-		mav.setViewName("document/myEnforceMent");
-		
-		this.tempCheck(db);
-		
-		//DocumentBean을 List에 생성
-		List<DocumentBean> docList;
-		
-		try {
-			db.setDmWriteId((String)ssn.getAttribute("userId"));
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-		
-		//작성자ID(로그인한 사용자) 임의저장
-		//db.setDmWriteId("202103001");
-		
-		docList=sqlSession.selectList("myEnforceMent", db);
-		
-		mav.addObject("docList",docList);
+		mav = doc.myEnforcement(cri);
 
 		return mav;
 	}
 	
   	//결제대기함
-	@PostMapping("/apToDoList")
-	public ModelAndView apToDoList(DocumentBean db) {
-		ModelAndView mav = new ModelAndView();
+	@RequestMapping("/apToDoList")
+	public ModelAndView apToDoList(Criteria cri) {
 		
-		mav.setViewName("document/waitApproval");
-	
+		mav = doc.apToDoList(cri);
 		
-		this.tempCheck(db);
-		
-		List <DocumentBean> docList;
-		
-		try {
-			db.setApId((String)ssn.getAttribute("userId"));
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}	
-		
-		docList=sqlSession.selectList("waitApproval",db);
-		
-		
-		//APPROVAL_ID=로그인 한 아이디 =>'202103003' / xml에서 where절에 입력.
-		mav.addObject("docList",docList);
-	
-		
+		this.tempCheck(cri);
 		
 		return mav;
 	}
 	
 
   	//결제진행함
-	@PostMapping("/apIngList")
-	public ModelAndView apIngList(DocumentBean db) {
+	@RequestMapping("/apIngList")
+	public ModelAndView apIngList(Criteria cri) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("document/approvalProcced");
-		
-		this.tempCheck(db);
-		
-		List <DocumentBean> docList;
-
-		try {
-			db.setApId((String)ssn.getAttribute("userId"));
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		docList=sqlSession.selectList("approvalProcced",db);
-		
-		
-		
-		//APPROVAL_ID=로그인한아이디 =>'202103002' / xml에서 where절에 입력.		
-		mav.addObject("docList",docList);
-		
-		
+		mav = doc.apIngList(cri);
+		this.tempCheck(cri);
 		return mav;
 	}
 	
 	//결재완료함
-	@PostMapping("/apCompleteList")
-	public ModelAndView apCompleteList(DocumentBean db) {
+	@RequestMapping("/apCompleteList")
+	public ModelAndView apCompleteList(Criteria cri) {
 		
 		mav = new ModelAndView();
 		
-		mav.setViewName("document/completeApproval");
+		mav = doc.apCompleteList(cri);
 		
-		this.tempCheck(db);
+		this.tempCheck(cri);
 		
-		List <DocumentBean> docList;
-		
-
-		try {
-			db.setApId((String)ssn.getAttribute("userId"));
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		docList=sqlSession.selectList("completeApproval",db);
-		
-		//APPROVAL_ID=로그인한아이디 =>'202103001'xml에서 where절에 입력.
-		mav.addObject("docList",docList);	
-		return mav;
-		
+		return mav;	
 	}
 	
 	//반려함
-	@PostMapping("/apReturnList")
-	public ModelAndView apReturnList(DocumentBean db) {
+	@RequestMapping("/apReturnList")
+	public ModelAndView apReturnList(Criteria cri) {
 		mav = new ModelAndView();		
-		mav.setViewName("document/companionApproval");
 		
-		this.tempCheck(db);
+		mav = doc.apReturnList(cri);
 		
-		List <DocumentBean> docList;
-
-		try {
-			db.setApId((String)ssn.getAttribute("userId"));
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		docList=sqlSession.selectList("compaionApproval", db);
-		
-		//APPROVAL_ID=로그인한아이디 =>'202103001'xml에서 where절에 입력.
-		mav.addObject("docList",docList);
+		this.tempCheck(cri);
 		
 		return mav;
 	}
 	
 	//보류함
-	@PostMapping("/deferList")
-	public ModelAndView deferList(DocumentBean db) {
+	@RequestMapping("/deferList")
+	public ModelAndView deferList(Criteria cri) {
 		mav = new ModelAndView();		
-		mav.setViewName("document/deferList");
 		
-		this.tempCheck(db);
+		mav = doc.deferList(cri);
 		
-		List <DocumentBean> docList;
-		
-
-		try {
-			db.setApId((String)ssn.getAttribute("userId"));
-		
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		docList=sqlSession.selectList("deferList",db);
-		
-		
-		//APPROVAL_ID=로그인한아이디 =>'202103001'xml에서 where절에 입력.
-		mav.addObject("docList",docList);
+		this.tempCheck(cri);
 		
 		return mav;
 	}
 	
 
   	//참조열람함
-	@PostMapping("/apReferenceList")
-	public ModelAndView apReferenceList(DocumentBean db) {
+	@RequestMapping("/apReferenceList")
+	public ModelAndView apReferenceList(Criteria cri) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("document/referenceApproval");
+		mav = doc.referenceList(cri);
 		
-		this.tempCheck(db);
-		
-		List <DocumentBean> docList;
-		
-		try {
-			db.setReadingId((String)ssn.getAttribute("userId"));
-			db.setRefId((String)ssn.getAttribute("userId"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		docList=sqlSession.selectList("referenceApproval", db);
-		
-		//APPROVAL_ID=로그인한아이디 =>'202103002'xml에서 where절에 입력.
-		mav.addObject("docList",docList);
+		this.tempCheck(cri);
 		
 		return mav;
 	}
 	
 
 	//개인보관함	
-	@PostMapping("/myList")
-	public ModelAndView myList(DocumentBean db) {
+	@RequestMapping("/myList")
+	public ModelAndView myList(Criteria cri) {
 		mav = new ModelAndView();
 		
-    	mav.setViewName("document/myList");
+    	mav = doc.myList(cri);
     	
-    	this.tempCheck(db);   
+    	this.tempCheck(cri);   
     	
     	return mav;
 	}
 	
 
 	//개인보관함으로 이동시키는 JOB
-	@PostMapping("/goMyList")
-	public ModelAndView goMyList(DocumentBean db) {
+	@RequestMapping("/goMyList")
+	public ModelAndView goMyList(Criteria cri) {
 		mav = new ModelAndView();
 		
 		mav.setViewName("document/myList");
 		
-		this.tempCheck(db);
+		this.tempCheck(cri);
 		
 		return mav;
 	}
 	
 	//개인보관함에 있는 문서 삭제 JOB
-	@PostMapping("/delMyList")
+	@RequestMapping("/delMyList")
 	public ModelAndView delMyList(DocumentBean db) {
 		mav = new ModelAndView();
 		
@@ -314,14 +172,14 @@ public class ListController implements DocumentInter {
 	}
 
 	//문서검색 JOB
-	@PostMapping("/searchText")
+	@RequestMapping("/searchText")
 	@ResponseBody
-	public List<DocumentBean> searchText(@RequestBody DocumentBean db) {
+	public List<DocumentBean> searchText(@RequestBody DocumentBean db,Criteria cri) {
 		return doc.mSearchText(db);
 	}
 	
 	//페이지이동 JOB
-	@PostMapping("/moveAjaxPage")
+	@RequestMapping("/moveAjaxPage")
 	public List<DocumentBean> moveAjaxPage(DocumentBean db) {
 		
 		
@@ -329,28 +187,29 @@ public class ListController implements DocumentInter {
 	}
 	
 	//공문수신함
-	@PostMapping("/receiveList")
-	public ModelAndView receiveList(DocumentBean db) {
+	@RequestMapping("/receiveList")
+	public ModelAndView receiveList(Criteria cri) {
 		mav = new ModelAndView();
 		
-		mav.setViewName("document/receiveNotice");
+		mav = doc.receiveList(cri);
 		
-		this.tempCheck(db);
 		
+		this.tempCheck(cri);
+		/*
 		List <DocumentBean> docList;
 		
-		docList=sqlSession.selectList("receiveNotice",db);
+		docList=sqlSession.selectList("receiveNotice", cri);
 		
 		mav.addObject("docList",docList);
-		
+		*/
 		return mav;
 	}
 	
-	public void tempCheck(DocumentBean db) {
+	public void tempCheck(Criteria cri) {
 		try {
-			db.setDmNum((String) ssn.getAttribute("dmCheck"));
+			cri.setSenderId((String) ssn.getAttribute("dmCheck"));
 			if(ssn.getAttribute("dmCheck") != null) {
-				if(this.convertToBoolean(sqlSession.delete("delTemporary", db))) {
+				if(this.convertToBoolean(sqlSession.delete("delTemporary", cri))) {
 					ssn.removeAttribute("dmCheck");
 				} else {
 					System.out.println("Temporary is not Found");

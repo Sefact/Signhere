@@ -32,4 +32,9 @@ public class DocumentBean {
 	private String[] dmNumArr;
 	private List<ApprovalBean> aplBean;
 	private List<ReadingReferenceBean> rfBean;
+	private String fileLoc;
+	private String signLoc;
+	private String apComment;
+	private String apCommentId;
+	private String apDate;
 }

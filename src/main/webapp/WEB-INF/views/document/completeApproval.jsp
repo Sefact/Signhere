@@ -85,7 +85,7 @@
 		</div>
 		
 	</form>
-	
+	<button class="btn btn-primary" id="moveToMyList" onclick="showAddModal()">개인보관함추가</button>
 
 		<h2 class="sub-header">문서 목록</h2>
 		<div class="table-responsive">
@@ -102,6 +102,7 @@
 				<tbody>
 				<c:forEach var="docList" items="${docList}">
 				<tr>
+				<td><input type="checkBox" value="${docList.dmNum}"></td>
 				<td><c:out value="${docList.dmNum }"/></td>
 				<td><c:out value="${docList.dmTitle }"/></td>
 				<td><c:out value="${docList.dmCode }"/></td>				
@@ -112,6 +113,23 @@
 				</tbody>
 			</table>
 		</div>
+		<ul class="btn-group pagination">
+				    <c:if test="${pagination.prev }">
+				    <li>
+				        <a href='<c:url value="/apCompleteList?page=${pagination.startPage-1 }"/>'><i class="fa fa-chevron-left"></i></a>
+				    </li>
+				    </c:if>
+				    <c:forEach begin="${pagination.startPage }" end="${pagination.endPage }" var="pageNum">
+				    <li>
+				        <a href='<c:url value="/apCompleteList?page=${pageNum }"/>'><i class="fa">${pageNum }</i></a>
+				    </li>
+				    </c:forEach>
+				    <c:if test="${pagination.next && pagination.endPage >0 }">
+				    <li>
+				        <a href='<c:url value="/apCompleteList?page=${pagination.endPage+1 }"/>'><i class="fa fa-chevron-right"></i></a>
+				    </li>
+				    </c:if>
+		</ul>
 	</div>
 	
 		<jsp:include page="../utils/navigation.jsp" />

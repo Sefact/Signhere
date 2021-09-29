@@ -25,8 +25,8 @@
 					<select name ="grCode">
 						<option value="">직급선택</option>
 						<c:forEach var = "grade" items="${grList}">
-							<option value="${grade.gdCode}">
-								${grade.gdName }
+							<option value="${grade.GDCODE}">
+								${grade.GDNAME }
 							</option>
 						</c:forEach>
 					</select>
@@ -41,8 +41,8 @@
 					<select name ="dpCode">
 						<option value="">부서선택</option>
 						<c:forEach var = "department" items="${dpList}">
-							<option value="${department.dpCode}">
-								${department.dpName }
+							<option value="${department.DPCODE}">
+								${department.DPNAME }
 							</option>
 						</c:forEach>
 					</select>
@@ -72,23 +72,40 @@
 				</tr>
 			</thead>
 			<tbody id="empListBody">
-			<c:forEach var = "empLists" items="${empList}">
+			<c:forEach var = "empList" items="${empList}">
 				<tr>
 					<td>
-						<input type="checkBox" class="empListRow" value="${empLists.userId}">
-						<input type="hidden" class="empListRowName" value="${empLists.userName}">
-						<input type="hidden" class="empListRowgrName" value="${empLists.grName}">
-						<input type="hidden" class="empListRowdpName" value="${empLists.dpName}">
+						<input type="checkBox" class="empListRow" value="${empList.USERID}">
+						<input type="hidden" class="empListRowName" value="${empList.USERNAME}">
+						<input type="hidden" class="empListRowgrName" value="${empList.GRNAME}">
+						<input type="hidden" class="empListRowdpName" value="${empList.DPNAME}">
 					</td>
-					<td><c:out value="${empLists.userId}" /></td>
-					<td><c:out value="${empLists.userName}" /></td>
-					<td><c:out value="${empLists.grName}" /></td>
-					<td><c:out value="${empLists.dpName}" /></td>
+					<td><c:out value="${empList.USERID}" /></td>
+					<td><c:out value="${empList.USERNAME}" /></td>
+					<td><c:out value="${empList.GRNAME}" /></td>
+					<td><c:out value="${empList.DPNAME}" /></td>
 				</tr>
 			</c:forEach>
 			</tbody>
 		</table>
 	</div>
+	<ul class="btn-group pagination">
+		<c:if test="${pagination.prev }">
+			<li><a
+				href='<c:url value="/admin?page=${pagination.startPage-1 }"/>'><i
+					class="fa fa-chevron-left"></i></a></li>
+		</c:if>
+		<c:forEach begin="${pagination.startPage }"
+			end="${pagination.endPage }" var="pageNum">
+			<li><a href='<c:url value="/admin?page=${pageNum }"/>'><i
+					class="fa">${pageNum }</i></a></li>
+		</c:forEach>
+		<c:if test="${pagination.next && pagination.endPage >0 }">
+			<li><a
+				href='<c:url value="/admin?page=${pagination.endPage+1 }"/>'><i
+					class="fa fa-chevron-right"></i></a></li>
+		</c:if>
+	</ul>
 	<!-- add Employee modal -->
 	<div id="addModal" role="dialog" class="modal fade">
       <div class="modal-dialog">

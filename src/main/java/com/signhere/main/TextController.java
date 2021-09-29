@@ -90,11 +90,12 @@ public class TextController {
 	}
 	
 	@PostMapping("/documentBox")
-	public List<DocumentBean> documentBox(@RequestBody List<DocumentBean> dlist) {
+	public List<DocumentBean> documentBox(@RequestBody String dmNum) {
+		
 		List<DocumentBean> docList;
 		
-		docList = fut.mDocumentBox(dlist.get(0));
+		docList = fut.mDocumentBox(dmNum);
 		
-		return docList;
+		return null;
 	}
 }

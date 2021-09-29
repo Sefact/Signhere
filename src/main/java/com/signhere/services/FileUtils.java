@@ -95,10 +95,10 @@ public class FileUtils {
 		return mav;
 	}
 	
-	public List<DocumentBean> mDocumentBox(DocumentBean db) {
+	public List<DocumentBean> mDocumentBox(String dmNum) {
 		List<DocumentBean> docList;
 		
-		docList = null;
+		docList = sqlSession.selectList("selectWaitDocDetail",dmNum);
 		
 		return docList;
 	}

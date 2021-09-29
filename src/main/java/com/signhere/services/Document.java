@@ -29,6 +29,8 @@ public class Document {
 	@Autowired
 	Session ssn;
 	
+	Pagination pgn;
+	
 	private String uploadPath = "C:\\Company\\Document\\";
 	private String signPath = "C:\\Company\\Signature\\";
 	
@@ -125,7 +127,6 @@ public class Document {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return mav;
 	}
 
@@ -349,5 +350,235 @@ public class Document {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public ModelAndView apToDoList(Criteria cri) {
+		
+		mav = new ModelAndView();
+		
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countWaitList", cri));
+		
+		List<Map<String,Object>> waitList = sqlSession.selectList("waitApproval",cri);
+		
+		mav.setViewName("document/waitApproval");
+		mav.addObject("docList", waitList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+	public ModelAndView apIngList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countApprovalProceed",cri));
+		
+		List<Map<String,Object>> ingList = sqlSession.selectList("approvalProcced",cri);
+		
+		mav.setViewName("document/approvalProcced");
+		mav.addObject("docList", ingList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView apCompleteList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countCompletedDocs",cri));
+		
+		List<Map<String,Object>> completedList = sqlSession.selectList("completeApproval",cri);
+		
+		mav.setViewName("document/completeApproval");
+		mav.addObject("docList", completedList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView apReturnList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReturnedDocs",cri));
+		
+		List<Map<String,Object>> returnedList = sqlSession.selectList("returnedApproval",cri);
+		
+		mav.setViewName("document/companionApproval");
+		mav.addObject("docList", returnedList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView deferList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countdeferredDocs",cri));
+		
+		List<Map<String,Object>> deferredList = sqlSession.selectList("deferredApproval",cri);
+		
+		mav.setViewName("document/deferList");
+		mav.addObject("docList", deferredList);
+		mav.addObject("pagination", pgn);
+		return mav;
+	}
+
+
+
+	public ModelAndView referenceList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReferredDocs",cri));
+		
+		List<Map<String,Object>> referredList = sqlSession.selectList("referenceApproval",cri);
+		
+		mav.setViewName("document/referenceApproval");
+		mav.addObject("docList", referredList);
+		mav.addObject("pagination", pgn);
+		return mav;
+	}
+
+
+
+	public ModelAndView receiveList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReceiveDocs",cri));
+		
+		List<Map<String,Object>> receiveList = sqlSession.selectList("receiveList",cri);
+		
+		System.out.println(receiveList);
+		
+		mav.setViewName("document/receiveNotice");
+		mav.addObject("docList", receiveList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView myList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyList",cri));
+		
+		List<Map<String,Object>> myList = sqlSession.selectList("myList",cri);
+		
+		
+		mav.setViewName("document/myList");
+		mav.addObject("docList", myList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView myDraft(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyDraft",cri));
+		
+		List<Map<String,Object>> myDraft = sqlSession.selectList("myDraft",cri);
+		
+		
+		mav.setViewName("document/myDraft");
+		mav.addObject("docList", myDraft);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView myEnforcement(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyEnforceMent",cri));
+		
+		List<Map<String,Object>> myEnforceMent = sqlSession.selectList("myEnforceMent",cri);
+		
+		
+		mav.setViewName("document/myEnforceMent");
+		mav.addObject("docList", myEnforceMent);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
 	}
 }
