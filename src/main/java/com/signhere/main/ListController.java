@@ -1,28 +1,32 @@
 package com.signhere.main;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import org.apache.ibatis.session.SqlSession;
+import java.util.List;
+
+
+
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
+
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+
+
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import com.signhere.beans.DocumentBean;
+import com.signhere.beans.WriteBean;
 import com.signhere.mapper.DocumentInter;
 import com.signhere.services.Criteria;
 import com.signhere.services.Document;
-import com.signhere.services.Management;
+
 import com.signhere.utils.Session;
 
 @Controller
@@ -37,18 +41,19 @@ public class ListController implements DocumentInter {
 	@Autowired
 	Session ssn;
 	
-	private int chechkNum = 11;
   
 	//내가 보낸 기안
+
 	@RequestMapping("/myDraft")
 	public ModelAndView myDraft(Criteria cri) {
+
 		mav = new ModelAndView();
 		
 		mav = doc.myDraft(cri);
 		
 		// Temporary Check 있을 시 비워주고 없는 경우 콘솔에 에러메시지 출력
+
 		this.tempCheck(cri);
-		
 	
 		return mav;
 	}
@@ -67,6 +72,7 @@ public class ListController implements DocumentInter {
 	@RequestMapping("/apToDoList")
 	public ModelAndView apToDoList(Criteria cri) {
 		
+
 		mav = doc.apToDoList(cri);
 		
 		this.tempCheck(cri);
@@ -151,24 +157,20 @@ public class ListController implements DocumentInter {
 
 	//개인보관함으로 이동시키는 JOB
 	@RequestMapping("/goMyList")
-	public ModelAndView goMyList(Criteria cri) {
-		mav = new ModelAndView();
+	public int goMyList(@RequestBody String[] dmNumArr) {
 		
-		mav.setViewName("document/myList");
+		int result = doc.goMyList(dmNumArr);
 		
-		this.tempCheck(cri);
-		
-		return mav;
+		return result;
 	}
 	
 	//개인보관함에 있는 문서 삭제 JOB
 	@RequestMapping("/delMyList")
-	public ModelAndView delMyList(DocumentBean db) {
-		mav = new ModelAndView();
+	public int delMyList(@RequestBody String[] dmNumArr) {
 		
-		mav.setViewName("document/myList");
+		int result = doc.delMyList(dmNumArr);
 		
-		return mav;
+		return result;
 	}
 
 	//문서검색 JOB
@@ -195,13 +197,7 @@ public class ListController implements DocumentInter {
 		
 		
 		this.tempCheck(cri);
-		/*
-		List <DocumentBean> docList;
 		
-		docList=sqlSession.selectList("receiveNotice", cri);
-		
-		mav.addObject("docList",docList);
-		*/
 		return mav;
 	}
 	
@@ -225,4 +221,16 @@ public class ListController implements DocumentInter {
 	private boolean convertToBoolean(int result) {
 		return result==1 ? true: false;  
 	}
+	
+	@GetMapping("/documentBox")
+	public ModelAndView documentBox(@ModelAttribute WriteBean wb) {
+
+			
+			mav = doc.documentBoxDetail(wb);
+			
+			return mav;
+	}
+	
+	
+
 }

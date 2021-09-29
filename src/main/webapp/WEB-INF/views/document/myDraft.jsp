@@ -23,7 +23,8 @@
 <body>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
+	<jsp:include page="../utils/navigation.jsp" />
+	
 	<h1 class="page-header">MyDraft</h1>
 
 	<form>
@@ -130,7 +131,5 @@
 		</ul>
 		
 	</div>
-	
-		<jsp:include page="../utils/navigation.jsp" />
-	</body>
-	</html>
+</body>
+</html>

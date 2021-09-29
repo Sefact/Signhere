@@ -2,25 +2,37 @@ package com.signhere.main;
 
 import java.util.List;
 
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.AccessBean;
 import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.ApprovalCommentBean;
 import com.signhere.beans.CompanionDeferBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.ReadingReferenceBean;
 import com.signhere.beans.UserBean;
+import com.signhere.services.Document;
 import com.signhere.services.FileUtils;
+import com.signhere.utils.Session;
 
 @Controller
 public class TextController {
+	
+	
+	
 	@Autowired
 	private FileUtils fut;
 	private ModelAndView mav;
+	private Session ssn;
+	
+	private Document doc;
+	SqlSessionTemplate sqlSession;
 	
 	@PostMapping("/preview")
 	public List<DocumentBean> preview(@RequestBody List<DocumentBean> dlist) {
@@ -89,6 +101,7 @@ public class TextController {
 		return mav;
 	}
 	
+
 	@PostMapping("/documentBox")
 	public List<DocumentBean> documentBox(@RequestBody String dmNum) {
 		
@@ -98,4 +111,5 @@ public class TextController {
 		
 		return null;
 	}
+
 }

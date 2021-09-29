@@ -89,6 +89,8 @@
 	
 
 		<h2 class="sub-header">문서 목록</h2>
+		<input type="button" class="btn btn-primary" value="Delete"
+		onClick="delMyList()" />
 		<div class="table-responsive">
 			<table class="table table-striped">
 				<thead>
@@ -103,6 +105,7 @@
 				<tbody>
 			<c:forEach var="docList" items="${docList}">
 				<tr>
+					<td><input type="checkBox" class="docListRow" value="${docList.dmNum }"  /></td>
 					<td><c:out value="${docList.dmNum }"/></td>
 					<td><c:out value="${docList.dmTitle }"/></td>
 					<td><c:out value="${docList.dmCode }"/></td>				

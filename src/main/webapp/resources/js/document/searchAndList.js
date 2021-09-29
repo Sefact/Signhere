@@ -30,3 +30,48 @@ function handleDocDetail(jsonData){
 	let responseData = JSON.parse(jsonData);
 	console.log(responseData);
 }
+
+function addToMyList(){
+	let docList = document.querySelectorAll(".docListRow");
+	let listSize = docList.length;
+	let arr = [];
+	
+	for(i=0; i<listSize; i++){
+		if(docList[i].checked == true){
+			arr.push(docList[i].value);
+		}
+	}
+	
+	let objectArr = {"dmNumArr":arr};
+	
+	fetchAjax("goMyList","post", objectArr, handleAddMyList);
+}
+
+function handleAddMyList(data){
+	JSON.parse(data);
+	console.log(data);
+	location.reload();
+	
+}
+
+function delMyList(){
+	let docList = document.querySelectorAll(".docListRow");
+	let listSize = docList.length;
+	let arr = [];
+	
+	for(i=0; i<listSize; i++){
+		if(docList[i].checked == true){
+			arr.push(docList[i].value);
+		}
+	}
+	
+	let objectArr = {"dmNumArr":arr};
+	
+	fetchAjax("delMyList","post", objectArr, handleDelMyList);
+}
+
+function handleDelMyList(data){
+	JSON.parse(data);
+	console.log(data);
+	location.reload();
+}

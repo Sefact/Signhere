@@ -20,4 +20,6 @@ public class AccessBean {
 	private String grCode;
 	private String grName;
 	private String browser;
+	private String abc;
+	
 }

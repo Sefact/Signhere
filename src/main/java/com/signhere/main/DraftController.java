@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
+import com.signhere.beans.WriteBean;
 import com.signhere.services.Document;
 import com.signhere.utils.Session;
 
@@ -145,14 +146,23 @@ public class DraftController {
 		return new ResponseEntity<>("deleted", HttpStatus.OK);
 	}
 	
-	/*
-	 * @PostMapping("/saveSign")
-	 * 
-	 * @ResponseBody public String saveSign(@RequestParam(value="file",
-	 * required=true) MultipartFile [] file) {
-	 * 
-	 * return null; }
-	 */
+	@PostMapping("/deleteSign")
+	@ResponseBody
+	public ResponseEntity<String> deleteSign(String signName) throws IOException {
+		
+		try {
+			signName = (String) ssn.getAttribute("signLoc");
+			if(new File(signName).delete()) {
+				ssn.removeAttribute("signLoc");
+			} else {
+				System.out.println("Sign Already Delete");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		return new ResponseEntity<>("deleted", HttpStatus.OK);
+	}
 	
 	@PostMapping("/saveSign")
 	@ResponseBody
@@ -173,5 +183,15 @@ public class DraftController {
 		}
 		
 		return result;
+	}
+	
+	@PostMapping("/requestDraft")
+	@ResponseBody
+	public List<WriteBean> requestDraft(@RequestBody List<WriteBean> wlist) {
+		List<WriteBean> writeList;
+		
+		writeList = doc.mRequestDraft(wlist.get(0));
+		
+		return writeList;
 	}
 }

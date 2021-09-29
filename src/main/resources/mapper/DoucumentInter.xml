@@ -6,6 +6,29 @@
 
 <mapper namespace="com.signhere.mapper.DocumentInter">
 
+	<select id="getLogInInfo2" parameterType="AccessBean" resultType="DocumentBean"> 
+	   SELECT MM.ID AS userId, 
+       MM.PW AS userPwd, 
+       MM.NAME AS userName,
+       MM.PWINITIAL as pwInitial, 
+       MM.COMPANY_CODE AS cmCode,
+       CM.COMPANY_NAME AS cmName,
+       GR.GRADE_NAME AS grName,
+       DP.DEPARTMENT_NAME AS dpName,
+       MM.MAIL AS userMail,
+       DP.DEPARTMENT_CODE AS dpCode,
+       MM.ADMIN as admin      
+       FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
+       INNER JOIN GR ON GR.GRADE_CODE=MM.GRADE_CODE
+       INNER JOIN DP ON DP.COMPANY_CODE=MM.COMPANY_CODE 
+       AND DP.DEPARTMENT_CODE = MM.DEPARTMENT_CODE
+       WHERE ID=#{userId}
+	</select>
+
+
+
+
+
 	<select id="searchCompletedDocs" parameterType="DocumentBean" resultType="DocumentBean">
 		SELECT DM.DOCUMENT_NUM AS dmNum,
 		DM.COMPANY_CODE AS cmCode,
@@ -89,8 +112,6 @@
 	]]>
 	</select>
 	
-	
-	 
 	<select id="waitApproval" parameterType="hashmap"  resultType="hashmap">
 		<![CDATA[		
 			SELECT * FROM(
@@ -315,7 +336,7 @@
 	</select>        	
 
 	<insert id="insTemporary" parameterType="DocumentBean">
-		INSERT INTO TL (DOCUMENT_NUM, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES(CONCAT(#{cmCode}, TEMP_SEQ.NEXTVAL), #{dmWriteId}, #{dmTitle}, TO_CHAR(SYSDATE), #{cmCode}, #{dmCode})
+		INSERT INTO TL (DOCUMENT_NUM, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES(CONCAT(#{cmCode}, TEMP_SEQ.NEXTVAL), #{dmWriteId}, #{dmTitle}, SYSDATE, #{cmCode}, #{dmCode})
 	</insert>
         	
 	<select id="selTemporary" parameterType="DocumentBean" resultType="DocumentBean">
@@ -334,4 +355,77 @@
 		DELETE FROM TEMPORARYLIST WHERE DOCUMENT_NUM = #{dmNum}
 	</delete>
 	
+	<insert id="insDocument" parameterType="WriteBean">
+		INSERT INTO DOCUMENT (DOCUMENT_NUM, APPROVAL_CODE, FILE_LOCATION, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES (#{dmNum}, 'P', #{fileLoc}, #{dmWriter}, #{dmTitle}, TO_DATE(TO_CHAR(TO_timestamp(#{dmDate}), 'yyyymmddhh24miss'), 'yyyymmddhh24miss'), #{cmCode}, #{dmCode})
+	</insert>
+	
+	<insert id="insApprovalComment" parameterType="WriteBean">
+		INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM, SIGN_LOCATION, APPROVAL_SEQ_CHECK) VALUES(#{dmWriter}, '1', #{dmNum}, #{signLoc}, 'C')
+	</insert>
+	
+	<insert id="insApprovalOther" parameterType="WriteBean">
+		INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM) VALUES(#{dmWriter}, #{aplSeq}, #{dmNum})
+	</insert>
+	
+	<insert id="insReference" parameterType="WriteBean">
+		INSERT INTO RF (DOCUMENT_NUM, REFERENCE_ID) VALUES(#{dmNum}, #{refId})
+	</insert>
+	
+
+	<select id="detailDocument" parameterType="WriteBean" resultType="WriteBean">
+		SELECT
+		DM.DOCUMENT_TITLE AS "dmTitle",
+		DM.DOCUMENT_NUM AS "dmNum",
+		DM.FILE_LOCATION AS "fileLoc",
+		DM.DOCUMENT_DATE AS "dmDate",
+		DM.APPROVAL_CODE AS " apCode",
+		MM.NAME AS "dmWriter",
+		AL.APPROVAL_ID AS "apId",
+		AL.APPROVAL_SEQ AS "aplSeq",
+		AL.SIGN_LOCATION AS "signLoc",
+		AL.RECEIVER AS "receiver"
+		FROM DM
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN MM ON DM.WRITER = MM.ID
+		WHERE DM.DOCUMENT_NUM=#{dmNumCheck}
+	</select>
+	
+	<select id="detailRefer" parameterType="ReadingReferenceBean" resultType="ReadingReferenceBean">
+	
+		SELECT 
+		RF.DOCUMENT_NUM AS"dmNum",
+		MM.NAME AS "rdName",
+		RF.REFERENCE_ID AS "rdId"
+		FROM RF
+		INNER JOIN MM ON RF.REFERENCE_ID=MM.ID
+		WHERE DOCUMENT_NUM=#{dmNum}
+	</select>
+	
+	<select id="signLocation" parameterType="ApprovalBean" resultType="ApprovalBean">
+		SELECT AL.SIGN_LOCATION AS "aplLocation",
+        AL.APPROVAL_SEQ AS "aplSeq"   
+		FROM AL
+        WHERE DOCUMENT_NUM=#{dmNum}
+	</select>
+	
+	<select id="selGrInfo" parameterType="String" resultType="String">
+		SELECT GR.GRADE_NAME AS "grName"
+		FROM MM INNER JOIN GR ON MM.GRADE_CODE = GR.GRADE_CODE
+		WHERE ID = #{apId}
+	</select>
+	
+	<select id="selDpInfo" parameterType="String" resultType="String">
+		SELECT DP.DEPARTMENT_NAME AS "dpName"
+		FROM MM INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND
+                         MM.COMPANY_CODE = DP.COMPANY_CODE
+		WHERE ID = #{apId}
+	</select>
+	
+	<insert id="goMyList" parameterType="hashmap">
+		INSERT INTO PL VALUES(#{userId},#{dmNum})
+	</insert>
+	
+	<delete id="delMyList" parameterType="hashmap">
+		DELETE FROM PL WHERE ID=#{userId} AND DOCUMENT_NUM = #{dmNum}
+	</delete>
 </mapper>

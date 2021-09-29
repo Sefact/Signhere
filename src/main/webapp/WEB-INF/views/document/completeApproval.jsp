@@ -7,7 +7,7 @@
 	<title>결재완료함</title>
 	
 	<!-- Resources JS -->
-	<script src="/resources/js/login/main.js"></script>
+	<script src="/resources/js/document/searchAndList.js"></script>
 	<script src="/resources/js/admin/aplistAdmin.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
@@ -21,6 +21,7 @@
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
 <body>
+	<jsp:include page="../utils/navigation.jsp" />
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 	<h1 class="page-header">결재완료함</h1>
@@ -85,9 +86,9 @@
 		</div>
 		
 	</form>
-	<button class="btn btn-primary" id="moveToMyList" onclick="showAddModal()">개인보관함추가</button>
 
 		<h2 class="sub-header">문서 목록</h2>
+		<button class="btn btn-primary" id="addToMyList" onclick="addToMyList()">개인보관함추가</button>
 		<div class="table-responsive">
 			<table class="table table-striped">
 				<thead>
@@ -102,7 +103,7 @@
 				<tbody>
 				<c:forEach var="docList" items="${docList}">
 				<tr>
-				<td><input type="checkBox" value="${docList.dmNum}"></td>
+				<td><input class="docListRow" type="checkBox" value="${docList.dmNum}"></td>
 				<td><c:out value="${docList.dmNum }"/></td>
 				<td><c:out value="${docList.dmTitle }"/></td>
 				<td><c:out value="${docList.dmCode }"/></td>				
@@ -131,7 +132,5 @@
 				    </c:if>
 		</ul>
 	</div>
-	
-		<jsp:include page="../utils/navigation.jsp" />
-	</body>
-	</html>
+</body>
+</html>

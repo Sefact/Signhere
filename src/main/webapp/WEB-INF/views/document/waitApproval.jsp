@@ -23,20 +23,17 @@
 <link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
 <body>
-
+	<jsp:include page="../utils/navigation.jsp" />
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 		<h1 class="page-header">결제대기함</h1>
-
 		<form>
-			<div class="form-row">
-				<div class="form-group col-md-1">
-					<label for="inputDocumentNum">문서번호</label>
-				</div>
-				<div class="form-group col-md-11">
-					<input type="text" class="form-control" name="dmNum"
-						placeholder="문서번호">
-				</div>
+		<div class="form-row">
+			<div class="form-group col-md-1">
+				<label for="inputDocumentNum">문서번호</label>
+			</div>
+			<div class="form-group col-md-11">
+				 <input type="text" class="form-control" name="dmNum" placeholder="문서번호">
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-1">
@@ -88,8 +85,9 @@
 				</div>
 			</div>
 
+</div>
 		</form>
-
+	
 
 		<h2 class="sub-header">문서 목록</h2>
 		<div class="table-responsive">

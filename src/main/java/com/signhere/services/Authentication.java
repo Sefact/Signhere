@@ -143,11 +143,6 @@ public class Authentication implements AuthentInter {
 
 							ab.setUserId((String)ssn.getAttribute("userId"));
 							
-							
-						
-							
-							
-							
 							mav.setViewName("login/main");						
 						
 						} catch (Exception e) {

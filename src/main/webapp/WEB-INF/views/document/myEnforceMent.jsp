@@ -21,6 +21,7 @@
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
 <body>
+	<jsp:include page="../utils/navigation.jsp" />
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 	<h1 class="page-header">MyDraft</h1>
@@ -129,7 +130,5 @@
 		</c:if>
 	</ul>
 	</div>
-	
-		<jsp:include page="../utils/navigation.jsp" />
-	</body>
-	</html>
+</body>
+</html>
