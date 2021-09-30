@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-
 	<script src="/resources/js/authentication.js"></script>
 	<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
@@ -52,18 +51,16 @@
             <li><a onclick="myList();">개인 보관함</a></li>
 			<li><a onclick="setEntrust();">위임권 관리</a></li>
 		</ul>
-          
+    
 		<c:if test="${sessionScope.admin eq 'Y'}">
-			<ul class="nav nav-sidebar">
-            	<li><a onclick="admin();">직원 관리</a></li>
-            	<li><a onclick="apListAdmin();">결재문서 관리</a></li>
-          	</ul>
-		</c:if>
-          
+	    <ul class="nav nav-sidebar">
+			<li><a onclick="admin();">직원 관리</a></li>
+			<li><a onclick="apListAdmin();">결재문서 관리</a></li>
+		</ul>
+	    </c:if>
         </div>
 		</div>
 	</div>
-  
     
 	<!-- Approval modal -->
 	<div id="dummyModal" role="dialog" class="modal fade">

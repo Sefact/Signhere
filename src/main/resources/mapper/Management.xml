@@ -5,8 +5,13 @@
 
 <mapper namespace="com.signhere.mapper.ManagementInter">
 	
-
-	<select id="getAllApListAdmin" parameterType="DocumentBean" resultType="DocumentBean">
+	<select id="countAllApproval" resultType="Integer">
+		SELECT COUNT(*) FROM DM WHERE COMPANY_CODE = #{senderId} AND APPROVAL_CODE='C'
+	</select>
+	
+	<select id="getAllApListAdmin" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[		
+		SELECT * FROM(
 		SELECT DM.DOCUMENT_NUM AS dmNum,
 		DM.DOCUMENT_TITLE AS dmTitle,
 		DM.APPROVAL_CODE AS apCode,
@@ -15,11 +20,15 @@
 		DS.DOCUMENT_TITLE AS dmName,
 		MM.ID AS dmWriteId,
 		MM.NAME AS dmWriter,
-		DM.DOCUMENT_DATE AS dmDate 
+		DM.DOCUMENT_DATE AS dmDate,
+		ROWNUM AS RNUM 
 		FROM DM INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
 		INNER JOIN APS ON DM.APPROVAL_CODE = APS.APPROVAL_CODE 
 		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE 
-		WHERE DM.COMPANY_CODE=#{cmCode} AND DM.APPROVAL_CODE='C' ORDER BY DM.document_date DESC
+		WHERE DM.COMPANY_CODE = #{senderId} AND DM.APPROVAL_CODE='C' 
+		AND ROWNUM <= #{page} * #{perPageNum} ORDER BY DM.document_date DESC) 
+		WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
 	</select>
 	
 	
@@ -105,19 +114,29 @@
 		DELETE FROM DM WHERE DOCUMENT_NUM = #{dmNum}
 	</delete>
 	
-	<select id = "getAllDp" parameterType = "DepartmentBean" resultType="DepartmentBean">
+	<select id = "getAllDp" parameterType = "hashmap" resultType="hashmap">
 		SELECT 
 		DEPARTMENT_CODE AS dpCode,
 		COMPANY_CODE AS cmCode,
 		DEPARTMENT_NAME AS dpName 
-		FROM DP WHERE COMPANY_CODE = #{cmCode}
+		FROM DP WHERE COMPANY_CODE = #{senderId}
 	</select>
 	
-	<select id="getAllGr" parameterType="GradeBean" resultType ="GradeBean">
+	<select id="getAllGr" parameterType="hashmap" resultType ="hashmap">
 		SELECT GRADE_CODE AS gdCode, GRADE_NAME AS gdName FROM GR
 	</select>
 	
-	<select id ="getAllEmp" parameterType = "UserBean" resultType="UserBean">
+	<select id="countAllEmp" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM MM 
+		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE 
+		INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
+		WHERE MM.COMPANY_CODE = ${senderId}
+	</select>
+	
+	<select id ="getAllEmp" parameterType = "hashmap" resultType="hashmap">
+	<![CDATA[		
+		SELECT * FROM(
 		SELECT 
 		MM.COMPANY_CODE AS cmCode,
 		MM.ID AS userId,
@@ -125,12 +144,16 @@
 		MM.GRADE_CODE AS grCode,
 		GR.GRADE_NAME AS grName,
 		MM.DEPARTMENT_CODE AS dpCode,
-		DP.DEPARTMENT_NAME AS dpName 
+		DP.DEPARTMENT_NAME AS dpName,
+		ROWNUM AS RNUM
 		FROM 
 		MM 
 		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE 
 		INNER JOIN GR ON MM.GRADE_CODE = gr.grade_code 
-		WHERE MM.COMPANY_CODE = ${cmCode}
+		WHERE MM.COMPANY_CODE = ${senderId} AND ROWNUM <= #{page} * #{perPageNum}) 
+		WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+		
 	</select>
 	
 	<insert id ="addNewEmp" parameterType="UserBean">

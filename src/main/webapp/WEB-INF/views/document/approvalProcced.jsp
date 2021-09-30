@@ -103,7 +103,7 @@
 				<tbody>
 			<c:forEach var="docList" items="${docList}">
 				<tr>
-					<td><c:out value="${docList.dmNum }"/></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}" /></a></td>
 					<td><c:out value="${docList.dmTitle }"/></td>
 					<td><c:out value="${docList.dmCode }"/></td>				
 					<td><c:out value="${docList.dmWriter }"/></td>
@@ -113,6 +113,23 @@
 				</tbody>
 			</table>
 		</div>
+		<ul class="btn-group pagination">
+				    <c:if test="${pagination.prev }">
+				    <li>
+				        <a href='<c:url value="/apIngList?page=${pagination.startPage-1 }"/>'><i class="fa fa-chevron-left"></i></a>
+				    </li>
+				    </c:if>
+				    <c:forEach begin="${pagination.startPage }" end="${pagination.endPage }" var="pageNum">
+				    <li>
+				        <a href='<c:url value="/apIngList?page=${pageNum }"/>'><i class="fa">${pageNum }</i></a>
+				    </li>
+				    </c:forEach>
+				    <c:if test="${pagination.next && pagination.endPage >0 }">
+				    <li>
+				        <a href='<c:url value="/apIngList?page=${pagination.endPage+1 }"/>'><i class="fa fa-chevron-right"></i></a>
+				    </li>
+				    </c:if>
+		</ul>
 	</div>
 </body>
 </html>

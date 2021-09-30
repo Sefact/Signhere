@@ -1,24 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>문서보여주기페이지</title>
-<link rel="stylesheet" href="css/index.css">
 
+	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
-	<!-- JQuery -->
+	<!-- Jquery Core JS -->
 	<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-	<!-- popper.js -->
-	<script src="/webjars/popper.js/2.9.3/umd/popper.min.js"></script>
+	<!-- Bootstrap Core JS -->
+	<script src="/webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<!-- Font-Awesome -->
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
+	<!-- Signature Library -->
+	<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 </head>
 
 
@@ -33,43 +36,47 @@
 					
 				</div>
 				<div class="form-group col-md-2">
-					<button type="button" class="btn btn-primary btn-block" id="onAplModal">결재</button>
+					<button type="button" class="btn btn-primary btn-block" id="onAplModal" >결재</button>
 				</div>
 				<div class="form-group col-md-2">
-					<button type="button" class="btn btn-primary btn-block" id="onAplModal">반려</button>
+					<button type="button" class="btn btn-primary btn-block" id="onAplModal2">반려</button>
 				</div>
 			</div>
+			<c:set var="docList" value="${docList}" />
+			
 			<div class="form-row">
 				<div class="form-group col-md-12">
 					<label>문서제목</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmTitle}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmTitle}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-6">
 					<label>문서번호</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmNum}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmNum}" disabled/>
 				</div>
 				<div class="form-group col-md-6">
 					<label>날짜</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.tempList[0].dmDate}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmDate}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
 					<label>작성자</label>
-					<input type="text" class="form-control" id="" value="${sessionScope.docBean.dmWriter}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmWriter}" disabled/>
 				</div>
 				<div class="form-group col-md-4">
 					<label>참조자</label>
 					<!-- <input type="text" class="form-control" id="" value="${sessionScope.docBean.rfBean[0].rdId}" disabled/>  -->
 					<select class="form-control">
-						<option value="${sessionScope.docBean.rfBean[0].rdName}">${sessionScope.docBean.rfBean[0].rdName}</option>
+					<c:forEach var="refList" items="${refList}">
+						<option value="${refList.rdName}"><c:out value="${refList.rdName}"/></option>
+						</c:forEach>	
 					</select>
 				</div>
 				<div class="form-group col-md-4">
 					<label>문서종류</label>
-					<input type="text" class="form-control" id="" placeholder="${sessionScope.docBean.dmCode}" disabled/>
+					<input type="text" class="form-control" id="" value="${docList.dmName }" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
@@ -77,45 +84,94 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12">
-					<img id="imgPreview" />
+					<img id="imgPreview" src="${fileLoc}" width="50%" height="70%"/>
+				
 				</div>
 			</div>
 			<div class="form-row">
-				<div class="form-group col-md-12" id="docUploadForm">
-					<input type="button" id="docUpload" value="Submit" />
-				</div>
+					<font size="10em">결재선</font>
+					
+
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select id="" class="form-control" size="3">
+							<option>부서: ${apConfirmList[0].apDp}</option>
+							<option>직급: ${apConfirmList[0].apGr}</option>
+							<option>이름: ${apConfirmList[0].apName}</option>
 					</select>
+				<div><img style="border: 2px solid black" src="${signList[1].signLocation}" width="300px" height="200px" /></div>	
 				</div>
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select id="" class="form-control" size="3" >
+							<option>부서: ${apConfirmList[1].apDp}</option>
+							<option>직급: ${apConfirmList[1].apGr}</option>
+							<option>이름: ${apConfirmList[1].apName}</option>
 					</select>
+				<div><img style="border: 2px solid black" src="${signList[2].signLocation}" width="300px" height="200px"  /></div>					
 				</div>
 				<div class="form-group col-md-4">
-					<select id="" class="form-control" size="4">
-					
+					<select id="" class="form-control" size="3">
+							<option>부서: ${apConfirmList[2].apDp}</option>
+							<option>직급: ${apConfirmList[2].apGr}</option>
+							<option>이름: ${apConfirmList[2].apName}</option>
 					</select>
+				<div><img style="border: 2px solid black" src="${signList[3].signLocation}" /></div>					
+					
 				</div>
 			</div>
 			<!-- Signature Form -->
+	
+
+			
 			<div class="form-row">
-				<div class="form-group col-md-4">
+				<div class="form-group col-md-12">
 					<div id="signature-pad" class="m-signature-pad">
 				        <div class="m-signature-pad--body">
-				            <canvas id="signature-canvas"></canvas>
+				       <font size="50em"> Sign Here ->></font>
+				            <canvas id="signature-canvas" style="border: 2px solid black" width="300px" height="100px"></canvas>
 				        </div>
 				        <div class="m-signature-pad--footer">
 				            <button type="button" class="button clear" data-action="clear">지우기</button>
 				            <button type="button" class="button save" data-action="save">저장</button>
 				        </div>
 				    </div>
-				</div>
-				<div class="form-group col-md-4">
+				</div> 
+				<div class="form-group col-md-12"> <font size="5em" color="grey">* 결재/반려 의견</font>
+				<table class="table table-striped">
+				<thead>
+					<tr>
+						<th class ="col-md-1">결재자</th>
+						<th class ="col-md-1">부서</th>
+						<th class ="col-md-1">직급</th>
+						<th class ="col-md-4">의견</th>
+						<th class ="col-md-1">날짜</th>
+					</tr>
+				</thead>
+				<tbody>
+				<c:forEach var="apCommentList" items="${apCommentList}">
+					<tr>
+						<td><c:out value="${apCommentList.acName }"/></td>
+						<td><c:out value="${apCommentList.dpName }"/></td>
+						<td><c:out value="${apCommentList.grName }"/></td>
+						<td><c:out value="${apCommentList.acContents }"/></td>
+						<td><c:out value="${apCommentList.acDate }"/></td>
+						</tr>	
+				</c:forEach>
+							
+				<c:forEach var="cpCommentList" items="${cpCommentList}">
+					<tr>
+						<td><c:out value="${cpCommentList.cpName }"/></td>
+						<td><c:out value="${cpCommentList.cpName }"/></td>
+						<td><c:out value="${cpCommentList.cpName }"/></td>
+						<td><c:out value="${cpCommentList.cpContents }"/></td>
+						<td><c:out value="${cpCommentList.cpDate }"/></td>
+						</tr>	
+				</c:forEach>				
+						
+				</tbody>
+				</table>
+				
 				</div>
 				<div class="form-group col-md-4">
 				</div>
@@ -132,13 +188,11 @@
 					<h4 class="modal-title">결재문</h4>
 				</div>
 				<div id="selMember" class="modal-body">
-					<form>
+					
+
 						<div class="container-fluid">
 							<div class="form-row">
-								<div class="col-md-12">
-									<label>Title</label>	
-									<input type="text"class="form-control" name="modifyTitle" value="${sessionScope.docBean.dmTitle}"><br>
-								</div>
+
 							</div>
 							<div class="form-row">
 								<div class="form-group col-md-12">	
@@ -153,7 +207,7 @@
 										<c:forEach var="ogAplList" items="${sessionScope.ogAplMap}">
 												<option value="<c:out value="${ogAplList.aplId}"></c:out>"><c:out value="${ogAplList.aplName}"></c:out></option>
 										</c:forEach>
-									</select>
+									</select>	
 								</div>
 								<div class="form-group col-md-2">
 									<button type="button" id="mModifyLineSave" class="btn btn-primary btn-block">저장</button>
@@ -259,11 +313,11 @@
 				<h4 class="modal-title">결재의견</h4>
 			</div>
 			<div class="modal-body">
-			<form>
+		
 				<div class="form-group">
-					<textarea class="form-control" id="commentTextArea" rows="3"></textarea>
+					<textarea class="form-control" name="acContents" rows="3"></textarea>
 				</div>
-			</form>
+	
 			</div>
 			<div class="modal-footer">
 				<button type="button" id="requestApproval" class="btn btn primary">Send</button>
@@ -273,17 +327,100 @@
 		</div>
 	</div>
 	
+		<!-- Companion Request Modal -->
+	<div id="cpnRequestModal" role="dialog" class="modal fade">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" class="close">&times;</button>
+				<h4 class="modal-title">반려의견</h4>
+			</div>
+			<div class="modal-body">
+		
+				<div class="form-group">
+					<textarea class="form-control" name="cpContents" rows="3"></textarea>
+				</div>
+	
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="requestCompanion" class="btn btn primary">Send</button>
+				<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+			</div>
+		</div>
+		</div>
+	</div>
+	
+	
+	
+	
 	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#onAplModal').click(function() {
-			$('#aplRequestModal').modal('show');
-		})
-	});
-	</script>
+      $('document').ready(function() {
+         $('#onAplModal').click(function() {
+        	 var signCheck = $('#signDelete').attr("value");
+        	 
+        	 
+        /*	 if(typeof signCheck == "undefined" || signCheck == "" || signCheck == null) {
+					alert("사인을 업로드 부탁드립니다.");
+			}
+        	 else{*/
+     
+            $('#aplRequestModal').modal('show');
+            
+         })
+      });
+      
+      $('#requestApproval').click(function(){
+    	  let acContents=document.getElementsByName("acContents")[0];
+
+    
+    	  let form = makeForm("approvalDraft","get");
+    	  
+    	  form.appendChild(acContents);
+    	  
+    	  document.body.appendChild(form);
+    	  
+    	  form.submit();
+    	  
+    	  
+      });
+      
+      
+      $('document').ready(function() {
+          $('#onAplModal2').click(function() {
+     
+      
+             $('#cpnRequestModal').modal('show');
+             
+          })
+       });
+       
+       $('#requestCompanion').click(function(){
+     	  let cpContents=document.getElementsByName("cpContents")[0];
+
+     
+     	  let form = makeForm("companionDraft","get");
+     	  
+     	  form.appendChild(cpContents);
+     	  
+     	  document.body.appendChild(form);
+     	  
+     	  form.submit();
+     	  
+     	  
+       });
+       
+      
+      
+      
+      
+   </script>
+	
+	
 	
 	<!-- IMG Preview -->
 	<script type="text/javascript">	
 	var imgInput = document.getElementById("docFile");
+	
 	imgInput.addEventListener('change', function (e) {
 		if (e.target.files) {
 			var imageFile = e.target.files[0];
@@ -355,97 +492,13 @@
     } */
 	</script>
 	
-	<!-- File Send -->
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#docUpload').click(function() {
-			var formData = new FormData();
-			var inputFiles = $('input[name="docFile"]');
-			var files = inputFiles[0].files;
-			
-			formData.append('key1', 'value1');
-			formData.append('key2', 'value2');
-			
-			for(var i=0; i<files.length; i++) {
-				formData.append('uploadFiles', files[i]);
-			}
-			
-			$.ajax({
-				type : 'POST',
-				url : '/uploadFile',
-				data : formData,
-				processData : false,
-				contentType : false
-			})
-			.done(function(data) {
-				alert("Upload Success");
-				
-				console.log(data.result);
-				
-				var delHtml = "";
-				delHtml += "<input type='button' data-src="+ data.result +" id='docDelete' value='Delete'/>";
-				
-				if($("#docDelete").length > 0) {
-					console.log("Delete Button already");
-				} else {
-					$('#docUploadForm').append(delHtml);
-				}
-				
-				/* if($("#docDelete").css("visibility") == "hidden") {
-					$("#docDelete").css('visibility', 'visible');
-				} else {
-					console.log("Delete Button Visible");
-				} */
-				
-			})
-			.fail(function(data) {
-				alert("Upload Failed");
-			})
-			
-			/* var acReason = document.getElementById("commentTextArea").value;
-			
-			
-			alert(acReason.value);
-			console.log(acReason); */
-		})
-	});
-	</script>
+
 	
-	<script type="text/javascript">
-	$('document').ready(function() {
-		$('#docUploadForm').on('click', '#docDelete', function() {
-			var that = $(this);
-			alert(that.attr("data-src"));
-			
-			$.ajax({
-				type : "POST",
-				url : "/deleteFile",
-				data : {fileName:that.attr("data-src")},
-				dataType : "text"
-			})
-			.done(function(data) {
-				$("input[name='docFile']").val("");
-				console.log("Success");
-			})
-			.fail(function(data) {
-				console.log("Failed");
-			})
-		});
-	});
-	</script>
 	
-	<script type="text/javascript">
-	    var checkUnload = true;
-	    
-	    $(window).on("beforeunload", function(){
-	        if(checkUnload) return false;
-	    });
-	   
-	    $(document).on("click", "#modifyApproval", function(event){
-	        // disable warning
-	        $(window).off('beforeunload');
-	    });
-	</script>
+	
+
+	
+
 	
 	<script type="text/javascript">
 	var canvas = $("#signature-pad canvas")[0];
@@ -493,6 +546,10 @@
             }
         }
     });   
+ 
+		
+
+
      
     function resizeCanvas(){
         var canvas = $("#signature-pad canvas")[0];
@@ -508,6 +565,9 @@
     });
 
     resizeCanvas();
+    
+    
+    
     
     /* $('document').ready(function() {
 		$('#saveSign').click(function() {
@@ -540,8 +600,10 @@
 			})
 		})
 	}); */
-	</script>
+
 	
+	
+	</script>
 
 	
 	
