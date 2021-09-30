@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-
-
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -157,18 +155,24 @@ public class ListController implements DocumentInter {
 
 	//개인보관함으로 이동시키는 JOB
 	@RequestMapping("/goMyList")
-	public int goMyList(@RequestBody String[] dmNumArr) {
+	@ResponseBody
+	public String goMyList(@RequestBody DocumentBean docList) {
 		
-		int result = doc.goMyList(dmNumArr);
+		String result = doc.goMyList(docList.getDmNumArr());
+		
+		System.out.println(result);
 		
 		return result;
 	}
 	
 	//개인보관함에 있는 문서 삭제 JOB
 	@RequestMapping("/delMyList")
-	public int delMyList(@RequestBody String[] dmNumArr) {
+	@ResponseBody
+	public String delMyList(@RequestBody DocumentBean docList) {
 		
-		int result = doc.delMyList(dmNumArr);
+		String result = doc.delMyList(docList.getDmNumArr());
+		
+		System.out.println(result);
 		
 		return result;
 	}

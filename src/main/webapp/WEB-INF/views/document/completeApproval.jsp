@@ -3,26 +3,26 @@
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>결재완료함</title>
-	
-	<!-- Resources JS -->
-	<script src="/resources/js/document/searchAndList.js"></script>
-	<script src="/resources/js/admin/aplistAdmin.js"></script>
-	<!-- Bootstrap core CSS -->
-	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
-	<!-- Jquery Core JS -->
-	<script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
-	<!-- Bootstrap Core JS -->
-	<script src="/webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-	<!-- Font-Awesome -->
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-	<!-- Resources CSS -->
-	<link href="/resources/css/login/main.css" rel="stylesheet">
+   <meta charset="UTF-8">
+   <title>결재완료함</title>
+   
+   <!-- Resources JS -->
+   <script src="/resources/js/login/main.js"></script>
+   <script src="/resources/js/admin/aplistAdmin.js"></script>
+   <!-- Bootstrap core CSS -->
+   <link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
+   <!-- Jquery Core JS -->
+   <script src="/webjars/jquery/3.6.0/jquery.min.js"></script>
+   <!-- Bootstrap Core JS -->
+   <script src="/webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <!-- Font-Awesome -->
+   <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+   <!-- Resources CSS -->
+   <link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
 <body>
-	<jsp:include page="../utils/navigation.jsp" />
-	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+   <jsp:include page="../utils/navigation.jsp" />
+   <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
 	<h1 class="page-header">결재완료함</h1>
 
@@ -133,4 +133,28 @@
 		</ul>
 	</div>
 </body>
+<script>
+function addToMyList(){
+	let docList = document.querySelectorAll(".docListRow");
+	let listSize = docList.length;
+	let arr = [];
+	
+	for(i=0; i<listSize; i++){
+		if(docList[i].checked == true){
+			arr.push(docList[i].value);
+		}
+	}
+	
+	let objectArr = {"dmNumArr":arr};
+	
+	fetchAjax("/goMyList","post", objectArr, handleAddMyList);
+}
+
+function handleAddMyList(data){
+	JSON.parse(data);
+	console.log(data);
+	location.reload();
+	
+}
+</script>
 </html>

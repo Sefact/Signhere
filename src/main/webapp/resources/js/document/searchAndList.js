@@ -1,3 +1,4 @@
+
 function fetchAjax(action,method,data,afterFunction){
 fetch(action,{
 		method:method,
@@ -23,7 +24,7 @@ fetch(action,{
 }
 
 function showDocDetail(dmNum){
-	fetchAjax("documentBox","post", dmNum, handleDocDetail);
+	fetchAjax("/documentBox","post", dmNum, handleDocDetail);
 }
 
 function handleDocDetail(jsonData){
@@ -44,7 +45,7 @@ function addToMyList(){
 	
 	let objectArr = {"dmNumArr":arr};
 	
-	fetchAjax("goMyList","post", objectArr, handleAddMyList);
+	fetchAjax("/goMyList","post", objectArr, handleAddMyList);
 }
 
 function handleAddMyList(data){
@@ -67,7 +68,7 @@ function delMyList(){
 	
 	let objectArr = {"dmNumArr":arr};
 	
-	fetchAjax("delMyList","post", objectArr, handleDelMyList);
+	fetchAjax("/delMyList","post", objectArr, handleDelMyList);
 }
 
 function handleDelMyList(data){

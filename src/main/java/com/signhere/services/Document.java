@@ -803,7 +803,7 @@ public class Document {
 
 
 
-	public int goMyList(String[] dmNumArr) {
+	public String goMyList(String[] dmNumArr) {
 		int numOfDocs = dmNumArr.length;
 		int resultCode = 0;
 		
@@ -832,10 +832,10 @@ public class Document {
 			this.setTransactionResult(false);
 		}
 		
-		return resultCode;
+		return resultCode+"";
 	}
 	
-	public int delMyList(String[] dmNumArr) {
+	public String delMyList(String[] dmNumArr) {
 		
 		int numOfDocs = dmNumArr.length;
 		int resultCode = 0;
@@ -865,7 +865,7 @@ public class Document {
 			this.setTransactionResult(false);
 		}
 		
-		return resultCode;
+		return resultCode+"";
 	}
 
 	

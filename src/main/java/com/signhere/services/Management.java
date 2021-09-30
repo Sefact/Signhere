@@ -61,6 +61,9 @@ public class Management {
 		List<Map<String,Object>> dpList = sqlSession.selectList("getAllDp",cri);
 		List<Map<String,Object>> grList = sqlSession.selectList("getAllGr",cri);
 		
+		System.out.println(dpList);
+		System.out.println(grList);
+		
 		mav.addObject("grList",grList);
 		mav.addObject("dpList",dpList);
 		mav.addObject("empList",empList);
@@ -102,8 +105,10 @@ public class Management {
 			e.printStackTrace();
 		}
 		
-		
+		//암호화 추가 
 		int result = sqlSession.insert("addNewEmp",ub);
+		
+		System.out.println(this.generatePw());
 		
 		return result+"";
 	}
