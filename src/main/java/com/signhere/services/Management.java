@@ -109,6 +109,8 @@ public class Management {
 		
 		int result = sqlSession.insert("addNewEmp",ub);
 		
+		
+		System.out.println("비번난수"+this.generatePw());
 		return result+"";
 	}
 

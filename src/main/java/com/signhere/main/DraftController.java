@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.signhere.beans.ApprovalBean;
+import com.signhere.beans.ApprovalCommentBean;
+import com.signhere.beans.CompanionDeferBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.beans.WriteBean;
@@ -69,6 +74,46 @@ public class DraftController {
 		
 		return mav;
 	}
+	
+	@GetMapping("/approvalDraft")
+	private ModelAndView approvalDraft(@ModelAttribute DocumentBean db, @ModelAttribute ApprovalCommentBean acb ) {
+			
+		ModelAndView mav =new ModelAndView();
+		
+		try {
+			db.setApId((String)ssn.getAttribute("userId"));
+			db.setDmNum((String)ssn.getAttribute("dmNum"));	
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		doc.confirmApproval(db,acb);
+		
+		mav.setViewName("document/approvalProcced");
+		
+		return mav;
+	}
+	
+	//documentBox에서 보류버튼
+	@GetMapping("/companionDraft")
+	private ModelAndView companionDraft(@ModelAttribute DocumentBean db, @ModelAttribute CompanionDeferBean cdb) {
+			
+		ModelAndView mav =new ModelAndView();
+			try {
+				db.setDmNum((String)ssn.getAttribute("dmNum"));
+			} catch (Exception e) {
+			
+				e.printStackTrace();
+			}
+			
+		doc.confirmCompanion(db,cdb);
+		
+		mav.setViewName("document/companionApproval");
+		
+		return mav;
+	}
+	
+	
+	
 	
 	@RequestMapping("/draftMove")
 	public String draftMove() {

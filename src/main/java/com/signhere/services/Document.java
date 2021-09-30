@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.ApprovalBean;
+import com.signhere.beans.ApprovalCommentBean;
+import com.signhere.beans.CompanionDeferBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.ReadingReferenceBean;
 import com.signhere.beans.UserBean;
@@ -134,7 +136,6 @@ public class Document {
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();
 		
-		System.out.println(db);
 		
 		List<DocumentBean> tempList = null;
 		String dmCodeCheck = null;
@@ -354,39 +355,45 @@ public class Document {
 			wb.setFileLoc((String) ssn.getAttribute("fileLoc"));
 			wb.setSignLoc((String) ssn.getAttribute("signLoc"));
 			
-			System.out.println(ssn.getAttribute("aplMap"));
-			System.out.println(ssn.getAttribute("docMap"));
-			System.out.println(ssn.getAttribute("refMap"));
+	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		
-		System.out.println(wb);
-		
-		if(this.convertToBoolean(sqlSession.insert("insDocument", wb))) {
-			sqlSession.delete("delTemporary", wb);
-			if(this.convertToBoolean(sqlSession.insert("insApprovalComment", wb))) {
-				for(int i=0; i<aplineSize; i++) {
-					wb.setDmWriter(wb.getAplBean().get(i).getAplId());
-					wb.setAplSeq(wb.getAplBean().get(i).getAplSeq()+1);
-					
-					sqlSession.insert("insApprovalOther", wb);
-				}
-				if(rflineSize > 0) {
-					for(int i=0; i<rflineSize; i++) {
-						wb.setRefId(wb.getRefBean().get(i).getRdId());
-						
-						sqlSession.insert("insReference", wb);
-					}
-				} else {
-					System.out.println("Reference Line is not found");
-				}
-				System.out.println("Success");
-			}
-		} else {
-			System.out.println("Error");
-		}
+		/* 문서 테이블에 정상적으로 정보가 삽입된 경우 */
+	      if(this.convertToBoolean(sqlSession.insert("insDocument", wb))) {
+	         /* 임시 보관함에 대한 정보 삭제 */
+	         sqlSession.delete("delTemporary", wb);
+	         /* 결재문을 올린 사람에 대한 정보를 삽입 결재선 */
+	         if(this.convertToBoolean(sqlSession.insert("insApprovalComment", wb))) {
+	            /* 다음 결재자를 결재선에 삽입*/
+	            wb.setDmWriter(wb.getAplBean().get(0).getAplId());
+	            wb.setAplSeq(wb.getAplBean().get(0).getAplSeq()+1);
+	            if(this.convertToBoolean(sqlSession.insert("insApprovalProgress", wb))) {
+	               /* 결재 대기자들을 결재선에 삽입 */
+	               for(int i=1; i<aplineSize; i++) {
+	                  wb.setDmWriter(wb.getAplBean().get(i).getAplId());
+	                  wb.setAplSeq(wb.getAplBean().get(i).getAplSeq()+1);
+	                  
+	                  sqlSession.insert("insApprovalOther", wb);
+	               }
+	            }
+	            if(rflineSize > 0) {
+	               for(int i=0; i<rflineSize; i++) {
+	                  wb.setRefId(wb.getRefBean().get(i).getRdId());
+	                  
+	                  sqlSession.insert("insReference", wb);
+	               }
+	            } else {
+	               System.out.println("Reference Line is not found");
+	            }
+	            System.out.println("Success");
+	         }
+	      } else {
+	         System.out.println("Error");
+	      }
 		
 		return writeList;
 	}
@@ -441,24 +448,49 @@ public class Document {
 	}
 	
 
-	public ModelAndView documentBoxDetail(WriteBean wb) {
-		
+	public ModelAndView documentBoxDetail(WriteBean wb,ApprovalBean ab) {
 		ModelAndView mav = new ModelAndView();
-		ReadingReferenceBean rrb = new ReadingReferenceBean();
-		ApprovalBean ab = new ApprovalBean();
-			
+		DocumentBean db = new DocumentBean();
+		ReadingReferenceBean rrb = new ReadingReferenceBean();	
+		ApprovalCommentBean apb = new ApprovalCommentBean();
+		CompanionDeferBean cdb = new CompanionDeferBean();
 		try {
 			wb.setLogId((String)ssn.getAttribute("userId"));
-		
-		} catch (Exception e) {		
+			db.setApId((String)ssn.getAttribute("userId"));
+			ab.setDmNum(wb.getDmNumCheck());
+			db.setDmNum(wb.getDmNumCheck());
+			ssn.setAttribute("dmNum",db.getDmNum());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		List<ApprovalBean> apList;
+	
+		//결재선에 올라온 사람들의 이름,부서,직급
+		apList=sqlSession.selectList("apList",ab);
 		
+		List<Map<String, Object>> apConfirmList = new ArrayList<Map<String, Object>>();
+		
+		for(int i=1; i<apList.size(); i++) {
+			Map<String, Object> apConfirmListPut = new HashMap<String, Object>();
+			
+			apConfirmListPut.put("apName", apList.get(i).getAplName());
+			apConfirmListPut.put("apDp", apList.get(i).getDpName());
+			apConfirmListPut.put("apGr", apList.get(i).getGrName());
+					
+			apConfirmList.add(apConfirmListPut);
+			
+		}
+		mav.addObject("apConfirmList",apConfirmList);
+
+	
 		List<WriteBean> docList;
 		
+		//documentbox에 나와야할 항목들 제목,날짜,종류 등등
 		docList=sqlSession.selectList("detailDocument",wb);
 		
-		mav.addObject("docList",docList.get(0));	
+		mav.addObject("docList",docList.get(0));
+		
+		//참조선
 		List<ReadingReferenceBean> refList;	
 		
 		rrb.setDmNum(wb.getDmNumCheck());
@@ -466,7 +498,7 @@ public class Document {
 		
 		mav.addObject("refList",refList);
 
-		System.out.println("splitTest"+docList.get(0).getFileLoc().split("resources").toString());
+		
 		/* 문서img파일 저장경로를 /img/*.jpg(file) 형식으로 자름*/
 		String fileLoc= docList.get(0).getFileLoc();
 		int beginIndex = fileLoc.indexOf("/img");
@@ -476,10 +508,8 @@ public class Document {
 		mav.addObject("fileLoc",fileLocResult);
 		
 		
-		
+		//사인 경로 리스트
 		List<ApprovalBean> signList;
-	
-		ab.setDmNum(wb.getDmNumCheck());
 		signList=sqlSession.selectList("signLocation",ab);
 		
 		
@@ -499,40 +529,108 @@ public class Document {
 		mav.addObject("signList",signLocList);
 		
 		
+		//결재의견 
+		List <ApprovalCommentBean> apCommentList;
 		
-	
+		apb.setDmNum(wb.getDmNumCheck());
 		
+		apCommentList=sqlSession.selectList("apCommentList",apb);
+		
+		
+		mav.addObject("ap","결재");
+		
+		mav.addObject("apCommentList",apCommentList);
 		
 
+		//반려의견 
+		List <CompanionDeferBean> cpCommentList;
 		
+		cdb.setDmNum(wb.getDmNumCheck());
 		
-//		mav.addObject("dmTitle",wb.getDmTitle());
-		//이거 그냥 위에서 dmNum으로 저장해두 됨. 헷갈릴수도 있으니 일단 다른걸로 저장.
-	
+		cpCommentList=sqlSession.selectList("cpCommentList",cdb);
 		
-		//DOCUMENT,APPROVALLINE,APCOMMENT(결재의견) ,COMMENT(그냥의견 이건 완료문서함에 한해서),REF,READING,
+		mav.addObject("cp","반려");
 		
-		
-		
-		//결재선에 있는 사람들 (부서포함) , 사인 파일 위치,   AL테이블 
-		
-		
-		//dm테이블에 있는 문서(jpg)에 관한 파일 위치  DM테이블
+		mav.addObject("cpCommentList",cpCommentList);
 		
 		
 		
-		//REF,READING아이디는 REF테이블,READING테이블에있음
-		
-	
 	
 		mav.setViewName("document/documentBox");
 		
 		
+		//중간결재자인지 마지막결재자인지 판단하는 쿼리 1=true(마지막결재자) 0=false(중간결재자)
+		
+	
 		return mav;
 	}
+	
+	public void confirmApproval(DocumentBean db,ApprovalCommentBean acb ) {
+		
+		int isApSeqCheck = sqlSession.selectOne("isApSeqCheck",db);
+		
+		try {
+			db.setSignLoc((String)ssn.getAttribute("signLoc"));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if(this.convertToBoolean(isApSeqCheck)) {
+			this.confirmFinalApproval(db);			
+		} else {			
+			this.confirmMiddleApproval(db);
+		}
+		try {
+			acb.setAcId((String)ssn.getAttribute("userId"));
+			acb.setDmNum((String)ssn.getAttribute("dmNum"));	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		
+		sqlSession.insert("insertApprovalComment", acb);
+
+	}
+	
+	//중간결재자
+		private void confirmMiddleApproval(DocumentBean db) {
+			sqlSession.update("approvalUpdateMyAplSeqCheck",db);	
+			sqlSession.update("approvalUpdateNextAplSeqCheck",db);
+			
+		}
+	
+	
+	//최종결재자
+	private void confirmFinalApproval(DocumentBean db) {
+		sqlSession.update("approvalFinalUpdateMyAplSeqCheck",db);	
+		sqlSession.update("approvalFinalUpdateNextAplSeqCheck",db);
+
+	}
+	
+	public void confirmCompanion(DocumentBean db, CompanionDeferBean cdb) {
+		
+		try {
+			cdb.setCpId((String)ssn.getAttribute("userId"));
+			cdb.setDmNum((String)ssn.getAttribute("dmNum"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sqlSession.update("confirmCompanion", db);
+		sqlSession.insert("insertCompanionComment",cdb);
+		
+		//해당문서(도큐먼트번호 참조)의 상태를 R로 바꿔줘야함.
+		
+	}
+	
 	
 	private boolean convertToBoolean(int result) {
 		return result==1 ? true: false;  
 	}
+
+
+
 
 }
