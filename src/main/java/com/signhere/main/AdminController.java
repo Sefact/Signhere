@@ -57,6 +57,12 @@ public class AdminController {
 		return mag.mailDup(ub);
 	}
 	
+	@PostMapping("/employerDup")
+	@ResponseBody
+	public CompanyBean employerDup(@RequestBody CompanyBean cb) {
+		return mag.mEmployerDup(cb);
+	}
+	
 	
 	//새로운 직원 추가시 id 중복 체크  
 	//최초 회원가입시에도 사용.(Authentication.class) join 메소드

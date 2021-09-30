@@ -101,8 +101,7 @@
 				</thead>
 				<tbody>
 			<c:forEach var="docList" items="${docList}">
-				<tr>
-					
+				<tr>			
 					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}" /></a></td>
 					<td><c:out value="${docList.dmTitle}"/></td>
 					<td><c:out value="${docList.dmCode}"/></td>				

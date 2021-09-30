@@ -129,6 +129,8 @@ public class Management {
 		
 		cb.setMessage(dupCheck);
 		
+		System.out.println(cb.getMessage());
+		
 		return cb;
 	}
 	
