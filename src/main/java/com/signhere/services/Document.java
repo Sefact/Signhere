@@ -310,14 +310,12 @@ public class Document {
 				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
 				File tmpDir = new File(uploadPath);
 				File tmp = new File(uploadPath + fileName);
-				
 
 				if(!tmpDir.exists()) {
 					 if(tmpDir.mkdirs()) {
 					 }
 					System.out.println(tmpDir.getPath());
 				}
-
 
 				System.out.println("fileName"+fileLoc);
 				System.out.println("fileLoc"+fileName);

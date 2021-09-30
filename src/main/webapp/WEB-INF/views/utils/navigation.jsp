@@ -149,11 +149,11 @@
 								<div class="form-group col-md-4">
 								</div>
 								<div class="form-group col-md-2">
-									<label>기안</label>
+									<label for="D">기안</label>
 									<input type="radio" name="dmCode" value="D"/>
 								</div>
 								<div class="form-group col-md-2">
-									<label>시행</label>
+									<label for="E">시행</label>
 									<input type="radio" name="dmCode" value="E"/>
 								</div>
 								<div class="form-group col-md-4">
@@ -511,6 +511,7 @@
 					var pushRfApline = document.getElementById("selReferencelLine");
 					
 					var radioDmCode = $('input[name="dmCode"]:checked').val();
+					var radioDmName = $("label[for='"+radioDmCode+"']").text();
 					
 					var docBean = [];
 					var aplBean = [];
@@ -538,7 +539,7 @@
 						rfBean.push(rfInital);
 					}
 					
-					var docInital = {'dmCode':radioDmCode, 'dmTitle':navDmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':mAplSize, aplBean, rfBean};
+					var docInital = {'dmCode':radioDmCode, 'dmName':radioDmName, 'dmTitle':navDmTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':mAplSize, aplBean, rfBean};
 					docBean.push(docInital);
 					
 					var json = JSON.stringify(docBean);
