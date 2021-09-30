@@ -108,8 +108,13 @@ public class Management {
 		//암호화 추가 
 		int result = sqlSession.insert("addNewEmp",ub);
 		
+
 		System.out.println(this.generatePw());
 		
+
+		
+		System.out.println("비번난수"+this.generatePw());
+
 		return result+"";
 	}
 

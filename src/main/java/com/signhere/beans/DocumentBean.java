@@ -30,6 +30,7 @@ public class DocumentBean {
 	private String readingId;
 	//APPROVALLINE테이블의 APPROVAL_SEQ가 담길 BEAN
 	private int aplSeq;
+	private String aplSeqCheck;
 	private char searchCode;
 	private String[] dmNumArr;
 	private List<ApprovalBean> aplBean;
@@ -44,5 +45,4 @@ public class DocumentBean {
 	// 사원의 직급과 부서명
 	private String grName;
 	private String dpName;
-
 }

@@ -94,16 +94,16 @@
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="name" items="${docList}">
+				<c:forEach var="docList" items="${docList}">
 					<tr>
 						<td><input type="checkBox" class="docListRow"
-							value="${name.dmNum}">
-						<c:out value="${name.dmNum}" /></td>
-						<td><c:out value="${name.dmTitle}" /></td>
-						<td><c:out value="${name.apName}" /></td>
-						<td><c:out value="${name.dmName}" /></td>
-						<td><c:out value="${name.dmWriter}" /></td>
-						<td><c:out value="${name.dmDate}" /></td>
+							value="${docList.DMNUM}">
+						<c:out value="${docList.DMNUM}" /></td>
+						<td><c:out value="${docList.DMTITLE}" /></td>
+						<td><c:out value="${docList.APNAME}" /></td>
+						<td><c:out value="${docList.DMNAME}" /></td>
+						<td><c:out value="${docList.DMWRITER}" /></td>
+						<td><c:out value="${docList.DMDATE}" /></td>
 					</tr>
 				</c:forEach>
 			</tbody>

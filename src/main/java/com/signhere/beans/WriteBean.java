@@ -31,6 +31,8 @@ public class WriteBean {
 	private String signLoc;
 	/*위임여부*/
 	private String receiver;
+	/*문서종류*/
+	private String dmName;
 	/* 결재선(부서) */
 	private List<ApprovalBean> aplBean;
 	private List<ReadingReferenceBean> refBean;

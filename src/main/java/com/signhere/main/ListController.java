@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 
+import com.signhere.beans.AccessBean;
+import com.signhere.beans.ApprovalBean;
+
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.WriteBean;
 import com.signhere.mapper.DocumentInter;
@@ -106,10 +109,13 @@ public class ListController implements DocumentInter {
 	@RequestMapping("/apReturnList")
 	public ModelAndView apReturnList(Criteria cri) {
 		mav = new ModelAndView();		
+
 		
 		mav = doc.apReturnList(cri);
 		
+
 		this.tempCheck(cri);
+
 		
 		return mav;
 	}
@@ -206,10 +212,13 @@ public class ListController implements DocumentInter {
 	}
 	
 	public void tempCheck(Criteria cri) {
+		
+		DocumentBean db = new DocumentBean();
+		
 		try {
-			cri.setSenderId((String) ssn.getAttribute("dmCheck"));
+			db.setDmNum((String) ssn.getAttribute("dmCheck"));
 			if(ssn.getAttribute("dmCheck") != null) {
-				if(this.convertToBoolean(sqlSession.delete("delTemporary", cri))) {
+				if(this.convertToBoolean(sqlSession.delete("delTemporary", db))) {
 					ssn.removeAttribute("dmCheck");
 				} else {
 					System.out.println("Temporary is not Found");
@@ -227,10 +236,10 @@ public class ListController implements DocumentInter {
 	}
 	
 	@GetMapping("/documentBox")
-	public ModelAndView documentBox(@ModelAttribute WriteBean wb) {
+	public ModelAndView documentBox(@ModelAttribute WriteBean wb, @ModelAttribute ApprovalBean ab) {
 
 			
-			mav = doc.documentBoxDetail(wb);
+			mav = doc.documentBoxDetail(wb, ab);
 			
 			return mav;
 	}

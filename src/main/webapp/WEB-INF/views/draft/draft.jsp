@@ -895,7 +895,13 @@
 				dataType: 'json'
 			})
 			.done(function(data) {
-				location.href = "/myDraft";
+				dmCodeCheck = data[0].dmCode;
+	            
+				if(dmCodeCheck == "D") {
+				   location.href = "/myDraft";   
+				} else {
+				   location.href = "/myEnforceMent";
+				}
 				console.log("Success");
 			})
 			.fail(function(data) {

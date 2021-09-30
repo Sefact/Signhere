@@ -416,7 +416,7 @@ public class Authentication implements AuthentInter {
 
 		}else {
 			mav.addObject("message",message);
-			mav.addObject("redirect:/");
+			mav.addObject("login/home");
 
 		}
 

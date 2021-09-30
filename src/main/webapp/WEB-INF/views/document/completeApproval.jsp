@@ -103,8 +103,11 @@
 				<tbody>
 				<c:forEach var="docList" items="${docList}">
 				<tr>
+
 				<td><input class="docListRow" type="checkBox" value="${docList.dmNum}"></td>
 				<td><c:out value="${docList.dmNum }"/></td>
+				<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum }"/></a></td>
+
 				<td><c:out value="${docList.dmTitle }"/></td>
 				<td><c:out value="${docList.dmCode }"/></td>				
 				<td><c:out value="${docList.dmWriter }"/></td>
