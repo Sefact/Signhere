@@ -11,4 +11,6 @@ public class ApprovalBean {
 	private String aplLocation;
 	private String aplReceiverId;
 	private String aplReceiver;
+	private String dpName;
+	private String grName;
 }

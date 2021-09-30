@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.AccessBean;
+import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.WriteBean;
 import com.signhere.mapper.DocumentInter;
@@ -208,7 +209,7 @@ public class ListController implements DocumentInter {
 	@PostMapping("/apReturnList")
 	public ModelAndView apReturnList(DocumentBean db) {
 		mav = new ModelAndView();		
-		mav.setViewName("document/companionApproval");
+		
 		
 		this.tempCheck(db);
 		
@@ -225,6 +226,7 @@ public class ListController implements DocumentInter {
 		
 		//APPROVAL_ID=로그인한아이디 =>'202103001'xml에서 where절에 입력.
 		mav.addObject("docList",docList);
+		mav.setViewName("document/companionApproval");
 		
 		return mav;
 	}
@@ -382,10 +384,10 @@ public class ListController implements DocumentInter {
 	//예를들면 내가 waitApproval함의 sql조건에 일치판단(참/거짓)하여 트루라면 버튼들이 보여야하고 false면 버튼들이 보이지 않아야 함.
 	
 	@GetMapping("/documentBox")
-	public ModelAndView documentBox(@ModelAttribute WriteBean wb) {
+	public ModelAndView documentBox(@ModelAttribute WriteBean wb, @ModelAttribute ApprovalBean ab) {
 
 			
-			mav = doc.documentBoxDetail(wb);
+			mav = doc.documentBoxDetail(wb, ab);
 			
 			return mav;
 	}
