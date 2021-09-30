@@ -102,7 +102,14 @@ public class TextController {
 	}
 	
 
-	
+	@PostMapping("/documentBox")
+	public List<DocumentBean> documentBox(@RequestBody String dmNum) {
+		
+		List<DocumentBean> docList;
+		
+		docList = fut.mDocumentBox(dmNum);
+		
+		return null;
+	}
 
-	
 }

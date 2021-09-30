@@ -84,7 +84,7 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12">
-					<img id="imgPreview" src="${fileLoc}"/>
+					<img id="imgPreview" src="${fileLoc}" width="50%" height="70%"/>
 				
 				</div>
 			</div>

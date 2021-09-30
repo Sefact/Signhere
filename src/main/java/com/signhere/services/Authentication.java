@@ -126,8 +126,8 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userName",tmplist.get(0).getUserName());
 							DocumentBean db = new DocumentBean();
 							
-							mav.addObject("waitChart", this.waitApprovalChart(db));
-							mav.addObject("docList", this.waitApprovalList(db));
+							//mav.addObject("waitChart", this.waitApprovalChart(db));
+							//mav.addObject("docList", this.waitApprovalList(db));
 							mav.addObject("docList2", this.apIngList(db));
 							//결제대기함의 수를 addObject해줌.
 						
@@ -162,14 +162,14 @@ public class Authentication implements AuthentInter {
 		return mav;
 	}
 	//결제대기함의 문서수 차트에 담음
-	public int waitApprovalChart(DocumentBean db) {	
+	public int waitApprovalChart(Criteria cri) {	
 		List <DocumentBean> docList;	
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));	
+			cri.setSenderId((String)ssn.getAttribute("userId"));	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
-		docList=sqlSession.selectList("waitApproval",db);		
+		docList=sqlSession.selectList("waitApproval",cri);		
 		int size = docList.size();
 		
 		return size;
@@ -198,10 +198,9 @@ public class Authentication implements AuthentInter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
-		docList=sqlSession.selectList("approvalProcced",db);		
-
+		//docList=sqlSession.selectList("approvalProcced",db);		
 		
-		return docList;
+		return null;
 	}
 	
 	
@@ -417,7 +416,7 @@ public class Authentication implements AuthentInter {
 
 		}else {
 			mav.addObject("message",message);
-			mav.addObject("redirect:/");
+			mav.addObject("login/home");
 
 		}
 
@@ -494,8 +493,8 @@ public class Authentication implements AuthentInter {
 		mav.setViewName("login/home");
 		try {
 			if(ssn.getAttribute("userId") != null) {	
-			mav.addObject("waitChart", this.waitApprovalChart(db));
-			mav.addObject("docList", this.waitApprovalList(db));
+			//mav.addObject("waitChart", this.waitApprovalChart(db));
+			//mav.addObject("docList", this.waitApprovalList(db));
 			mav.addObject("docList2", this.apIngList(db));
 			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
 			//로그인한 상태에서 main으로 가면 자꾸 newInfo로감.. 심지어 pwInitial은 1로 잘 나옴	

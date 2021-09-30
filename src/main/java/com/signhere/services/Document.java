@@ -13,7 +13,11 @@ import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,9 +37,20 @@ public class Document {
 	ModelAndView mav;
 	@Autowired
 	Session ssn;
+	@Autowired
+	DataSourceTransactionManager tx;
+
+	Pagination pgn;
 	
-	private String uploadPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
-	private String signPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
+	private DefaultTransactionDefinition def;
+	private TransactionStatus status;
+	
+	private String uploadPath = "C:\\Users\\Dongmin Geum\\git\\Signherev2\\Signhere\\src\\main\\webapp\\resources\\img";
+	private String signPath = "C:\\Users\\Dongmin Geum\\git\\Signherev2\\Signhere\\src\\main\\webapp\\resources\\img";
+
+	//private String uploadPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
+	//private String signPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
+
 	
 	public List<DocumentBean> mSearchText(DocumentBean db){
 
@@ -292,12 +307,24 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = multipartFile.getOriginalFilename();
+			
+				uploadPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
 				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
+				File tmpDir = new File(uploadPath);
 				File tmp = new File(uploadPath + fileName);
 				
+
+				if(!tmpDir.exists()) {
+					 if(tmpDir.mkdirs()) {
+					 }
+					System.out.println(tmpDir.getPath());
+				}
+
+
 				System.out.println("fileName"+fileLoc);
 				System.out.println("fileLoc"+fileName);
 				
+
 				fileMap.put("fileName", fileName);
 				fileMap.put("fileSize", multipartFile.getSize());
 				multipartFile.transferTo(tmp);
@@ -320,9 +347,18 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = ssn.getAttribute("userId") + ".png";
-				String signLoc = signPath + fileName;
-				File tmp = new File(signPath + fileName);
 
+				signPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
+				File tmpDir = new File(signPath);
+
+				String signLoc = signPath + fileName;
+
+				File tmp = new File(signPath + fileName);
+				
+				if(!tmpDir.exists()) {
+					tmpDir.mkdirs();
+				}
+				
 				signMap.put("fileName", fileName);
 				signMap.put("fileSize", multipartFile.getSize());
 				multipartFile.transferTo(tmp);
@@ -448,7 +484,244 @@ public class Document {
 	}
 	
 
+
+	public ModelAndView apToDoList(Criteria cri) {
+		
+		mav = new ModelAndView();
+		
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countWaitList", cri));
+		
+		List<Map<String,Object>> waitList = sqlSession.selectList("waitApproval",cri);
+		
+		mav.setViewName("document/waitApproval");
+		mav.addObject("docList", waitList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+	public ModelAndView apIngList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countApprovalProceed",cri));
+		
+		List<Map<String,Object>> ingList = sqlSession.selectList("approvalProcced",cri);
+		
+		mav.setViewName("document/approvalProcced");
+		mav.addObject("docList", ingList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView apCompleteList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countCompletedDocs",cri));
+		
+		List<Map<String,Object>> completedList = sqlSession.selectList("completeApproval",cri);
+		
+		mav.setViewName("document/completeApproval");
+		mav.addObject("docList", completedList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView apReturnList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReturnedDocs",cri));
+		
+		List<Map<String,Object>> returnedList = sqlSession.selectList("returnedApproval",cri);
+		
+		mav.setViewName("document/companionApproval");
+		mav.addObject("docList", returnedList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView deferList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countdeferredDocs",cri));
+		
+		List<Map<String,Object>> deferredList = sqlSession.selectList("deferredApproval",cri);
+		
+		mav.setViewName("document/deferList");
+		mav.addObject("docList", deferredList);
+		mav.addObject("pagination", pgn);
+		return mav;
+	}
+
+
+
+	public ModelAndView referenceList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReferredDocs",cri));
+		
+		List<Map<String,Object>> referredList = sqlSession.selectList("referenceApproval",cri);
+		
+		System.out.println(referredList.toString());
+		
+		mav.setViewName("document/referenceApproval");
+		mav.addObject("docList", referredList);
+		mav.addObject("pagination", pgn);
+		return mav;
+	}
+
+
+
+	public ModelAndView receiveList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReceiveDocs",cri));
+		
+		List<Map<String,Object>> receiveList = sqlSession.selectList("receiveList",cri);
+		
+		System.out.println(receiveList);
+		
+		mav.setViewName("document/receiveNotice");
+		mav.addObject("docList", receiveList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView myList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyList",cri));
+		
+		List<Map<String,Object>> myList = sqlSession.selectList("myList",cri);
+		
+		
+		mav.setViewName("document/myList");
+		mav.addObject("docList", myList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView myDraft(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyDraft",cri));
+		
+		List<Map<String,Object>> myDraft = sqlSession.selectList("myDraft",cri);
+		
+		
+		mav.setViewName("document/myDraft");
+		mav.addObject("docList", myDraft);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+	public ModelAndView myEnforcement(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyEnforceMent",cri));
+		
+		List<Map<String,Object>> myEnforceMent = sqlSession.selectList("myEnforceMent",cri);
+		
+		
+		mav.setViewName("document/myEnforceMent");
+		mav.addObject("docList", myEnforceMent);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+
+
+
 	public ModelAndView documentBoxDetail(WriteBean wb,ApprovalBean ab) {
+
 		ModelAndView mav = new ModelAndView();
 		DocumentBean db = new DocumentBean();
 		ReadingReferenceBean rrb = new ReadingReferenceBean();	
@@ -501,9 +774,22 @@ public class Document {
 		
 		/* 문서img파일 저장경로를 /img/*.jpg(file) 형식으로 자름*/
 		String fileLoc= docList.get(0).getFileLoc();
-		int beginIndex = fileLoc.indexOf("/img");
+		
+		System.out.println(docList.get(0).getFileLoc());
+		System.out.println(fileLoc);
+		
+		String cmCode = null;
+		try {
+			cmCode = (String)ssn.getAttribute("cmCode");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int beginIndex = fileLoc.indexOf("\\img");
 		int lastIndex = fileLoc.length();	
 		String fileLocResult=fileLoc.substring(beginIndex,lastIndex);
+		
+		System.out.println(fileLocResult);
 		
 		mav.addObject("fileLoc",fileLocResult);
 		
@@ -516,7 +802,7 @@ public class Document {
 		//사인로케이션에 /img 부터의 경로를 저장하는 메소드
 		List<Map<String, Object>> signLocList = new ArrayList<Map<String, Object>>();
 		
-		int beginIndex2 = signList.get(0).getAplLocation().indexOf("/img");
+		int beginIndex2 = signList.get(0).getAplLocation().indexOf("\\img");
 		for(int i=0; i<signList.size(); i++) {
 			Map<String, Object> signLocListPut = new HashMap<String, Object>();
 			if(signList.get(i).getAplLocation()!=null) {
@@ -633,4 +919,91 @@ public class Document {
 
 
 
+	public String goMyList(String[] dmNumArr) {
+		int numOfDocs = dmNumArr.length;
+		int resultCode = 0;
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		
+		try {
+			map.put("userId", ssn.getAttribute("userId"));
+			map.put("dmNum", "init");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
+		
+		int counter = 0;
+		
+		for(int i =0; i<numOfDocs; i++) {
+			map.replace("dmNum", dmNumArr[i]);
+			counter += sqlSession.insert("goMyList",map);
+		}
+		
+		if(counter == numOfDocs) {
+			this.setTransactionResult(true);
+			resultCode = 1;
+		}else {
+			this.setTransactionResult(false);
+		}
+		
+		return resultCode+"";
+	}
+	
+	public String delMyList(String[] dmNumArr) {
+		
+		int numOfDocs = dmNumArr.length;
+		int resultCode = 0;
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		
+		try {
+			map.put("userId", ssn.getAttribute("userId"));
+			map.put("dmNum", "init");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
+		
+		int counter = 0;
+		
+		for(int i =0; i<numOfDocs; i++) {
+			map.replace("dmNum", dmNumArr[i]);
+			counter += sqlSession.delete("delMyList",map);
+		}
+		
+		if(counter == numOfDocs) {
+			this.setTransactionResult(true);
+			resultCode = 1;
+		}else {
+			this.setTransactionResult(false);
+		}
+		
+		return resultCode+"";
+	}
+
+	
+	//Transaction configuration 
+		private void setTransactionConf(int propagation, int isolationLevel, boolean isRead) {
+			def = new DefaultTransactionDefinition();
+			def.setPropagationBehavior(propagation);
+			def.setIsolationLevel(isolationLevel);
+			def.setReadOnly(isRead);
+			status = tx.getTransaction(def);
+		}
+
+		//Transaction Result
+		private void setTransactionResult(boolean isCheck) {
+			if(isCheck) {
+				tx.commit(status);
+			}else{
+				tx.rollback(status);
+			}
+		}
+
+
+
+		
 }

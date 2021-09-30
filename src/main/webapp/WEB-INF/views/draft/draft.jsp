@@ -180,7 +180,6 @@
 												<option value="<c:out value="${aplList.aplId}"></c:out>"><c:out value="${aplList.aplName}"></c:out></option>
 										</c:forEach>
 									</select>
-								
 								</div>
 							</div>
 							<!-- 결재선(타부서) 타이틀 -->
@@ -896,7 +895,13 @@
 				dataType: 'json'
 			})
 			.done(function(data) {
-				location.href = "/myDraft";
+				dmCodeCheck = data[0].dmCode;
+	            
+				if(dmCodeCheck == "D") {
+				   location.href = "/myDraft";   
+				} else {
+				   location.href = "/myEnforceMent";
+				}
 				console.log("Success");
 			})
 			.fail(function(data) {
