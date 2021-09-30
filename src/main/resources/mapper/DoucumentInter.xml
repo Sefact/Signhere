@@ -7,27 +7,23 @@
 <mapper namespace="com.signhere.mapper.DocumentInter">
 
 	<select id="getLogInInfo2" parameterType="AccessBean" resultType="DocumentBean"> 
-	   SELECT MM.ID AS userId, 
-       MM.PW AS userPwd, 
-       MM.NAME AS userName,
-       MM.PWINITIAL as pwInitial, 
-       MM.COMPANY_CODE AS cmCode,
-       CM.COMPANY_NAME AS cmName,
-       GR.GRADE_NAME AS grName,
-       DP.DEPARTMENT_NAME AS dpName,
-       MM.MAIL AS userMail,
-       DP.DEPARTMENT_CODE AS dpCode,
-       MM.ADMIN as admin      
-       FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
-       INNER JOIN GR ON GR.GRADE_CODE=MM.GRADE_CODE
-       INNER JOIN DP ON DP.COMPANY_CODE=MM.COMPANY_CODE 
-       AND DP.DEPARTMENT_CODE = MM.DEPARTMENT_CODE
-       WHERE ID=#{userId}
+		SELECT MM.ID AS userId, 
+			   MM.PW AS userPwd, 
+			   MM.NAME AS userName,
+			   MM.PWINITIAL as pwInitial, 
+			   MM.COMPANY_CODE AS cmCode,
+			   CM.COMPANY_NAME AS cmName,
+			   GR.GRADE_NAME AS grName,
+			   DP.DEPARTMENT_NAME AS dpName,
+			   MM.MAIL AS userMail,
+			   DP.DEPARTMENT_CODE AS dpCode,
+		       MM.ADMIN as admin      
+		FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
+				 INNER JOIN GR ON GR.GRADE_CODE=MM.GRADE_CODE
+				 INNER JOIN DP ON DP.COMPANY_CODE=MM.COMPANY_CODE 
+					    AND DP.DEPARTMENT_CODE = MM.DEPARTMENT_CODE
+		WHERE ID=#{userId}
 	</select>
-
-
-
-
 
 	<select id="searchCompletedDocs" parameterType="DocumentBean" resultType="DocumentBean">
 		SELECT DM.DOCUMENT_NUM AS dmNum,
@@ -260,10 +256,9 @@
 
 	<select id="countReferredDocs" resultType="Integer">
 		SELECT COUNT(*) 
-		FROM DM 
-        INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
-        INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
-        INNER JOIN RF ON DM.DOCUMENT_NUM = RF.DOCUMENT_NUM
+		FROM DM INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+				INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        		INNER JOIN RF ON DM.DOCUMENT_NUM = RF.DOCUMENT_NUM
         WHERE RF.REFERENCE_ID=#{senderId} 
 	</select>
 	
@@ -364,8 +359,8 @@
 	</insert>
 	
 	<insert id="insApprovalComment" parameterType="WriteBean">
-      INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM, SIGN_LOCATION, APPROVAL_SEQ_CHECK) VALUES(#{dmWriter}, '1', #{dmNum}, #{signLoc}, 'C')
-   </insert>
+		INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM, SIGN_LOCATION, APPROVAL_SEQ_CHECK) VALUES(#{dmWriter}, '1', #{dmNum}, #{signLoc}, 'C')
+	</insert>
    
    <insert id="insApprovalProgress" parameterType="WriteBean">
       INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM, APPROVAL_SEQ_CHECK) VALUES(#{dmWriter}, #{aplSeq}, #{dmNum}, 'P')
@@ -377,8 +372,7 @@
 	
 	<insert id="insReference" parameterType="WriteBean">
 		INSERT INTO RF (DOCUMENT_NUM, REFERENCE_ID) VALUES(#{dmNum}, #{refId})
-	</insert>
-	
+	</insert>	
 
 	<select id="detailDocument" parameterType="WriteBean" resultType="WriteBean">
 		SELECT
@@ -400,8 +394,7 @@
 		WHERE DM.DOCUMENT_NUM=#{dmNumCheck}
 	</select>
 	
-	<select id="detailRefer" parameterType="ReadingReferenceBean" resultType="ReadingReferenceBean">
-	
+	<select id="detailRefer" parameterType="ReadingReferenceBean" resultType="ReadingReferenceBean">	
 		SELECT 
 		RF.DOCUMENT_NUM AS"dmNum",
 		MM.NAME AS "rdName",
@@ -430,7 +423,6 @@
                          MM.COMPANY_CODE = DP.COMPANY_CODE
 		WHERE ID = #{apId}
 	</select>
-	
 
 	<insert id="goMyList" parameterType="hashmap">
 		INSERT INTO PL VALUES(#{userId},#{dmNum})
@@ -456,7 +448,6 @@
 	</select>
 	
 	<select id="apCommentList" parameterType="ApprovalCommentBean" resultType="ApprovalCommentBean">
-	
 		SELECT  DISTINCT 
         MM.NAME AS "acName",
         DP.DEPARTMENT_NAME AS "dpName",
@@ -469,11 +460,9 @@
 		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE
 		INNER JOIN GR ON MM.GRADE_CODE = GR.GRADE_CODE
 		WHERE AC.DOCUMENT_NUM=#{dmNum}
-	
 	</select>
 	
-		<select id="cpCommentList" parameterType="CompanionDeferBean" resultType="CompanionDeferBean">
-	
+	<select id="cpCommentList" parameterType="CompanionDeferBean" resultType="CompanionDeferBean">
 		SELECT  DISTINCT 
         MM.NAME AS "cpName",
         DP.DEPARTMENT_NAME AS "dpName",
@@ -486,81 +475,62 @@
 		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE
 		INNER JOIN GR ON MM.GRADE_CODE = GR.GRADE_CODE
 		WHERE COD.DOCUMENT_NUM=#{dmNum}
-	
 	</select>
 	
-		<select id="isApSeqCheck" parameterType="DocumentBean" resultType="int">
-			SELECT COUNT (*) 
-			FROM AL
-			WHERE 
-			APPROVAL_ID=#{apId} 
-			AND DOCUMENT_NUM=#{dmNum} 
-			AND
-			(SELECT APPROVAL_SEQ FROM AL WHERE APPROVAL_ID = #{apId} AND DOCUMENT_NUM=#{dmNum})
-			=
-			(SELECT MAX(APPROVAL_SEQ) 
-			FROM AL 
-			WHERE DOCUMENT_NUM=#{dmNum})
-		
-		</select>
-		
-		
-		<update id ="approvalUpdateMyAplSeqCheck" parameterType="DocumentBean">
-		
-				UPDATE AL
-				SET APPROVAL_SEQ_CHECK='C', SIGN_LOCATION=#{signLoc} 
-				WHERE APPROVAL_ID=#{apId}
-				AND DOCUMENT_NUM=#{dmNum}
-		
-		</update>
-		
-		<update id ="approvalUpdateNextAplSeqCheck" parameterType="DocumentBean">
-		
-				UPDATE AL
-				SET APPROVAL_SEQ_CHECK='P'
-				WHERE APPROVAL_SEQ=
-				(SELECT APPROVAL_SEQ FROM AL WHERE APPROVAL_ID = #{apId} AND DOCUMENT_NUM=#{dmNum} )+'1'
-				AND DOCUMENT_NUM=#{dmNum}
-		
-		</update>
-		
-		<insert id ="insertApprovalComment" parameterType="ApprovalCommentBean">
-				
-				INSERT INTO AC VALUES (#{dmNum},#{acContents},#{acId},SYSDATE)
-		
-		</insert>
+	<select id="isApSeqCheck" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT (*) 
+		FROM AL
+		WHERE 
+		APPROVAL_ID=#{apId} 
+		AND DOCUMENT_NUM=#{dmNum} 
+		AND
+		(SELECT APPROVAL_SEQ FROM AL WHERE APPROVAL_ID = #{apId} AND DOCUMENT_NUM=#{dmNum})
+		=
+		(SELECT MAX(APPROVAL_SEQ) 
+		FROM AL 
+		WHERE DOCUMENT_NUM=#{dmNum})
+	</select>
 		
 		
-		<update id ="approvalFinalUpdateMyAplSeqCheck" parameterType="DocumentBean">
+	<update id ="approvalUpdateMyAplSeqCheck" parameterType="DocumentBean">
+		UPDATE AL
+		SET APPROVAL_SEQ_CHECK='C', SIGN_LOCATION=#{signLoc} 
+		WHERE APPROVAL_ID=#{apId}
+		AND DOCUMENT_NUM=#{dmNum}
+	</update>
 		
-				UPDATE AL
-				SET APPROVAL_SEQ_CHECK='C', SIGN_LOCATION=#{signLoc}  
-				WHERE APPROVAL_ID=#{apId}
-				AND DOCUMENT_NUM=#{dmNum}
+	<update id ="approvalUpdateNextAplSeqCheck" parameterType="DocumentBean">	
+		UPDATE AL
+		SET APPROVAL_SEQ_CHECK='P'
+		WHERE APPROVAL_SEQ=
+		(SELECT APPROVAL_SEQ FROM AL WHERE APPROVAL_ID = #{apId} AND DOCUMENT_NUM=#{dmNum} )+'1'
+		AND DOCUMENT_NUM=#{dmNum}
+	</update>
 		
-		</update>
+	<insert id ="insertApprovalComment" parameterType="ApprovalCommentBean">
+		INSERT INTO AC VALUES (#{dmNum},#{acContents},#{acId},SYSDATE)
+	</insert>
 		
-		<update id ="approvalFinalUpdateNextAplSeqCheck" parameterType="DocumentBean">
+	<update id ="approvalFinalUpdateMyAplSeqCheck" parameterType="DocumentBean">
+		UPDATE AL
+		SET APPROVAL_SEQ_CHECK='C', SIGN_LOCATION=#{signLoc}  
+		WHERE APPROVAL_ID=#{apId}
+		AND DOCUMENT_NUM=#{dmNum}
+	</update>
 		
-				UPDATE DM
-				SET APPROVAL_CODE='C'
-				WHERE DOCUMENT_NUM=#{dmNum}
+	<update id ="approvalFinalUpdateNextAplSeqCheck" parameterType="DocumentBean">
+		UPDATE DM
+		SET APPROVAL_CODE='C'
+		WHERE DOCUMENT_NUM=#{dmNum}
+	</update>
 		
-		</update>
+	<update id="confirmCompanion" parameterType="DocumentBean">
+		UPDATE DM
+		SET APPROVAL_CODE='R'
+		WHERE DOCUMENT_NUM=#{dmNum}
+	</update>
 		
-		<update id="confirmCompanion" parameterType="DocumentBean">
-			UPDATE DM
-			SET APPROVAL_CODE='R'
-			WHERE DOCUMENT_NUM=#{dmNum}
-		
-		</update>
-		
-		<insert id ="insertCompanionComment" parameterType="ApprovalCommentBean">
-				
-			INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
-		
-		</insert>
-		
-
-
+	<insert id ="insertCompanionComment" parameterType="ApprovalCommentBean">		
+		INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
+	</insert>
 </mapper>

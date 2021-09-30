@@ -89,9 +89,7 @@
 				</div>
 			</div>
 			<div class="form-row">
-					<font size="10em">결재선</font>
-					
-
+				<font size="10em">결재선</font>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
