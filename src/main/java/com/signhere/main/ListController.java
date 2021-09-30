@@ -88,7 +88,7 @@ public class ListController implements DocumentInter {
 	}
 	
 	//내가 보낸 시행
-	@PostMapping("/myEnforceMent")
+	@RequestMapping(value="/myEnforceMent", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView myEnforceMent(DocumentBean db) {
 		mav = new ModelAndView();
 		

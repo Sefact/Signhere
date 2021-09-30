@@ -132,8 +132,6 @@ public class Document {
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();
 		
-		System.out.println(db);
-		
 		List<DocumentBean> tempList = null;
 		String dmCodeCheck = null;
 		
@@ -296,7 +294,6 @@ public class Document {
 				fileMap.put("fileSize", multipartFile.getSize());
 				multipartFile.transferTo(tmp);
 				ssn.setAttribute("fileLoc", fileLoc);
-				System.out.println(ssn.getAttribute("fileLoc"));
 				// sqlSession.insertFiles(fileMap);
 			} catch (Exception e) {
 				System.out.println("Error");
@@ -348,25 +345,28 @@ public class Document {
 			wb.setCmCode((String) ssn.getAttribute("cmCode"));
 			wb.setFileLoc((String) ssn.getAttribute("fileLoc"));
 			wb.setSignLoc((String) ssn.getAttribute("signLoc"));
-			
-			System.out.println(ssn.getAttribute("aplMap"));
-			System.out.println(ssn.getAttribute("docMap"));
-			System.out.println(ssn.getAttribute("refMap"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		System.out.println(wb);
-		
+
+		/* 문서 테이블에 정상적으로 정보가 삽입된 경우 */
 		if(this.convertToBoolean(sqlSession.insert("insDocument", wb))) {
+			/* 임시 보관함에 대한 정보 삭제 */
 			sqlSession.delete("delTemporary", wb);
+			/* 결재문을 올린 사람에 대한 정보를 삽입 결재선 */
 			if(this.convertToBoolean(sqlSession.insert("insApprovalComment", wb))) {
-				for(int i=0; i<aplineSize; i++) {
-					wb.setDmWriter(wb.getAplBean().get(i).getAplId());
-					wb.setAplSeq(wb.getAplBean().get(i).getAplSeq()+1);
-					
-					sqlSession.insert("insApprovalOther", wb);
+				/* 다음 결재자를 결재선에 삽입*/
+				wb.setDmWriter(wb.getAplBean().get(0).getAplId());
+				wb.setAplSeq(wb.getAplBean().get(0).getAplSeq()+1);
+				if(this.convertToBoolean(sqlSession.insert("insApprovalProgress", wb))) {
+					/* 결재 대기자들을 결재선에 삽입 */
+					for(int i=1; i<aplineSize; i++) {
+						wb.setDmWriter(wb.getAplBean().get(i).getAplId());
+						wb.setAplSeq(wb.getAplBean().get(i).getAplSeq()+1);
+						
+						sqlSession.insert("insApprovalOther", wb);
+					}
 				}
 				if(rflineSize > 0) {
 					for(int i=0; i<rflineSize; i++) {

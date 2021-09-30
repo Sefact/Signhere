@@ -807,6 +807,7 @@
                     
                    //sign.clear();
                 },
+                
                 error : function(res){
                     console.log("failed");
                 }
@@ -857,7 +858,6 @@
 			var dmTitle = document.getElementById("dmTitle").value;
 			var dmNum =document.getElementById("dmNum").value;
 			var dmDate = document.getElementById("dmDate").value;
-			//var dmWriter = document.getElementById("dmWriter").value;
 			var dmCode = document.getElementById("dmCode").value;
 			var acReason = document.getElementById("commentTextArea").value;
 			
@@ -880,11 +880,6 @@
 				refBean.push({rdId:'${refMap.rdId}', rfSeq:'${refMap.rfSeq}'});
 			</c:forEach>
 			
-			/* for(var i=0; i<approvalSize; i++) {
-				aplInit = {'aplSeq':i+1, 'aplId':'${sessionScope.aplMap[i].aplId}'}
-				aplBean.push(aplInit);
-			} */
-			
 			var draftData = [{'dmTitle':dmTitle, 'dmNum':dmNum, 'dmDate':dmDate, 'dmWriter':'${sessionScope.userId}', 'dmCode':dmCode, 'aplComment':acReason, aplBean, refBean}];
 			var draftJson = JSON.stringify(draftData);
 			
@@ -896,7 +891,14 @@
 				dataType: 'json'
 			})
 			.done(function(data) {
-				location.href = "/myDraft";
+				dmCodeCheck = data[0].dmCode;
+				
+				if(dmCodeCheck == "D") {
+					location.href = "/myDraft";	
+				} else {
+					location.href = "/myEnforceMent";
+				}
+				
 				console.log("Success");
 			})
 			.fail(function(data) {
@@ -924,7 +926,7 @@
 	    
 	    $(document).on("click", "#requestApproval", function(event){
 	        $(window).off('beforeunload');
-	    });	    
+	    });
 	</script>
 </body>
 

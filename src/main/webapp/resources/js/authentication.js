@@ -519,6 +519,3 @@ function cancelPassword(){
 	form.submit();
 	
 }
-
-
-
