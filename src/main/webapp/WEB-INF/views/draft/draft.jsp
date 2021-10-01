@@ -124,8 +124,8 @@
 				            <canvas id="signature-canvas"></canvas>
 				        </div>
 				        <div class="m-signature-pad--footer" id="signUpClear">
-				            <button type="button" id="signClear" class="button clear" data-action="clear">지우기</button>
-				            <button type="button" id="signUpload" class="button save" data-action="save">저장</button>
+				            <button type="button" id="signClear" class="btn btn-primary" data-action="clear">지우기</button>
+				            <button type="button" id="signUpload" class="btn btn-primary" data-action="save">저장</button>
 				        </div>
 				    </div>
 				</div>
@@ -801,7 +801,7 @@
                     alert("저장완료");
                     
                     var signHtml = "";
-                    signHtml += '<button type="button" id="signDelete" value="signDelete" class="button save" data-action="delete">삭제</button>'
+                    signHtml += '<button type="button" id="signDelete" value="signDelete" class="btn btn-primary" data-action="delete">삭제</button>'
                     
                     $('#signUpClear').html(signHtml);
                     
@@ -822,8 +822,8 @@
 		})
 		.done(function(data) {
 			var signInitHtml = "";
-			signInitHtml += '<button type="button" id="signClear" class="button clear" data-action="clear">지우기</button> ';
-			signInitHtml += '<button type="button" id="signUpload" class="button save" data-action="save">저장</button>';
+			signInitHtml += '<button type="button" id="signClear" class="btn btn-primary" data-action="clear">지우기</button> ';
+			signInitHtml += '<button type="button" id="signUpload" class="btn btn-primary" data-action="save">저장</button>';
 			
 			$('#signUpClear').html(signInitHtml);
 			

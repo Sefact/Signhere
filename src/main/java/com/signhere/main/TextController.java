@@ -22,9 +22,7 @@ import com.signhere.services.FileUtils;
 import com.signhere.utils.Session;
 
 @Controller
-public class TextController {
-	
-	
+public class TextController {	
 	
 	@Autowired
 	private FileUtils fut;

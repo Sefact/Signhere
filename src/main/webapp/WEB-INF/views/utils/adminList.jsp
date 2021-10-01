@@ -4,25 +4,19 @@
 	<script src="/resources/js/authentication.js"></script>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
 	<h1 class="page-header">Employees</h1>
-	
-		<form >
+		<form>
 			<div class="form-row">
-				<div class="form-group col-md-1">
+				<div class="form-group col-md-12">
 					<label for="userName">이름</label>
-				</div>
-				<div class="form-group col-md-11">
 					<input type="text" class="form-control" name="userName" placeholder="직원이름"/>
 				</div>
 			</div>
 			
 			<div class="form-row">
-				<div class="form-group col-md-1">
+				<div class="form-group col-md-6">
 					<label for="grCode">직급</label>
-				</div>
-				<div class="form-group col-md-5">
-					<select name ="grCode">
+					<select class="form-control" name ="grCode">
 						<option value="">직급선택</option>
 						<c:forEach var = "grList" items="${grList}">
 							<option value="${grList.GDCODE}">
@@ -31,14 +25,9 @@
 						</c:forEach>
 					</select>
 				</div>
-			</div>
-			
-			<div class="form-row">
-				<div class="form-group col-md-1">
+				<div class="form-group col-md-6">
 					<label for="dpCode">부서</label>
-				</div>
-				<div class="form-group col-md-5">
-					<select name ="dpCode">
+					<select class="form-control" name="dpCode">
 						<option value="">부서선택</option>
 						<c:forEach var = "dpList" items="${dpList}">
 							<option value="${dpList.DPCODE}">
@@ -47,65 +36,82 @@
 						</c:forEach>
 					</select>
 				</div>
-				<div class="form-group col-md-6">
-				<input type="button" class="btn btn-primary" value="Search"
-					onClick="searchEmployee()" />
-			</div>
 			</div>
 			
+			<div class="form-row">
+				<div class="form-group col-md-12">
+				<input type="button" class="btn btn-primary" value="Search"
+					onClick="searchEmployee()" />
+				</div>
+			</div>			
 		</form>
 
-	<h2 class="sub-header">직원리스트</h2>
-	<button class="btn btn-primary" id="addEmployeeBtn" onclick="showAddModal()">직원추가</button>
-	<button class="btn btn-primary" id="deleteEmployeeBtn" onclick="confirmDel()">직원삭제</button>
-	<button class="btn btn-primary" id="modifyEmployeeBtn" onclick="requestUserInfoDetail()">직원정보수정</button>
-	<button class="btn btn-primary" id="addDepartmentBtn" onclick="showAddDpModal()">부서 추가</button>
-	<div class="table-responsive">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th></th>
-					<th>아이디</th>
-					<th>이름</th>
-					<th>직급</th>
-					<th>부서</th>
-				</tr>
-			</thead>
-			<tbody id="empListBody">
-			<c:forEach var = "empList" items="${empList}">
-				<tr>
-					<td>
-						<input type="checkBox" class="empListRow" value="${empList.USERID}">
-						<input type="hidden" class="empListRowName" value="${empList.USERNAME}">
-						<input type="hidden" class="empListRowgrName" value="${empList.GRNAME}">
-						<input type="hidden" class="empListRowdpName" value="${empList.DPNAME}">
-					</td>
-					<td><c:out value="${empList.USERID}" /></td>
-					<td><c:out value="${empList.USERNAME}" /></td>
-					<td><c:out value="${empList.GRNAME}" /></td>
-					<td><c:out value="${empList.DPNAME}" /></td>
-				</tr>
-			</c:forEach>
-			</tbody>
-		</table>
+	<div class="form-row">
+		<div class="form-group col-md-12">
+			<h2 class="sub-header">직원리스트</h2>
+		</div>
 	</div>
-	<ul class="btn-group pagination">
-		<c:if test="${pagination.prev }">
-			<li><a
-				href='<c:url value="/admin?page=${pagination.startPage-1 }"/>'><i
-					class="fa fa-chevron-left"></i></a></li>
-		</c:if>
-		<c:forEach begin="${pagination.startPage }"
-			end="${pagination.endPage }" var="pageNum">
-			<li><a href='<c:url value="/admin?page=${pageNum }"/>'><i
-					class="fa">${pageNum }</i></a></li>
-		</c:forEach>
-		<c:if test="${pagination.next && pagination.endPage >0 }">
-			<li><a
-				href='<c:url value="/admin?page=${pagination.endPage+1 }"/>'><i
-					class="fa fa-chevron-right"></i></a></li>
-		</c:if>
-	</ul>
+	
+	<div class="form-row">
+		<div class="form-group col-md-12">
+			<button class="btn btn-primary" id="addEmployeeBtn" onclick="showAddModal()">직원추가</button>
+			<button class="btn btn-primary" id="deleteEmployeeBtn" onclick="confirmDel()">직원삭제</button>
+			<button class="btn btn-primary" id="modifyEmployeeBtn" onclick="requestUserInfoDetail()">직원정보수정</button>
+			<button class="btn btn-primary" id="addDepartmentBtn" onclick="showAddDpModal()">부서 추가</button>
+		</div>
+	</div>
+	
+	<div class="form-row">
+		<div class="form-group col-md-12">
+			<div class="table-responsive">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th></th>
+							<th>아이디</th>
+							<th>이름</th>
+							<th>직급</th>
+							<th>부서</th>
+						</tr>
+					</thead>
+					<tbody id="empListBody">
+					<c:forEach var = "empList" items="${empList}">
+						<tr>
+							<td>
+								<input type="checkBox" class="empListRow" value="${empList.USERID}">
+								<input type="hidden" class="empListRowName" value="${empList.USERNAME}">
+								<input type="hidden" class="empListRowgrName" value="${empList.GRNAME}">
+								<input type="hidden" class="empListRowdpName" value="${empList.DPNAME}">
+							</td>
+							<td><c:out value="${empList.USERID}" /></td>
+							<td><c:out value="${empList.USERNAME}" /></td>
+							<td><c:out value="${empList.GRNAME}" /></td>
+							<td><c:out value="${empList.DPNAME}" /></td>
+						</tr>
+					</c:forEach>
+					</tbody>
+				</table>
+				</div>
+				<ul class="btn-group pagination">
+					<c:if test="${pagination.prev }">
+						<li><a
+							href='<c:url value="/admin?page=${pagination.startPage-1 }"/>'><i
+								class="fa fa-chevron-left"></i></a></li>
+					</c:if>
+					<c:forEach begin="${pagination.startPage }"
+						end="${pagination.endPage }" var="pageNum">
+						<li><a href='<c:url value="/admin?page=${pageNum }"/>'><i
+								class="fa">${pageNum }</i></a></li>
+					</c:forEach>
+					<c:if test="${pagination.next && pagination.endPage >0 }">
+						<li><a
+							href='<c:url value="/admin?page=${pagination.endPage+1 }"/>'><i
+								class="fa fa-chevron-right"></i></a></li>
+					</c:if>
+				</ul>
+		</div>
+	</div>
+	
 	<!-- add Employee modal -->
 	<div id="addModal" role="dialog" class="modal fade">
       <div class="modal-dialog">
@@ -115,37 +121,41 @@
             <h4 class="modal-title">직원추가</h4>
           </div>
           <div id="" class="modal-body">
-            <div>
-            	<label for ="userIdNew">아이디</label>
-            	<input id="userIdNewBox" name="userIdNew" placeholder="사번입력" onBlur="userIdNewCheck(this)"/>
-            	<input type="button" value="중복체크" onClick="userIdNewDupCheck()">
-            </div>
-            <div>
-            	<label for ="userNameNew">이름</label>
-            	<input id="userNameNewBox" name="userNameNew" placeholder="이름입력" onBlur="nameCheck(this)" />
-            </div>
-            <div>
-            	<label for ="grGradeNew">직급</label>
-            	<select id="grGradeNewBox" name ="grCodeNew">
-					<option value="">직급선택</option>
-						<c:forEach var = "grList" items="${grList}">
-							<option value="${grList.GDCODE}">
-								${grList.GDNAME }
-							</option>
-					</c:forEach>
-				</select>
-            </div>
-            <div>
-            	<label for ="dpCodeNew">부서</label>
-            	<select id="dpCodeNewBox" name ="dpCodeNew">
-					<option value="">부서선택</option>
-					<c:forEach var = "dpList" items="${dpList}">
-						<option value="${dpList.DPCODE}">
-							${dpList.DPNAME }
-						</option>
+            <form>
+	            <div class="form-group">
+	            	<label for="userIdNew">아이디</label>
+	            	<input id="userIdNewBox" class="form-control" name="userIdNew" placeholder="사번입력" onBlur="userIdNewCheck(this)"/>
+		        </div>
+		        <div class="form-group">
+		        	<input type="button" class="btn btn-primary" value="중복체크" onClick="userIdNewDupCheck()">
+		        </div>
+	            <div class="form-group">
+	            	<label for ="userNameNew">이름</label>
+	            	<input id="userNameNewBox" class="form-control" name="userNameNew" placeholder="이름입력" onBlur="nameCheck(this)" />
+	            </div>
+	            <div class="form-group">
+	            	<label for ="grGradeNew">직급</label>
+	            	<select class="form-control" id="grGradeNewBox" name ="grCodeNew">
+						<option value="">직급선택</option>
+							<c:forEach var = "grList" items="${grList}">
+								<option value="${grList.GDCODE}">
+									${grList.GDNAME }
+								</option>
 						</c:forEach>
-				</select>
-            </div>
+					</select>
+	            </div>
+	            <div class="form-group">
+	            	<label for ="dpCodeNew">부서</label>
+	            	<select class="form-control" id="dpCodeNewBox" name ="dpCodeNew">
+						<option value="">부서선택</option>
+						<c:forEach var = "dpList" items="${dpList}">
+							<option value="${dpList.DPCODE}">
+								${dpList.DPNAME }
+							</option>
+							</c:forEach>
+					</select>
+				</div>
+			</form>
           </div>
           <div class="modal-footer">
             <button type="button" data-dismiss="modal" onClick="requestAddNewEmp()" id="requestAddNewBtn" class="btn btn primary">확인</button>
@@ -154,6 +164,7 @@
         </div>
       </div>
     </div>
+    
     <!-- modify Employee modal -->
 	<div id="modifyModal" role="dialog" class="modal fade">
       <div class="modal-dialog">
