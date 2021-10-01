@@ -37,7 +37,7 @@ public class Document {
 	
 	public List<DocumentBean> mSearchText(DocumentBean db){
 
-		//여기서 sessino에 들어간 cmCode 저장
+		//여기서 session에 들어간 cmCode 저장
 		try {
 			db.setCmCode((String)ssn.getAttribute("cmCode"));
 		} catch (Exception e) {
