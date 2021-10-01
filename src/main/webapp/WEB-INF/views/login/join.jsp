@@ -19,7 +19,9 @@
 </head>
 <body>   
     <div class="login-form">
-        <h2 class="text-center">Sign Here</h2>   
+   
+        <h2 class="text-center">Sign Here</h2> 
+         <div class="message" style="text-align:center; font-size:30px; color:red;">${failMessage}</div>  
         <div class="form-group has-error">
         	<input type="text" class="form-control" name="cmCode" placeholder="회사코드:사업자번호 10자리 (하이픈제외)" required="required" onBlur="dupCmCodeCheckblur()">
         </div>

@@ -1,6 +1,9 @@
 /**
  * 
  */
+var dupCmCheck;
+var userIdCheck;
+var userMailCheck;
 
 
 function fetchAjax(action,method,data,afterFunction){
@@ -62,26 +65,29 @@ function requestSignUp(){
 	const userPwd = document.getElementsByName("userPwd")[0];
 	const userMail = document.getElementsByName("userMail")[0];
 	
-	//if(!isValidateCheck(0,cmCode.value)){
-	//	alert("회사코드가 사업자번호양식에 맞지 않습니다");	
-	//}
-	//if(!isValidateCheck(1,userId.value)){
-	//	alert("아이디가 조건에 맞지않습니다.");}
+	if(dupCmCheck=="true"){
+		if(userIdCheck=="true"){
+			if(userMailCheck=="true"){
+				let form = makeForm("joinRequest","post");
+				form.appendChild(cmCode);
+				form.appendChild(cmName);
+				form.appendChild(userId);
+				form.appendChild(userName);
+				form.appendChild(userPwd);
+				form.appendChild(userMail);
+				document.body.appendChild(form);
+				form.submit();				
+			}			 else{ 
+				alert("이메일 중복체크 부탁드립니다.");					
+			}
+		}		
+			else{ 
+		alert("아이디 중복체크 부탁드립니다.");			
+		}
+	}	else {   
+	 alert("회사코드 중복체크 부탁드립니다.");			
+	}
 
-	let form = makeForm("joinRequest","post");
-	
-	form.appendChild(cmCode);
-	form.appendChild(cmName);
-	form.appendChild(userId);
-	form.appendChild(userName);
-	form.appendChild(userPwd);
-	form.appendChild(userMail);
-	
-	document.body.appendChild(form);
-	
-	
-	form.submit();
-		
 }
 
 
@@ -247,13 +253,15 @@ function dupCheckCmCode2(jsonData){
 			   cmCode.readOnly=true;
 		        },300);
 		BtnCmCode2.innerHTML="<input type='button' value='재입력' onClick='reDupBtnCmCode()'>";
+		
+		dupCmCheck="true";
 	  } else {
 		       alert("이미존재하는 회사코드 입니다.");
 			   cmCode="";
 		       setTimeout(function(){
 			   cmCode.focus();
 		        },300);
-		
+		dupCmCheck="false";
 	}
 	
 	}
@@ -309,11 +317,11 @@ function dupUserMailCheck2(jsonData){
 	userMail.setAttribute("readOnly",true);
 
 	dupBtnUserMail2.innerHTML="<input type='button' value='재입력' onClick='reDupUserMailCheck()'>";
-
+	userMailCheck="true"
 	alert("사용가능한 메일입니다.");
 	 }
 	   else
-		{
+		{userMailCheck="false";
 			alert("이미 존재하는 메일입니다");
 			userMail.value="";
 			userMail.focus();
@@ -381,12 +389,14 @@ function dupUserIdCheck2(jsonData){
 	alert("사용가능한 ID입니다.");
 	
 	userId.readOnly=true;
+	userIdCheck="true";
 		      
 	dupBtnUserId2.innerHTML="<input type='button' value='재입력' onClick='reDupUserIdCheck()'>";
 
 	 }
 	   else
 		{
+			userIdCheck="false";
 			userId.value="";
 			alert("이미 존재하는 ID입니다");
 				       setTimeout(function(){
@@ -432,13 +442,13 @@ function pwdConfirm(){
 	let userPwd2=document.getElementsByName("userPwd2");
 	
 	if(!(userPwd[0].value==userPwd2[0].value)){
-		pwdMsg2.innerHTML="<span style='font-size:1.3em; color: red;'>비밀번호가 일치하지 않습니다. </span>";
+		pwdMsg2.innerHTML="<span style='font-size:1.2em; color: red;'>비밀번호가 일치하지 않습니다. </span>";
 		userPwd2[0].value="";
 		userPwd2[0].focus();	
 		
 	}else{
 		
-		pwdMsg2.innerText="비밀번호가 일치합니다";
+		pwdMsg2.innerHTML="<span style='font-size:1.2em; color: green;'>비밀번호가 일치합니다. </span>";
 	}	
 }
 
@@ -547,5 +557,11 @@ function cancelPassword(){
 	
 }
 
+function cancelNewInfo(){
+	
+	location.href="localhost/login/main.jsp";
+	
+	
+}
 
 

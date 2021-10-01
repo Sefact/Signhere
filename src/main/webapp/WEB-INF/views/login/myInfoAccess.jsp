@@ -23,18 +23,22 @@
 <body>
 
 <div class="form-group">
+
+	<div class="message" style="text-align:center; font-size:30px; color:red;">${failMessage}</div>
+
        
-	${message }
+
+
 		<input type="hidden" name="userId" value="${sessionScope.userId}">
-            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호"  onBlur="pwdValidate(this)">
+            <input type="password" class="form-control" style="width: 30%; float:none; margin:0 auto" name="userPwd" placeholder="비밀번호">
         </div>
-       <div id="pwdMsg"></div>
-          
-        <div class="form-group">      
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="myInfo()">내정보 수정 페이지</button>
+ 
+        
+     
+        <div class="form-group" style="text-align:center;">
+            <button type="submit" class="btn btn-primary" onClick="myInfo()">내정보 수정 페이지</button>
 		</div>
-		</div>
+
 
 		
 

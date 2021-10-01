@@ -20,7 +20,8 @@
 <body>   
     <div class="login-form">
         <h2 class="text-center">Sign Here</h2>   
-        <input type="button" onClick="logOut()">Logout
+        <h2 class="text-center">초기설정</h2>   
+       
   
 		<div class="form-group">
             <input type="text" class="form-control" name="cmName" placeholder="회사이름" value="${sessionScope.cmName}" disabled>
@@ -57,6 +58,9 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="cancelNewInfo()">취소</button>
         </div>
+        
+        
+         <button type="submit" class="btn btn-primary btn-deafult btn-block" onClick="logOut()" value="로그아웃">Logout</button>
 	</div>
 </body>
 </html>
