@@ -113,8 +113,7 @@ public class Authentication implements AuthentInter {
 								ssn.setAttribute("grName",tmplist.get(0).getGrName());
 								if(tmplist.get(0).getUserMail() != null) {
 									ssn.setAttribute("userMail", tmplist.get(0).getUserMail());
-									//여기서 이메일도 들어가있으면 미리 띄워 줘야함 > 만약 처음에 null이 아니여서 넣는다는 가정 
-									System.out.println(ssn.getAttribute("userMail"));
+									//여기서 이메일도 들어가있으면 미리 띄워 줘야함 > 만약 처음에 null이 아니여서 넣는다는 가정
 								}
 								mav.setViewName("login/newInfo");
 							}
