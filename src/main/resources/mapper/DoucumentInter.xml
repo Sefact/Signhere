@@ -25,11 +25,8 @@
        WHERE ID=#{userId}
 	</select>
 
-
-
-
-
-	<select id="searchCompletedDocs" parameterType="DocumentBean" resultType="DocumentBean">
+	
+	<select id="adminSearchDocs">
 		SELECT DM.DOCUMENT_NUM AS dmNum,
 		DM.COMPANY_CODE AS cmCode,
 		DM.DOCUMENT_TITLE AS dmTitle,
@@ -46,6 +43,36 @@
 		AND DOCUMENT_CODE LIKE '%'|| #{dmCode} ||'%' 
 		AND APPROVAL_CODE = 'C'   
 		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+	</select>
+
+
+	<select id="searchWDocs" parameterType="DocumentBean" resultType="DocumentBean">
+	<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE '%'|| #{dmCode}  ||'%'
+		AND APPROVAL_CODE = #{apCode}
+		AND AL.SIGN_LOCATION IS NULL
+		AND AL.APPROVAL_ID = #{dmWriteId}
+		AND AL.APPROVAL_SEQ_CHECK = #{apCode}
+		AND AL.APPROVAL_SEQ <= (SELECT MIN(APPROVAL_SEQ) FROM AL
+		WHERE SIGN_LOCATION IS NULL AND APPROVAL_ID = #{dmWriteId})
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
 	</select>
   	
 	<select id="countMyDraft" resultType="Integer">
@@ -142,7 +169,32 @@
 			WHERE RNUM > (#{page} -1) * #{perPageNum} 
 		]]>
 	</select>
-	 
+	
+	<select id="searchPDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE '%'|| #{dmCode}  ||'%'
+		AND DM.APPROVAL_CODE = 'P' AND AL.APPROVAL_ID LIKE '%'|| #{dmWriteId}  ||'%'
+		AND AL.APPROVAL_SEQ_CHECK='C' AND AL.SIGN_LOCATION IS NOT NULL
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>	 
+
 	<select id = "countApprovalProceed" resultType = "Integer">
 		SELECT COUNT(*) 
 		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
@@ -171,6 +223,32 @@
 				AND AL.APPROVAL_SEQ_CHECK='C' AND AL.SIGN_LOCATION IS NOT NULL
 				AND ROWNUM <= #{page} * #{perPageNum}) 
 				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchCDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%' 
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE = #{dmCode} 
+		AND APPROVAL_CODE = #{apCode}
+		AND AL.APPROVAL_ID = #{dmWriteId}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
 		]]>
 	</select>
 	

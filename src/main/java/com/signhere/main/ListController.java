@@ -190,6 +190,13 @@ public class ListController implements DocumentInter {
 		return doc.mSearchText(db);
 	}
 	
+	//관리자 문서검색 JOB
+	@RequestMapping("/adminSearchText")
+	@ResponseBody
+	public List<DocumentBean> adminSearchText(@RequestBody DocumentBean db,Criteria cri) {
+		return doc.adminSearchText(db);
+	}
+	
 	//페이지이동 JOB
 	@RequestMapping("/moveAjaxPage")
 	public List<DocumentBean> moveAjaxPage(DocumentBean db) {

@@ -31,7 +31,7 @@ public class DocumentBean {
 	//APPROVALLINE테이블의 APPROVAL_SEQ가 담길 BEAN
 	private int aplSeq;
 	private String aplSeqCheck;
-	private char searchCode;
+	private String searchCode;
 	private String[] dmNumArr;
 	private List<ApprovalBean> aplBean;
 	private List<ReadingReferenceBean> rfBean;

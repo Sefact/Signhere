@@ -57,28 +57,51 @@ public class Document {
 		//여기서 sessino에 들어간 cmCode 저장
 		try {
 			db.setCmCode((String)ssn.getAttribute("cmCode"));
+			db.setDmWriteId((String)ssn.getAttribute("userId"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		this.handleNullValues(db);
 		this.changeDateFormat(db);
 
-		List<DocumentBean> docList;
+		List<DocumentBean> docList=null;
 
-		System.out.println("dmCode:" + db.getCmCode());
+		System.out.println("cmCode:" + db.getCmCode());
 		System.out.println("dmNum:" + db.getDmNum());
 		System.out.println("dmwriter:" + db.getDmWriter());
 		System.out.println("dmCode:" + db.getDmCode());
+		System.out.println("dmName:" + db.getDmName());
 		System.out.println("apcode:" + db.getApCode());
 		System.out.println("dmtitle:" + db.getDmTitle());
 		System.out.println("dmdate:" + db.getDmDate());
 		System.out.println("dmdate2:" + db.getDmDate2());
+		System.out.println("dmWriteId:" + db.getDmWriteId());
 		
-		docList = sqlSession.selectList("searchCompletedDocs", db);
+		
+		
+		switch(db.getSearchCode()) {
+		case "W":
+			System.out.println("w");
+			docList = sqlSession.selectList("searchWDocs", db);
+			System.out.println(docList.size());
+			System.out.println(docList.toString());
+			break;
+		case "P":
+			docList = sqlSession.selectList("searchPDocs", db);
+			break;
+		case "C":
+			docList = sqlSession.selectList("searchCDocs", db);
+		}
+		
+		System.out.println(docList.toString());
+		
+		if(docList.size() == 0) {
+			db.setDmNumCheck("0");
+			docList.add(0, db);
+		}
 		
 		return docList;
 	}
-
 	
 
 	public List<UserBean> mWriteDraft(UserBean ub) {
@@ -470,6 +493,9 @@ public class Document {
 		}
 		if(db.getDmDate2().isEmpty()) {
 			db.setDmDate2(this.getToday());
+		}
+		if(db.getDmWriter().isEmpty()) {
+			db.setDmWriter("");
 		}
 	}
 	
@@ -1001,6 +1027,35 @@ public class Document {
 			}else{
 				tx.rollback(status);
 			}
+		}
+
+
+		public List<DocumentBean> adminSearchText(DocumentBean db) {
+			try {
+				db.setCmCode((String)ssn.getAttribute("cmCode"));
+				db.setDmWriteId((String)ssn.getAttribute("userId"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			this.handleNullValues(db);
+			this.changeDateFormat(db);
+
+			List<DocumentBean> docList;
+
+			System.out.println("cmCode:" + db.getCmCode());
+			System.out.println("dmNum:" + db.getDmNum());
+			System.out.println("dmwriter:" + db.getDmWriter());
+			System.out.println("dmCode:" + db.getDmCode());
+			System.out.println("apcode:" + db.getApCode());
+			System.out.println("dmtitle:" + db.getDmTitle());
+			System.out.println("dmdate:" + db.getDmDate());
+			System.out.println("dmdate2:" + db.getDmDate2());
+			
+			docList = sqlSession.selectList("adminSearchDocs", db);
+			
+			System.out.println(docList.toString());
+			
+			return docList;
 		}
 
 
