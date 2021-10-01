@@ -98,7 +98,14 @@
 							<option>직급: ${apConfirmList[0].apGr}</option>
 							<option>이름: ${apConfirmList[0].apName}</option>
 					</select>
-				<div><img style="border: 2px solid black" src="${signList[1].signLocation}" width="300px" height="200px" /></div>	
+					<c:choose>
+					    <c:when test="${signList[1].signLocation ne null}">
+							<div><img style="border: 2px solid black" src="${signList[1].signLocation}" width="300px" height="200px" /></div>
+					    </c:when>
+					    <c:otherwise>
+							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+					    </c:otherwise>
+					</c:choose>
 				</div>
 				<div class="form-group col-md-4">
 					<select id="" class="form-control" size="3" >
@@ -106,7 +113,14 @@
 							<option>직급: ${apConfirmList[1].apGr}</option>
 							<option>이름: ${apConfirmList[1].apName}</option>
 					</select>
-				<div><img style="border: 2px solid black" src="${signList[2].signLocation}" width="300px" height="200px"  /></div>					
+					<c:choose>
+					    <c:when test="${signList[2].signLocation ne null}">
+							<div><img style="border: 2px solid black" src="${signList[2].signLocation}" width="300px" height="200px" /></div>
+					    </c:when>
+					    <c:otherwise>
+							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+					    </c:otherwise>
+					</c:choose>					
 				</div>
 				<div class="form-group col-md-4">
 					<select id="" class="form-control" size="3">
@@ -114,8 +128,14 @@
 							<option>직급: ${apConfirmList[2].apGr}</option>
 							<option>이름: ${apConfirmList[2].apName}</option>
 					</select>
-				<div><img style="border: 2px solid black" src="${signList[3].signLocation}" /></div>					
-					
+					<c:choose>
+					    <c:when test="${signList[3].signLocation ne null}">
+							<div><img style="border: 2px solid black" src="${signList[3].signLocation}" width="300px" height="200px" /></div>
+					    </c:when>
+					    <c:otherwise>
+							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+					    </c:otherwise>
+					</c:choose>	
 				</div>
 			</div>
 			<!-- Signature Form -->
