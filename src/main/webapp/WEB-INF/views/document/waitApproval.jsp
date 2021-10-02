@@ -26,7 +26,7 @@
 	<jsp:include page="../utils/navigation.jsp" />
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-		<h1 class="page-header">결재대기함</h1>
+		<h1 class="page-header">결재 대기함</h1>
 		<form>
 		<div class="form-row">
 			<div class="form-group col-md-1">
