@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.signhere.beans.AccessBean;
 import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.ApprovalCommentBean;
-import com.signhere.beans.CompanionDeferBean;
+import com.signhere.beans.CompanionBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.ReadingReferenceBean;
 import com.signhere.beans.UserBean;
@@ -58,14 +58,14 @@ public class TextController {
 	}
 	
 	@PostMapping("/companion")
-	public ModelAndView companion(DocumentBean db, CompanionDeferBean cdb) {
+	public ModelAndView companion(DocumentBean db, CompanionBean cdb) {
 		mav = fut.mCompanion(db, cdb);
 		
 		return mav;
 	}
 	
 	@PostMapping("/defer")
-	public ModelAndView defer(ApprovalBean ab, CompanionDeferBean cdb) {
+	public ModelAndView defer(ApprovalBean ab, CompanionBean cdb) {
 		mav = fut.mDefer(ab, cdb);
 		
 		return mav;

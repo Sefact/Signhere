@@ -104,6 +104,8 @@ public class Authentication implements AuthentInter {
 							//최초로그인(pwIntial(최초기본설정여부)판단 후  ID,cmCode,Admin => Session 저장.)
 							if(tmplist.get(0).getPwInitial().equals("1")) {
 								
+						
+								
 							
 
 								mav.setViewName("login/main");								
@@ -130,18 +132,18 @@ public class Authentication implements AuthentInter {
 							DocumentBean db = new DocumentBean();
 							
 							//차트 결재대기함 갯수
-							mav.addObject("waitChart", this.waitApprovalChart(db));
+							ssn.setAttribute("waitChart", this.waitApprovalChart(db));
+						
 							//차트 결재 진행함 갯수
-							mav.addObject("ingChart", this.apIngChart(db));
-							//하나는 머하지..
+							ssn.setAttribute("ingChart", this.apIngChart(db));
+							//내가 보낸 결재수
+							ssn.setAttribute("myDraftChart", this.myDraftChart(db));
 							
-							
-							
-							//결제대기함을 메인에 띄워줌
+				
 							mav.addObject("docList", this.waitApprovalList(db));
-							//결제진행함을 메인에 띄워줌
 							mav.addObject("docList2", this.apIngList(db));
-							
+						
+
 						
 
 							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
@@ -154,6 +156,7 @@ public class Authentication implements AuthentInter {
 		
 
 							ab.setUserId((String)ssn.getAttribute("userId"));
+							
 							
 													
 						
@@ -186,6 +189,55 @@ public class Authentication implements AuthentInter {
 		
 		return size;
 	}
+	//결재진행함 수
+		public int apIngChart(DocumentBean db) {	
+			List <DocumentBean> docList;	
+			try {
+				db.setApId((String)ssn.getAttribute("userId"));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+			docList=sqlSession.selectList("approvalProcced",db);		
+			int size = docList.size();
+			
+			return size;
+		}
+		
+		//내가보낸결재수
+		public int myDraftChart(DocumentBean db) {	
+			List <DocumentBean> docList;	
+			List <DocumentBean> docList2;	
+			try {
+				db.setDmWriteId((String)ssn.getAttribute("userId"));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+			docList=sqlSession.selectList("myDraft",db);
+			docList2=sqlSession.selectList("myEnforceMent",db);	
+			int size = docList.size()+docList2.size();
+			
+			return size;
+		}
+		
+		
+		public int completeChart(DocumentBean db) {	
+			List <DocumentBean> docList;	
+
+			try {
+				db.setApId((String)ssn.getAttribute("userId"));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+			docList=sqlSession.selectList("myDraft",db);
+			
+			int size = docList.size();
+			
+			
+			return size;
+		}
+	
+	
+	
 	//결제대기함의 문서들 최근꺼부터 5개만 메인에 표시
 	public List<DocumentBean> waitApprovalList(DocumentBean db) {	
 		List <DocumentBean> docList;	
@@ -200,19 +252,7 @@ public class Authentication implements AuthentInter {
 		return docList;
 	}
 	
-	//결제진행함의 문서수 차트에 담음
-	public int apIngChart(DocumentBean db) {	
-		List <DocumentBean> docList;	
-		try {
-			db.setApId((String)ssn.getAttribute("userId"));	
-		} catch (Exception e) {
-			e.printStackTrace();
-		}		
-		docList=sqlSession.selectList("approvalProcced",db);		
-		int size = docList.size();
-		
-		return size;
-	}
+	
 	
 	
 	

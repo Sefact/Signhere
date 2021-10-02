@@ -19,7 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.ApprovalCommentBean;
-import com.signhere.beans.CompanionDeferBean;
+import com.signhere.beans.CompanionBean;
+import com.signhere.beans.DeferBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.ReadingReferenceBean;
 import com.signhere.beans.UserBean;
@@ -453,7 +454,7 @@ public class Document {
 		DocumentBean db = new DocumentBean();
 		ReadingReferenceBean rrb = new ReadingReferenceBean();	
 		ApprovalCommentBean apb = new ApprovalCommentBean();
-		CompanionDeferBean cdb = new CompanionDeferBean();
+		CompanionBean cdb = new CompanionBean();
 		try {
 			wb.setLogId((String)ssn.getAttribute("userId"));
 			db.setApId((String)ssn.getAttribute("userId"));
@@ -543,7 +544,7 @@ public class Document {
 		
 
 		//반려의견 
-		List <CompanionDeferBean> cpCommentList;
+		List <CompanionBean> cpCommentList;
 		
 		cdb.setDmNum(wb.getDmNumCheck());
 		
@@ -609,17 +610,35 @@ public class Document {
 
 	}
 	
-	public void confirmCompanion(DocumentBean db, CompanionDeferBean cdb) {
+	public void confirmCompanion(DocumentBean db, CompanionBean cb) {
 		
 		try {
-			cdb.setCpId((String)ssn.getAttribute("userId"));
-			cdb.setDmNum((String)ssn.getAttribute("dmNum"));
+			cb.setCpId((String)ssn.getAttribute("userId"));
+			cb.setDmNum((String)ssn.getAttribute("dmNum"));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		sqlSession.update("confirmCompanion", db);
-		sqlSession.insert("insertCompanionComment",cdb);
+		sqlSession.insert("insertCompanionComment",cb);
+		
+		//해당문서(도큐먼트번호 참조)의 상태를 R로 바꿔줘야함.
+		
+	}
+	
+	
+	
+	public void confirmDefer(DocumentBean db, DeferBean deb) {
+		
+		try {
+			deb.setCpId((String)ssn.getAttribute("userId"));
+			deb.setDmNum((String)ssn.getAttribute("dmNum"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		sqlSession.update("confirmDefer", db);
+		sqlSession.insert("insertCompanionComment",deb);
 		
 		//해당문서(도큐먼트번호 참조)의 상태를 R로 바꿔줘야함.
 		

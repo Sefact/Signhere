@@ -372,7 +372,22 @@
 		
 		</update>
 		
-		<insert id ="insertCompanionComment" parameterType="ApprovalCommentBean">
+		<update id="confirmDefer" parameterType="DocumentBean">
+			UPDATE DM
+			SET APPROVAL_CODE='D'
+			WHERE DOCUMENT_NUM=#{dmNum}
+		
+		</update>
+		
+		
+		<insert id ="insertCompanionComment" parameterType="CompanionBean">
+				
+			INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
+		
+		</insert>
+		
+			
+		<insert id ="insertDeferComment" parameterType="DeferBean">
 				
 			INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
 		
