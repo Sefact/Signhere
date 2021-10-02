@@ -4,10 +4,8 @@ import java.util.Date;
 
 import lombok.Data;
 
-
 @Data
-public class CompanionBean {
-
+public class DeferBean {
 	private String dmNum;
 	private String dpName;
 	private String grName;
@@ -15,5 +13,4 @@ public class CompanionBean {
 	private String cpId;
 	private String cpName;
 	private Date cpDate;
-
 }

@@ -32,7 +32,7 @@
 		<h1 class="page-header">Approval</h1>
 		
 			<div class="form-row">
-				<div class="form-group col-md-8">
+				<div class="form-group col-md-6">
 					
 				</div>
 				<div class="form-group col-md-2">
@@ -40,6 +40,9 @@
 				</div>
 				<div class="form-group col-md-2">
 					<button type="button" class="btn btn-primary btn-block" id="onAplModal2">반려</button>
+				</div>
+				<div class="form-group col-md-2">
+					<button type="button" class="btn btn-primary btn-block" id="onAplModal3">보류</button>
 				</div>
 			</div>
 			<c:set var="docList" value="${docList}" />
@@ -160,6 +163,7 @@
 				<table class="table table-striped">
 				<thead>
 					<tr>
+						<th class ="col-md-1">구분</th>
 						<th class ="col-md-1">결재자</th>
 						<th class ="col-md-1">부서</th>
 						<th class ="col-md-1">직급</th>
@@ -170,6 +174,7 @@
 				<tbody>
 				<c:forEach var="apCommentList" items="${apCommentList}">
 					<tr>
+						<td><c:out value="결재"/></td>
 						<td><c:out value="${apCommentList.acName }"/></td>
 						<td><c:out value="${apCommentList.dpName }"/></td>
 						<td><c:out value="${apCommentList.grName }"/></td>
@@ -180,9 +185,10 @@
 							
 				<c:forEach var="cpCommentList" items="${cpCommentList}">
 					<tr>
+		
 						<td><c:out value="${cpCommentList.cpName }"/></td>
-						<td><c:out value="${cpCommentList.cpName }"/></td>
-						<td><c:out value="${cpCommentList.cpName }"/></td>
+						<td><c:out value="${cpCommentList.dpName }"/></td>
+						<td><c:out value="${cpCommentList.grName }"/></td>
 						<td><c:out value="${cpCommentList.cpContents }"/></td>
 						<td><c:out value="${cpCommentList.cpDate }"/></td>
 						</tr>	
@@ -366,6 +372,35 @@
 		</div>
 	</div>
 	
+<<<<<<< HEAD
+	
+	<div id="defRequestModal" role="dialog" class="modal fade">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" class="close">&times;</button>
+				<h4 class="modal-title">보류의견</h4>
+			</div>
+			<div class="modal-body">
+		
+				<div class="form-group">
+					<textarea class="form-control" name="cpContents" rows="3"></textarea>
+				</div>
+	
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="requestDefer" class="btn btn primary">Send</button>
+				<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+			</div>
+		</div>
+		</div>
+	</div>
+	
+	
+	
+	
+=======
+>>>>>>> c24ad0232f5cc7f4eca51495af68ad00c5825027
 	<script type="text/javascript">
       $('document').ready(function() {
          $('#onAplModal').click(function() {
@@ -390,11 +425,22 @@
       $('document').ready(function() {
           $('#onAplModal2').click(function() {
      
-      
              $('#cpnRequestModal').modal('show');
              
           })
        });
+      
+      
+      
+      $('document').ready(function() {
+          $('#onAplModal3').click(function() {
+       
+             $('#defRequestModal').modal('show');
+             
+          })
+       });
+      
+      
        
        $('#requestCompanion').click(function(){
      	  let cpContents=document.getElementsByName("cpContents")[0];
@@ -410,7 +456,33 @@
      	  
      	  
        });
+<<<<<<< HEAD
+       
+       
+       $('#requestDefer').click(function(){
+      	  let cpContents=document.getElementsByName("cpContents")[1];
+
+      
+      	  let form = makeForm("deferDraft","get");
+      	  
+      	  form.appendChild(cpContents);
+      	  
+      	  document.body.appendChild(form);
+      	  
+      	  form.submit();
+      	  
+      	  
+        });
+      
+      
+      
+      
+   </script>
+	
+	
+=======
    </script>	
+>>>>>>> c24ad0232f5cc7f4eca51495af68ad00c5825027
 	
 	<!-- IMG Preview -->
 	<script type="text/javascript">	
