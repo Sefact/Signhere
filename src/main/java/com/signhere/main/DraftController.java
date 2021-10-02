@@ -152,9 +152,7 @@ public class DraftController {
 	@ResponseBody
 	public List<DocumentBean> modifyDraft(@RequestBody List<DocumentBean> dlist) {
 		List<DocumentBean> tempList;
-		
-		System.out.println(dlist.get(0));
-		
+				
 		tempList = doc.mModifyDraft(dlist.get(0));
 		
 		return tempList;
@@ -265,5 +263,16 @@ public class DraftController {
 		writeList = doc.mRequestDraft(wlist.get(0));
 		
 		return writeList;
+	}
+	
+	@RequestMapping(value="/draftTest")
+	public ModelAndView draftTest(DocumentBean db) throws Exception {
+		mav = new ModelAndView();
+		
+		System.out.println(db);
+		
+		mav.setViewName("home");
+		
+		return mav;
 	}
 }

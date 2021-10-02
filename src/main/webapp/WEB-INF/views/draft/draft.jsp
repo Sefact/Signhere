@@ -70,7 +70,7 @@
 				</div>
 				<div class="form-group col-md-4">
 					<label>문서종류</label>
-					<input type="text" class="form-control" id="dmCode" value="${sessionScope.docBean.dmCode}" disabled/>
+					<input type="text" class="form-control" id="dmCode" value="${sessionScope.docBean.dmName}" disabled/>
 				</div>
 			</div>
 			<div class="form-row">
@@ -124,8 +124,8 @@
 				            <canvas id="signature-canvas"></canvas>
 				        </div>
 				        <div class="m-signature-pad--footer" id="signUpClear">
-				            <button type="button" id="signClear" class="button clear" data-action="clear">지우기</button>
-				            <button type="button" id="signUpload" class="button save" data-action="save">저장</button>
+				            <button type="button" id="signClear" class="btn btn-primary" data-action="clear">지우기</button>
+				            <button type="button" id="signUpload" class="btn btn-primary" data-action="save">저장</button>
 				        </div>
 				    </div>
 				</div>
@@ -180,7 +180,6 @@
 												<option value="<c:out value="${aplList.aplId}"></c:out>"><c:out value="${aplList.aplName}"></c:out></option>
 										</c:forEach>
 									</select>
-								
 								</div>
 							</div>
 							<!-- 결재선(타부서) 타이틀 -->
@@ -251,11 +250,11 @@
 								<div class="form-group col-md-4">
 								</div>
 								<div class="form-group col-md-2">
-									<label>기안</label>
+									<label for="D">기안</label>
 									<input type="radio" name="dmCode" value="D"/>
 								</div>
 								<div class="form-group col-md-2">
-									<label>시행</label>
+									<label for="E">시행</label>
 									<input type="radio" name="dmCode" value="E"/>
 								</div>
 								<div class="form-group col-md-4">
@@ -572,6 +571,9 @@
 				var oPushRfApline = document.getElementById("selRfModifyLine");
 				
 				var originRadioDmCode = $('input[name="dmCode"]:checked').val();
+				var originRadioDmName = $("label[for='"+originRadioDmCode+"']").text().substring(0,2);
+				
+				alert(originRadioDmName);
 				
 				var docBean = [];
 				var aplBean = [];
@@ -599,7 +601,7 @@
 					rfBean.push(rfInital);
 				}
 				
-				var docInital = {'dmCode':originRadioDmCode, 'dmTitle':modifyTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':originMAplSize, 'dmNum':'${sessionScope.tempList[0].dmNum}', aplBean, rfBean};
+				var docInital = {'dmName':originRadioDmName, 'dmCode':originRadioDmCode, 'dmTitle':modifyTitle, 'dmWriter':'${sessionScope.userName}', 'aplSeq':originMAplSize, 'dmNum':'${sessionScope.tempList[0].dmNum}', aplBean, rfBean};
 				docBean.push(docInital);
 				
 				var json = JSON.stringify(docBean);
@@ -689,46 +691,44 @@
 		$('#docUploadForm').on('click', '#docUpload', function() {
 			var formData = new FormData();
 			var inputFiles = $('input[name="docFile"]');
+			var imgNullCheck = $("#imgPreview").attr("src");
 			var files = inputFiles[0].files;
 			
-			formData.append('key1', 'value1');
-			formData.append('key2', 'value2');
-			
-			for(var i=0; i<files.length; i++) {
-				formData.append('uploadFiles', files[i]);
-			}
-			
-			$.ajax({
-				type : 'POST',
-				url : '/uploadFile',
-				data : formData,
-				processData : false,
-				contentType : false
-			})
-			.done(function(data) {
-				alert("Upload Success");
+			if(typeof imgNullCheck == "undefined" || imgNullCheck == "" || imgNullCheck == null) {
+				alert("문서 업로드 부탁드립니다.");
+			} else {
+				formData.append('key1', 'value1');
+				formData.append('key2', 'value2');
 				
-				console.log(data.result);
-				
-				var delHtml = "";
-				delHtml += "<input type='button' data-src="+ data.result +" id='docDelete' value='Delete'/>";
-				
-				if($("#docDelete").length > 0) {
-					console.log("Delete Button already");
-				} else {
-					$('#docUploadForm').html(delHtml);
+				for(var i=0; i<files.length; i++) {
+					formData.append('uploadFiles', files[i]);
 				}
 				
-				/* if($("#docDelete").css("visibility") == "hidden") {
-					$("#docDelete").css('visibility', 'visible');
-				} else {
-					console.log("Delete Button Visible");
-				} */
-				
-			})
-			.fail(function(data) {
-				alert("Upload Failed");
-			})
+				$.ajax({
+					type : 'POST',
+					url : '/uploadFile',
+					data : formData,
+					processData : false,
+					contentType : false
+				})
+				.done(function(data) {
+					alert("Upload Success");
+					
+					console.log(data.result);
+					
+					var delHtml = "";
+					delHtml += "<input type='button' data-src="+ data.result +" id='docDelete' value='Delete'/>";
+					
+					if($("#docDelete").length > 0) {
+						console.log("Delete Button already");
+					} else {
+						$('#docUploadForm').html(delHtml);
+					}
+				})
+				.fail(function(data) {
+					alert("Upload Failed");
+				})
+			}
 		})
 	});
 	</script>
@@ -801,12 +801,13 @@
                     alert("저장완료");
                     
                     var signHtml = "";
-                    signHtml += '<button type="button" id="signDelete" value="signDelete" class="button save" data-action="delete">삭제</button>'
+                    signHtml += '<button type="button" id="signDelete" value="signDelete" class="btn btn-primary" data-action="delete">삭제</button>'
                     
                     $('#signUpClear').html(signHtml);
                     
                    //sign.clear();
                 },
+                
                 error : function(res){
                     console.log("failed");
                 }
@@ -821,8 +822,8 @@
 		})
 		.done(function(data) {
 			var signInitHtml = "";
-			signInitHtml += '<button type="button" id="signClear" class="button clear" data-action="clear">지우기</button> ';
-			signInitHtml += '<button type="button" id="signUpload" class="button save" data-action="save">저장</button>';
+			signInitHtml += '<button type="button" id="signClear" class="btn btn-primary" data-action="clear">지우기</button> ';
+			signInitHtml += '<button type="button" id="signUpload" class="btn btn-primary" data-action="save">저장</button>';
 			
 			$('#signUpClear').html(signInitHtml);
 			
@@ -857,7 +858,6 @@
 			var dmTitle = document.getElementById("dmTitle").value;
 			var dmNum =document.getElementById("dmNum").value;
 			var dmDate = document.getElementById("dmDate").value;
-			//var dmWriter = document.getElementById("dmWriter").value;
 			var dmCode = document.getElementById("dmCode").value;
 			var acReason = document.getElementById("commentTextArea").value;
 			
@@ -880,11 +880,6 @@
 				refBean.push({rdId:'${refMap.rdId}', rfSeq:'${refMap.rfSeq}'});
 			</c:forEach>
 			
-			/* for(var i=0; i<approvalSize; i++) {
-				aplInit = {'aplSeq':i+1, 'aplId':'${sessionScope.aplMap[i].aplId}'}
-				aplBean.push(aplInit);
-			} */
-			
 			var draftData = [{'dmTitle':dmTitle, 'dmNum':dmNum, 'dmDate':dmDate, 'dmWriter':'${sessionScope.userId}', 'dmCode':dmCode, 'aplComment':acReason, aplBean, refBean}];
 			var draftJson = JSON.stringify(draftData);
 			
@@ -896,7 +891,13 @@
 				dataType: 'json'
 			})
 			.done(function(data) {
-				location.href = "/myDraft";
+				dmCodeCheck = data[0].dmCode;
+				
+				if(dmCodeCheck == "D") {
+					location.href = "/myDraft";	
+				} else {
+					location.href = "/myEnforceMent";
+				}
 				console.log("Success");
 			})
 			.fail(function(data) {
@@ -924,7 +925,7 @@
 	    
 	    $(document).on("click", "#requestApproval", function(event){
 	        $(window).off('beforeunload');
-	    });	    
+	    });
 	</script>
 </body>
 

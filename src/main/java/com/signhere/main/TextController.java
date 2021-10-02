@@ -22,9 +22,7 @@ import com.signhere.services.FileUtils;
 import com.signhere.utils.Session;
 
 @Controller
-public class TextController {
-	
-	
+public class TextController {	
 	
 	@Autowired
 	private FileUtils fut;
@@ -102,7 +100,14 @@ public class TextController {
 	}
 	
 
-	
+	@PostMapping("/documentBox")
+	public List<DocumentBean> documentBox(@RequestBody String dmNum) {
+		
+		List<DocumentBean> docList;
+		
+		docList = fut.mDocumentBox(dmNum);
+		
+		return null;
+	}
 
-	
 }

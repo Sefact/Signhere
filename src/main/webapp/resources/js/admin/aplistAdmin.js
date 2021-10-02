@@ -202,13 +202,13 @@ function deleteDoc(){
 		body: JSON.stringify(objArray)
 	}).then(res =>{
 		if(res.ok){
-		return res.json()	
+		return res.json();	
 		}else{
 			console.error(`HTTP error status: ${res.status}`)
 		}
 	}) 
 	.then(jsonData =>{
-		console.log(jsonData)
+		console.log(jsonData);
 		location.reload();
 	}).catch(err=>{
 		console.log(err)

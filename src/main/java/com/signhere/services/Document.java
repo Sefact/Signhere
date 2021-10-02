@@ -13,13 +13,18 @@ import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.ApprovalCommentBean;
 import com.signhere.beans.CompanionBean;
+import com.signhere.beans.CompanionDeferBean;
 import com.signhere.beans.DeferBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.ReadingReferenceBean;
@@ -34,9 +39,22 @@ public class Document {
 	ModelAndView mav;
 	@Autowired
 	Session ssn;
+	@Autowired
+	DataSourceTransactionManager tx;
+
+	Pagination pgn;
 	
-	private String uploadPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
-	private String signPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
+	private DefaultTransactionDefinition def;
+	private TransactionStatus status;
+	
+	private String uploadPath = "C:\\Users\\H\\Documents\\Final\\Signhere\\git\\Signhere\\src\\main\\webapp\\resources\\img";
+	private String signPath = "C:\\Users\\H\\Documents\\Final\\Signhere\\git\\Signhere\\src\\main\\webapp\\resources\\img";
+	
+	//private String uploadPath = "C:\\Users\\Dongmin Geum\\git\\Signherev2\\Signhere\\src\\main\\webapp\\resources\\img";
+	//private String signPath = "C:\\Users\\Dongmin Geum\\git\\Signherev2\\Signhere\\src\\main\\webapp\\resources\\img";
+
+	//private String uploadPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
+	//private String signPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
 	
 	public List<DocumentBean> mSearchText(DocumentBean db){
 
@@ -63,9 +81,7 @@ public class Document {
 		docList = sqlSession.selectList("searchCompletedDocs", db);
 		
 		return docList;
-	}
-
-	
+	}	
 
 	public List<UserBean> mWriteDraft(UserBean ub) {
 		List<UserBean> userList = null;
@@ -136,8 +152,6 @@ public class Document {
 
 	public ModelAndView mConfirmDraft(DocumentBean db) {
 		mav = new ModelAndView();
-		
-		
 		List<DocumentBean> tempList = null;
 		String dmCodeCheck = null;
 		
@@ -293,17 +307,26 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = multipartFile.getOriginalFilename();
+			
+				uploadPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
 				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
+				File tmpDir = new File(uploadPath);
 				File tmp = new File(uploadPath + fileName);
-				
+
+				if(!tmpDir.exists()) {
+					 if(tmpDir.mkdirs()) {
+					 }
+					System.out.println(tmpDir.getPath());
+				}
+
 				System.out.println("fileName"+fileLoc);
 				System.out.println("fileLoc"+fileName);
 				
+
 				fileMap.put("fileName", fileName);
 				fileMap.put("fileSize", multipartFile.getSize());
 				multipartFile.transferTo(tmp);
 				ssn.setAttribute("fileLoc", fileLoc);
-				System.out.println(ssn.getAttribute("fileLoc"));
 				// sqlSession.insertFiles(fileMap);
 			} catch (Exception e) {
 				System.out.println("Error");
@@ -321,9 +344,18 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = ssn.getAttribute("userId") + ".png";
-				String signLoc = signPath + fileName;
-				File tmp = new File(signPath + fileName);
 
+				signPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
+				File tmpDir = new File(signPath);
+
+				String signLoc = signPath + fileName;
+
+				File tmp = new File(signPath + fileName);
+				
+				if(!tmpDir.exists()) {
+					tmpDir.mkdirs();
+				}
+				
 				signMap.put("fileName", fileName);
 				signMap.put("fileSize", multipartFile.getSize());
 				multipartFile.transferTo(tmp);
@@ -355,46 +387,43 @@ public class Document {
 			wb.setCmCode((String) ssn.getAttribute("cmCode"));
 			wb.setFileLoc((String) ssn.getAttribute("fileLoc"));
 			wb.setSignLoc((String) ssn.getAttribute("signLoc"));
-			
-	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		
 		/* 문서 테이블에 정상적으로 정보가 삽입된 경우 */
-	      if(this.convertToBoolean(sqlSession.insert("insDocument", wb))) {
-	         /* 임시 보관함에 대한 정보 삭제 */
-	         sqlSession.delete("delTemporary", wb);
-	         /* 결재문을 올린 사람에 대한 정보를 삽입 결재선 */
-	         if(this.convertToBoolean(sqlSession.insert("insApprovalComment", wb))) {
-	            /* 다음 결재자를 결재선에 삽입*/
-	            wb.setDmWriter(wb.getAplBean().get(0).getAplId());
-	            wb.setAplSeq(wb.getAplBean().get(0).getAplSeq()+1);
-	            if(this.convertToBoolean(sqlSession.insert("insApprovalProgress", wb))) {
-	               /* 결재 대기자들을 결재선에 삽입 */
-	               for(int i=1; i<aplineSize; i++) {
-	                  wb.setDmWriter(wb.getAplBean().get(i).getAplId());
-	                  wb.setAplSeq(wb.getAplBean().get(i).getAplSeq()+1);
-	                  
-	                  sqlSession.insert("insApprovalOther", wb);
-	               }
-	            }
-	            if(rflineSize > 0) {
-	               for(int i=0; i<rflineSize; i++) {
-	                  wb.setRefId(wb.getRefBean().get(i).getRdId());
-	                  
-	                  sqlSession.insert("insReference", wb);
-	               }
-	            } else {
-	               System.out.println("Reference Line is not found");
-	            }
-	            System.out.println("Success");
-	         }
-	      } else {
-	         System.out.println("Error");
-	      }
+		if(this.convertToBoolean(sqlSession.insert("insDocument", wb))) {
+			/* 임시 보관함에 대한 정보 삭제 */
+			sqlSession.delete("delTemporary", wb);
+			/* 결재문을 올린 사람에 대한 정보를 삽입 결재선 */
+			if(this.convertToBoolean(sqlSession.insert("insApprovalComment", wb))) {
+				/* 다음 결재자를 결재선에 삽입*/
+				wb.setDmWriter(wb.getAplBean().get(0).getAplId());
+				wb.setAplSeq(wb.getAplBean().get(0).getAplSeq()+1);
+				if(this.convertToBoolean(sqlSession.insert("insApprovalProgress", wb))) {
+					/* 결재 대기자들을 결재선에 삽입 */
+					for(int i=1; i<aplineSize; i++) {
+						wb.setDmWriter(wb.getAplBean().get(i).getAplId());
+						wb.setAplSeq(wb.getAplBean().get(i).getAplSeq()+1);
+						
+						sqlSession.insert("insApprovalOther", wb);
+					}
+				}
+				if(rflineSize > 0) {
+					for(int i=0; i<rflineSize; i++) {
+						wb.setRefId(wb.getRefBean().get(i).getRdId());
+						
+						sqlSession.insert("insReference", wb);
+					}
+				} else {
+					System.out.println("Reference Line is not found");
+				}
+				System.out.println("Success");
+			}
+		} else {
+			System.out.println("Error");
+		}
 		
 		return writeList;
 	}
@@ -447,14 +476,230 @@ public class Document {
 			e.printStackTrace();
 		}
 	}
+
+	public ModelAndView apToDoList(Criteria cri) {		
+		mav = new ModelAndView();
+		
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countWaitList", cri));
+		
+		List<Map<String,Object>> waitList = sqlSession.selectList("waitApproval",cri);
+		
+		mav.setViewName("document/waitApproval");
+		mav.addObject("docList", waitList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
 	
+	public ModelAndView apIngList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countApprovalProceed",cri));
+		
+		List<Map<String,Object>> ingList = sqlSession.selectList("approvalProcced",cri);
+		
+		mav.setViewName("document/approvalProcced");
+		mav.addObject("docList", ingList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+	public ModelAndView apCompleteList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countCompletedDocs",cri));
+		
+		List<Map<String,Object>> completedList = sqlSession.selectList("completeApproval",cri);
+		
+		mav.setViewName("document/completeApproval");
+		mav.addObject("docList", completedList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+	public ModelAndView apReturnList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReturnedDocs",cri));
+		
+		List<Map<String,Object>> returnedList = sqlSession.selectList("returnedApproval",cri);
+		
+		mav.setViewName("document/companionApproval");
+		mav.addObject("docList", returnedList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+	public ModelAndView deferList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countdeferredDocs",cri));
+		
+		List<Map<String,Object>> deferredList = sqlSession.selectList("deferredApproval",cri);
+		
+		mav.setViewName("document/deferList");
+		mav.addObject("docList", deferredList);
+		mav.addObject("pagination", pgn);
+		return mav;
+	}
+
+	public ModelAndView referenceList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReferredDocs",cri));
+		
+		List<Map<String,Object>> referredList = sqlSession.selectList("referenceApproval",cri);
+		
+		System.out.println(referredList.toString());
+		
+		mav.setViewName("document/referenceApproval");
+		mav.addObject("docList", referredList);
+		mav.addObject("pagination", pgn);
+		return mav;
+	}
+
+	public ModelAndView receiveList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("cmCode"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countReceiveDocs",cri));
+		
+		List<Map<String,Object>> receiveList = sqlSession.selectList("receiveList",cri);
+		
+		System.out.println(receiveList);
+		
+		mav.setViewName("document/receiveNotice");
+		mav.addObject("docList", receiveList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+	public ModelAndView myList(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyList",cri));
+		
+		List<Map<String,Object>> myList = sqlSession.selectList("myList",cri);
+		
+		
+		mav.setViewName("document/myList");
+		mav.addObject("docList", myList);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+	public ModelAndView myDraft(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyDraft",cri));
+		
+		List<Map<String,Object>> myDraft = sqlSession.selectList("myDraft",cri);
+		
+		
+		mav.setViewName("document/myDraft");
+		mav.addObject("docList", myDraft);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
+
+	public ModelAndView myEnforcement(Criteria cri) {
+		mav = new ModelAndView();
+		try {
+			cri.setSenderId((String)ssn.getAttribute("userId"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countMyEnforceMent",cri));
+		
+		List<Map<String,Object>> myEnforceMent = sqlSession.selectList("myEnforceMent",cri);
+		
+		
+		mav.setViewName("document/myEnforceMent");
+		mav.addObject("docList", myEnforceMent);
+		mav.addObject("pagination", pgn);
+		
+		return mav;
+	}
 
 	public ModelAndView documentBoxDetail(WriteBean wb,ApprovalBean ab) {
+
 		ModelAndView mav = new ModelAndView();
 		DocumentBean db = new DocumentBean();
 		ReadingReferenceBean rrb = new ReadingReferenceBean();	
 		ApprovalCommentBean apb = new ApprovalCommentBean();
-		CompanionBean cdb = new CompanionBean();
+		CompanionDeferBean cdb = new CompanionDeferBean();
 		try {
 			wb.setLogId((String)ssn.getAttribute("userId"));
 			db.setApId((String)ssn.getAttribute("userId"));
@@ -502,22 +747,33 @@ public class Document {
 		
 		/* 문서img파일 저장경로를 /img/*.jpg(file) 형식으로 자름*/
 		String fileLoc= docList.get(0).getFileLoc();
-		int beginIndex = fileLoc.indexOf("/img");
+		
+		System.out.println(docList.get(0).getFileLoc());
+		System.out.println(fileLoc);
+		
+		String cmCode = null;
+		try {
+			cmCode = (String)ssn.getAttribute("cmCode");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		int beginIndex = fileLoc.indexOf("\\img");
 		int lastIndex = fileLoc.length();	
 		String fileLocResult=fileLoc.substring(beginIndex,lastIndex);
 		
-		mav.addObject("fileLoc",fileLocResult);
+		System.out.println(fileLocResult);
 		
+		mav.addObject("fileLoc",fileLocResult);		
 		
 		//사인 경로 리스트
 		List<ApprovalBean> signList;
-		signList=sqlSession.selectList("signLocation",ab);
-		
+		signList=sqlSession.selectList("signLocation",ab);	
 		
 		//사인로케이션에 /img 부터의 경로를 저장하는 메소드
 		List<Map<String, Object>> signLocList = new ArrayList<Map<String, Object>>();
 		
-		int beginIndex2 = signList.get(0).getAplLocation().indexOf("/img");
+		int beginIndex2 = signList.get(0).getAplLocation().indexOf("\\img");
 		for(int i=0; i<signList.size(); i++) {
 			Map<String, Object> signLocListPut = new HashMap<String, Object>();
 			if(signList.get(i).getAplLocation()!=null) {
@@ -527,41 +783,32 @@ public class Document {
 			signLocList.add(signLocListPut);
 		}
 		}
-		mav.addObject("signList",signLocList);
-		
+		mav.addObject("signList",signLocList);		
 		
 		//결재의견 
 		List <ApprovalCommentBean> apCommentList;
 		
 		apb.setDmNum(wb.getDmNumCheck());
 		
-		apCommentList=sqlSession.selectList("apCommentList",apb);
-		
+		apCommentList=sqlSession.selectList("apCommentList",apb);	
 		
 		mav.addObject("ap","결재");
 		
-		mav.addObject("apCommentList",apCommentList);
-		
+		mav.addObject("apCommentList",apCommentList);	
 
 		//반려의견 
 		List <CompanionBean> cpCommentList;
 		
 		cdb.setDmNum(wb.getDmNumCheck());
 		
+		
 		cpCommentList=sqlSession.selectList("cpCommentList",cdb);
 		
-		mav.addObject("cp","반려");
+		mav.addObject("cp","반려");	
+		mav.addObject("cpCommentList",cpCommentList);		
+		mav.setViewName("document/documentBox");	
 		
-		mav.addObject("cpCommentList",cpCommentList);
-		
-		
-		
-	
-		mav.setViewName("document/documentBox");
-		
-		
-		//중간결재자인지 마지막결재자인지 판단하는 쿼리 1=true(마지막결재자) 0=false(중간결재자)
-		
+		//중간결재자인지 마지막결재자인지 판단하는 쿼리 1=true(마지막결재자) 0=false(중간결재자)	
 	
 		return mav;
 	}
@@ -588,30 +835,24 @@ public class Document {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-		
+		}		
 		sqlSession.insert("insertApprovalComment", acb);
-
 	}
 	
 	//중간결재자
-		private void confirmMiddleApproval(DocumentBean db) {
-			sqlSession.update("approvalUpdateMyAplSeqCheck",db);	
-			sqlSession.update("approvalUpdateNextAplSeqCheck",db);
-			
-		}
-	
+	private void confirmMiddleApproval(DocumentBean db) {
+		sqlSession.update("approvalUpdateMyAplSeqCheck",db);	
+		sqlSession.update("approvalUpdateNextAplSeqCheck",db);			
+	}	
 	
 	//최종결재자
 	private void confirmFinalApproval(DocumentBean db) {
 		sqlSession.update("approvalFinalUpdateMyAplSeqCheck",db);	
 		sqlSession.update("approvalFinalUpdateNextAplSeqCheck",db);
-
 	}
-	
-	public void confirmCompanion(DocumentBean db, CompanionBean cb) {
-		
+
+	public void confirmCompanion(DocumentBean db, CompanionBean cb) {		
+
 		try {
 			cb.setCpId((String)ssn.getAttribute("userId"));
 			cb.setDmNum((String)ssn.getAttribute("dmNum"));
@@ -640,16 +881,94 @@ public class Document {
 		sqlSession.update("confirmDefer", db);
 		sqlSession.insert("insertCompanionComment",deb);
 		
-		//해당문서(도큐먼트번호 참조)의 상태를 R로 바꿔줘야함.
-		
+		//해당문서(도큐먼트번호 참조)의 상태를 R로 바꿔줘야함.		
 	}
-	
 	
 	private boolean convertToBoolean(int result) {
 		return result==1 ? true: false;  
 	}
 
+	public String goMyList(String[] dmNumArr) {
+		int numOfDocs = dmNumArr.length;
+		int resultCode = 0;
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		
+		try {
+			map.put("userId", ssn.getAttribute("userId"));
+			map.put("dmNum", "init");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
+		
+		int counter = 0;
+		
+		for(int i =0; i<numOfDocs; i++) {
+			map.replace("dmNum", dmNumArr[i]);
+			counter += sqlSession.insert("goMyList",map);
+		}
+		
+		if(counter == numOfDocs) {
+			this.setTransactionResult(true);
+			resultCode = 1;
+		}else {
+			this.setTransactionResult(false);
+		}
+		
+		return resultCode+"";
+	}
+	
+	public String delMyList(String[] dmNumArr) {
+		
+		int numOfDocs = dmNumArr.length;
+		int resultCode = 0;
+		
+		HashMap<String, Object> map = new HashMap<String,Object>();
+		
+		try {
+			map.put("userId", ssn.getAttribute("userId"));
+			map.put("dmNum", "init");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
+		
+		int counter = 0;
+		
+		for(int i =0; i<numOfDocs; i++) {
+			map.replace("dmNum", dmNumArr[i]);
+			counter += sqlSession.delete("delMyList",map);
+		}
+		
+		if(counter == numOfDocs) {
+			this.setTransactionResult(true);
+			resultCode = 1;
+		}else {
+			this.setTransactionResult(false);
+		}
+		
+		return resultCode+"";
+	}
 
+	
+	//Transaction configuration 
+	private void setTransactionConf(int propagation, int isolationLevel, boolean isRead) {
+		def = new DefaultTransactionDefinition();
+		def.setPropagationBehavior(propagation);
+		def.setIsolationLevel(isolationLevel);
+		def.setReadOnly(isRead);
+		status = tx.getTransaction(def);
+	}
 
-
+	//Transaction Result
+	private void setTransactionResult(boolean isCheck) {
+		if(isCheck) {
+			tx.commit(status);
+		}else{
+			tx.rollback(status);
+		}
+	}		
 }

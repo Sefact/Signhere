@@ -16,4 +16,5 @@ public class CompanionDeferBean {
 	private String cpName;
 	private Date cpDate;
 
+
 }
