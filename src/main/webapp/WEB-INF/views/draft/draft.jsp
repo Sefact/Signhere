@@ -861,6 +861,12 @@
 			var dmCode = document.getElementById("dmCode").value;
 			var acReason = document.getElementById("commentTextArea").value;
 			
+			if(dmCode == "기안") {
+	            dmCode = "D";
+	         } else {
+	            dmCode = "E";
+	         }
+			
 			var approvalSize = '${sessionScope.aplMap.size()}';
 			var departmentSize = '${sessionScope.docMap.size()}';
 			var referenceSize = '${sessionScope.refMap.size()}';

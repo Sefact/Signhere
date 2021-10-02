@@ -107,7 +107,7 @@
 							<div><img style="border: 2px solid black" src="${signList[1].signLocation}" width="300px" height="200px" /></div>
 					    </c:when>
 					    <c:otherwise>
-							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="\img\signNull.jpeg" width="300px" height="200px" /></div>
 					    </c:otherwise>
 					</c:choose>
 				</div>
@@ -123,7 +123,7 @@
 							<div><img style="border: 2px solid black" src="${signList[2].signLocation}" width="300px" height="200px" /></div>
 					    </c:when>
 					    <c:otherwise>
-							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="\img\signNull.jpeg" width="300px" height="200px" /></div>
 					    </c:otherwise>
 					</c:choose>					
 				</div>
@@ -139,7 +139,7 @@
 							<div><img style="border: 2px solid black" src="${signList[3].signLocation}" width="300px" height="200px" /></div>
 					    </c:when>
 					    <c:otherwise>
-							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="\img\signNull.jpeg" width="300px" height="200px" /></div>
 					    </c:otherwise>
 					</c:choose>	
 				</div>
@@ -185,7 +185,7 @@
 							
 				<c:forEach var="cpCommentList" items="${cpCommentList}">
 					<tr>
-		
+						<td><c:out value="반려/보류"/></td>
 						<td><c:out value="${cpCommentList.cpName }"/></td>
 						<td><c:out value="${cpCommentList.dpName }"/></td>
 						<td><c:out value="${cpCommentList.grName }"/></td>
@@ -371,8 +371,7 @@
 		</div>
 		</div>
 	</div>
-	
-<<<<<<< HEAD
+
 	
 	<div id="defRequestModal" role="dialog" class="modal fade">
 		<div class="modal-dialog">
@@ -397,10 +396,7 @@
 	</div>
 	
 	
-	
-	
-=======
->>>>>>> c24ad0232f5cc7f4eca51495af68ad00c5825027
+
 	<script type="text/javascript">
       $('document').ready(function() {
          $('#onAplModal').click(function() {
@@ -456,7 +452,7 @@
      	  
      	  
        });
-<<<<<<< HEAD
+
        
        
        $('#requestDefer').click(function(){
@@ -480,9 +476,7 @@
    </script>
 	
 	
-=======
-   </script>	
->>>>>>> c24ad0232f5cc7f4eca51495af68ad00c5825027
+
 	
 	<!-- IMG Preview -->
 	<script type="text/javascript">	

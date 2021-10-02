@@ -307,8 +307,9 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = multipartFile.getOriginalFilename();
-			
+			//운영체제에 따라 슬러시 바꾸기
 				uploadPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
+				//uploadPath += (String)ssn.getAttribute("cmCode")+"/";
 				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
 				File tmpDir = new File(uploadPath);
 				File tmp = new File(uploadPath + fileName);
@@ -344,7 +345,7 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = ssn.getAttribute("userId") + ".png";
-
+				//
 				signPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
 				File tmpDir = new File(signPath);
 
@@ -759,6 +760,7 @@ public class Document {
 		}
 		
 		int beginIndex = fileLoc.indexOf("\\img");
+		//int beginIndex = fileLoc.indexOf("/img");
 		int lastIndex = fileLoc.length();	
 		String fileLocResult=fileLoc.substring(beginIndex,lastIndex);
 		
@@ -774,6 +776,7 @@ public class Document {
 		List<Map<String, Object>> signLocList = new ArrayList<Map<String, Object>>();
 		
 		int beginIndex2 = signList.get(0).getAplLocation().indexOf("\\img");
+		//int beginIndex2 = signList.get(0).getAplLocation().indexOf("/img");
 		for(int i=0; i<signList.size(); i++) {
 			Map<String, Object> signLocListPut = new HashMap<String, Object>();
 			if(signList.get(i).getAplLocation()!=null) {
