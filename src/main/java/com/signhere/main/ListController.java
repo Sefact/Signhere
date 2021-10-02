@@ -1,9 +1,6 @@
 package com.signhere.main;
 
-
 import java.util.List;
-
-
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
 
 import com.signhere.beans.AccessBean;
 import com.signhere.beans.ApprovalBean;
@@ -42,18 +38,14 @@ public class ListController implements DocumentInter {
 	@Autowired
 	Session ssn;
 	
-  
 	//내가 보낸 기안
-
 	@RequestMapping("/myDraft")
 	public ModelAndView myDraft(Criteria cri) {
-
 		mav = new ModelAndView();
 		
 		mav = doc.myDraft(cri);
 		
 		// Temporary Check 있을 시 비워주고 없는 경우 콘솔에 에러메시지 출력
-
 		this.tempCheck(cri);
 	
 		return mav;
@@ -72,8 +64,6 @@ public class ListController implements DocumentInter {
   	//결제대기함
 	@RequestMapping("/apToDoList")
 	public ModelAndView apToDoList(Criteria cri) {
-		
-
 		mav = doc.apToDoList(cri);
 		
 		this.tempCheck(cri);
@@ -81,14 +71,15 @@ public class ListController implements DocumentInter {
 		return mav;
 	}
 	
-
   	//결제진행함
 	@RequestMapping("/apIngList")
 	public ModelAndView apIngList(Criteria cri) {
 		mav = new ModelAndView();
 		
 		mav = doc.apIngList(cri);
+		
 		this.tempCheck(cri);
+		
 		return mav;
 	}
 	
@@ -109,13 +100,10 @@ public class ListController implements DocumentInter {
 	@RequestMapping("/apReturnList")
 	public ModelAndView apReturnList(Criteria cri) {
 		mav = new ModelAndView();		
-
 		
-		mav = doc.apReturnList(cri);
-		
+		mav = doc.apReturnList(cri);		
 
 		this.tempCheck(cri);
-
 		
 		return mav;
 	}
@@ -145,7 +133,6 @@ public class ListController implements DocumentInter {
 		return mav;
 	}
 	
-
 	//개인보관함	
 	@RequestMapping("/myList")
 	public ModelAndView myList(Criteria cri) {
@@ -156,8 +143,7 @@ public class ListController implements DocumentInter {
     	this.tempCheck(cri);   
     	
     	return mav;
-	}
-	
+	}	
 
 	//개인보관함으로 이동시키는 JOB
 	@RequestMapping("/goMyList")
@@ -201,7 +187,6 @@ public class ListController implements DocumentInter {
 	@RequestMapping("/moveAjaxPage")
 	public List<DocumentBean> moveAjaxPage(DocumentBean db) {
 		
-		
 		return null;
 	}
 	
@@ -210,18 +195,15 @@ public class ListController implements DocumentInter {
 	public ModelAndView receiveList(Criteria cri) {
 		mav = new ModelAndView();
 		
-		mav = doc.receiveList(cri);
-		
+		mav = doc.receiveList(cri);		
 		
 		this.tempCheck(cri);
 		
 		return mav;
 	}
 	
-	public void tempCheck(Criteria cri) {
-		
+	public void tempCheck(Criteria cri) {		
 		DocumentBean db = new DocumentBean();
-		
 		try {
 			db.setDmNum((String) ssn.getAttribute("dmCheck"));
 			if(ssn.getAttribute("dmCheck") != null) {
@@ -244,13 +226,8 @@ public class ListController implements DocumentInter {
 	
 	@GetMapping("/documentBox")
 	public ModelAndView documentBox(@ModelAttribute WriteBean wb, @ModelAttribute ApprovalBean ab) {
-
-			
 			mav = doc.documentBoxDetail(wb, ab);
 			
 			return mav;
 	}
-	
-	
-
 }

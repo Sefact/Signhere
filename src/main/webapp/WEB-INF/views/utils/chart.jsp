@@ -7,10 +7,11 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	<h1 class="page-header"></h1>
 
-	<div class="row placeholders col-sm-8">
+	<div class="row placeholders col-sm-10">
 	
 	
 		<canvas id="myChart" ></canvas>
+	
 
 	</div>
 
@@ -80,13 +81,14 @@ var ctx = document.getElementById('myChart').getContext('2d');
 
 
 
+
 var chart = new Chart(ctx, {
 	type : 'bar',
 	data : {
-		labels : [ '내가 보낸 결재', '내가 보낸 시행', '처리해야 할 결재 (결재대기함))' ],
+		labels : [ '처리해야 할 결재', '내가 보낸 결재', '진행중인 결재' ],
 		datasets : [ {
-			label : 'My First Dataset',
-			data : [ 2, 1, ${waitChart} ],
+			label : 'chart1',
+			data : [ ${sessionScope.waitChart}, ${sessionScope.myDraftChart}, ${sessionScope.ingChart} ],
 			backgroundColor : [ 'rgb(255, 99, 132)', 'rgb(54, 162, 235)',
 					'rgb(255, 205, 86)' ],
 			hoverOffset : 4
@@ -94,6 +96,13 @@ var chart = new Chart(ctx, {
 		} ]
 	}
 }); 
+
+
+
+
+
+
+
 
 </script>
 

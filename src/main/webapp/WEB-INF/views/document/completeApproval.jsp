@@ -88,6 +88,7 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
+						<th> # </th>
 						<th>문서번호</th>
 						<th>문서제목</th>
 						<th> &nbsp; 문서종류</th>

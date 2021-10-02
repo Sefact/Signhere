@@ -13,7 +13,7 @@
 	</insert>
 	
 	<insert id="JoinRequest" parameterType="UserBean">
-		INSERT INTO MM VALUES(#{userId},#{userPwd},'N','V',#{cmCode},#{userName},#{userMail},'0','Y')
+		INSERT INTO MM VALUES(#{userId},#{userPwd},'N','V',#{cmCode},#{userName},#{userMail},'1','Y')
 	</insert>
 	
 	<select id="getLogInInfo" parameterType="AccessBean" resultType="AccessBean"> 

@@ -6,7 +6,7 @@ function adminSearchText() {
 	const dmCode = document.getElementsByName("dmCode")[0].value;
 	const dmDate = document.getElementsByName("dmDate")[0].value;
 	const dmDate2 = document.getElementsByName("dmDate2")[0].value;
-	
+
 	
 fetch('/adminSearchText',{
 		method:'post',
