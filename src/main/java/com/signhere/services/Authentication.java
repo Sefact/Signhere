@@ -114,8 +114,7 @@ public class Authentication implements AuthentInter {
 								ssn.setAttribute("grName",tmplist.get(0).getGrName());
 								if(tmplist.get(0).getUserMail() != null) {
 									ssn.setAttribute("userMail", tmplist.get(0).getUserMail());
-									//여기서 이메일도 들어가있으면 미리 띄워 줘야함 > 만약 처음에 null이 아니여서 넣는다는 가정 
-									System.out.println(ssn.getAttribute("userMail"));
+									//여기서 이메일도 들어가있으면 미리 띄워 줘야함 > 만약 처음에 null이 아니여서 넣는다는 가정
 								}
 								mav.setViewName("login/newInfo");
 							}
@@ -129,6 +128,7 @@ public class Authentication implements AuthentInter {
 							
 							DocumentBean db = new DocumentBean();
 							
+
 							//차트 결재대기함 갯수
 							mav.addObject("waitChart", this.waitApprovalChart(db));
 							//차트 결재 진행함 갯수
@@ -174,14 +174,14 @@ public class Authentication implements AuthentInter {
 		return mav;
 	}
 	//결제대기함의 문서수 차트에 담음
-	public int waitApprovalChart(DocumentBean db) {	
+	public int waitApprovalChart(Criteria cri) {	
 		List <DocumentBean> docList;	
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));	
+			cri.setSenderId((String)ssn.getAttribute("userId"));	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
-		docList=sqlSession.selectList("waitApproval",db);		
+		docList=sqlSession.selectList("waitApproval",cri);		
 		int size = docList.size();
 		
 		return size;
@@ -225,7 +225,6 @@ public class Authentication implements AuthentInter {
 			e.printStackTrace();
 		}		
 		docList=sqlSession.selectList("approvalProcced",db);		
-
 		
 		return docList;
 	}
@@ -447,9 +446,9 @@ public class Authentication implements AuthentInter {
 			mav.setViewName("login/myInfo");
 
 		}else {
-			mav.setViewName("login/myInfoAccess");
+      mav.setViewName("login/myInfoAccess");
 			mav.addObject("failMessage",failMessage);
-		
+
 
 		}
 
@@ -526,15 +525,18 @@ public class Authentication implements AuthentInter {
 		mav.setViewName("login/home");
 		
 		try {
+
 			if(ssn.getAttribute("userId") != null) {
 			
-			mav.addObject("waitChart", this.waitApprovalChart(db));
-			mav.addObject("docList", this.waitApprovalList(db));
+		  mav.addObject("docList", this.waitApprovalList(db));
 			mav.addObject("docList2", this.apIngList(db));
-			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
-			//로그인한 상태에서 main으로 가면 자꾸 newInfo로감.. 심지어 pwInitial은 1로 잘 나옴	
-				
-			//equals가 실제값으로 비교하는거. ==하면 참조변수끼리 비교.
+
+			if(ssn.getAttribute("userId") != null) {	
+			//mav.addObject("waitChart", this.waitApprovalChart(db));
+			//mav.addObject("docList", this.waitApprovalList(db));
+        
+			mav.addObject("docList2", this.apIngList(db));
+
 			
 			if(((String)ssn.getAttribute("pwInitial")).equals("1")) {
 				

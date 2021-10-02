@@ -555,6 +555,7 @@ function cancelPassword(){
 	form.appendChild
 	form.submit();
 	
+
 }
 
 function cancelNewInfo(){
@@ -563,5 +564,4 @@ function cancelNewInfo(){
 	
 	
 }
-
 

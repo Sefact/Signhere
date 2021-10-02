@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,6 +22,7 @@ import com.signhere.beans.CompanyBean;
 import com.signhere.beans.DepartmentBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
+import com.signhere.services.Criteria;
 import com.signhere.services.Management;
 
 @Controller
@@ -32,10 +34,14 @@ public class AdminController {
 	@Autowired
 	SqlSessionTemplate sqlSession;
 	
+	private int chechkNum = 11;
+	
 	//직원 관리 페이지로 이동 
-	@PostMapping("/admin")
-	public ModelAndView admin() {
-		return mag.mAdmin();
+	@RequestMapping("/admin")
+	public ModelAndView admin(Criteria cri) {
+		mav = new ModelAndView();
+		mav = mag.mAdmin(cri);
+		return mav;
 	}
 	
 	//직원 관리 페이지에서 새로운 직원 추가
@@ -85,9 +91,11 @@ public class AdminController {
 		return mag.mUpdateEmployee(ub);
 	}
 	
-	@PostMapping("/apListAdmin")
-	public ModelAndView apListAdmin() {
-		return mag.mApListAdmin();
+	@RequestMapping("/apListAdmin")
+	public ModelAndView apListAdmin(Criteria cri) {
+		mav = new ModelAndView();
+		mav =  mag.mApListAdmin(cri);
+		return mav;
 	}
 	
 	
