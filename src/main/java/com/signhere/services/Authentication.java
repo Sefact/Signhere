@@ -128,19 +128,20 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("userName",tmplist.get(0).getUserName());
 							
 							
-							DocumentBean db = new DocumentBean();
+							Criteria cri = new Criteria();
+							
 							
 
 							//차트 결재대기함 갯수
-							ssn.setAttribute("waitChart", this.waitApprovalChart(db));				
+							ssn.setAttribute("waitChart", this.waitApprovalChart(cri));				
 							//차트 결재 진행함 갯수
-							ssn.setAttribute("ingChart", this.apIngChart(db));
+							ssn.setAttribute("ingChart", this.apIngChart(cri));
 							//내가 보낸 결재수
-							ssn.setAttribute("myDraftChart", this.myDraftChart(db));
+							ssn.setAttribute("myDraftChart", this.myDraftChart(cri));
 							
 				
-							mav.addObject("docList", this.waitApprovalList(db));
-							mav.addObject("docList2", this.apIngList(db));
+							mav.addObject("docList", this.waitApprovalList(cri));
+							mav.addObject("docList2", this.apIngList(cri));
 						
 
 						
@@ -189,30 +190,30 @@ public class Authentication implements AuthentInter {
 		return size;
 	}
 	//결재진행함 수
-		public int apIngChart(DocumentBean db) {	
+		public int apIngChart(Criteria cri) {	
 			List <DocumentBean> docList;	
 			try {
-				db.setApId((String)ssn.getAttribute("userId"));	
+				cri.setSenderId((String)ssn.getAttribute("userId"));	
 			} catch (Exception e) {
 				e.printStackTrace();
 			}		
-			docList=sqlSession.selectList("approvalProcced",db);		
+			docList=sqlSession.selectList("approvalProcced",cri);		
 			int size = docList.size();
 			
 			return size;
 		}
 		
 		//내가보낸결재수
-		public int myDraftChart(DocumentBean db) {	
+		public int myDraftChart(Criteria cri) {	
 			List <DocumentBean> docList;	
 			List <DocumentBean> docList2;	
 			try {
-				db.setDmWriteId((String)ssn.getAttribute("userId"));	
+				cri.setSenderId((String)ssn.getAttribute("userId"));	
 			} catch (Exception e) {
 				e.printStackTrace();
 			}		
-			docList=sqlSession.selectList("myDraft",db);
-			docList2=sqlSession.selectList("myEnforceMent",db);	
+			docList=sqlSession.selectList("myDraft",cri);
+			docList2=sqlSession.selectList("myEnforceMent",cri);	
 			int size = docList.size()+docList2.size();
 			
 			return size;
@@ -238,14 +239,14 @@ public class Authentication implements AuthentInter {
 	
 	
 	//결제대기함의 문서들 최근꺼부터 5개만 메인에 표시
-	public List<DocumentBean> waitApprovalList(DocumentBean db) {	
+	public List<DocumentBean> waitApprovalList(Criteria cri) {	
 		List <DocumentBean> docList;	
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));	
+			cri.setSenderId((String)ssn.getAttribute("userId"));	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
-		docList=sqlSession.selectList("waitApproval",db);		
+		docList=sqlSession.selectList("waitApproval",cri);		
 
 		
 		return docList;
@@ -256,14 +257,14 @@ public class Authentication implements AuthentInter {
 	
 	
 	//결제진행함의 문서들 최근꺼부터 5개만 메인에 표시
-	public List<DocumentBean> apIngList(DocumentBean db) {	
+	public List<DocumentBean> apIngList(Criteria cri) {	
 		List <DocumentBean> docList;	
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));	
+			cri.setSenderId((String)ssn.getAttribute("userId"));	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
-		docList=sqlSession.selectList("approvalProcced",db);		
+		docList=sqlSession.selectList("approvalProcced",cri);		
 		
 		return docList;
 	}
@@ -559,23 +560,23 @@ public class Authentication implements AuthentInter {
 	}
 
 	public ModelAndView mHome(@ModelAttribute UserBean ub) {
-		DocumentBean db = new DocumentBean();
+		Criteria cri = new Criteria();
 		ModelAndView mav =new ModelAndView();
-		mav.setViewName("login/home");
+		
 		
 		try {
 
 			if(ssn.getAttribute("userId") != null) {
 			
-		  mav.addObject("docList", this.waitApprovalList(db));
-			mav.addObject("docList2", this.apIngList(db));
+		    mav.addObject("docList", this.waitApprovalList(cri));
+			mav.addObject("docList2", this.apIngList(cri));
 
 	
 			
 			if(((String)ssn.getAttribute("pwInitial")).equals("1")) {
 				
 		
-				mav.setViewName("login/main");
+			mav.setViewName("login/main");
 		//  애초에 pwinitial이 1이면 무조건 메인 페이지.   pwInitialCheck=null이라는건 비번 업뎃 안했다는 뜻. or pwinitial이 0
 			
 			}else if(((String)ssn.getAttribute("pwIntialCheck")==null) || ((String)ssn.getAttribute("pwIntial")).equals("0"))  {			
@@ -586,6 +587,7 @@ public class Authentication implements AuthentInter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		mav.setViewName("login/home");
 		return mav;
 	}
 
@@ -615,5 +617,10 @@ public class Authentication implements AuthentInter {
 			e.printStackTrace();
 		}
 		return browser;
+	}
+	@Override
+	public List<DocumentBean> waitApprovalList(DocumentBean db) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

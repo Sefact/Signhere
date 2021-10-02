@@ -93,6 +93,7 @@
 			<table class="table table-striped">
 				<thead>
 					<tr>
+						<th> # </th>
 						<th>문서번호</th>
 						<th>문서제목</th>
 						<th> &nbsp; 문서종류</th>
@@ -105,9 +106,7 @@
 				<tr>
 
 				<td><input class="docListRow" type="checkBox" value="${docList.dmNum}"></td>
-				<td><c:out value="${docList.dmNum }"/></td>
 				<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum }"/></a></td>
-
 				<td><c:out value="${docList.dmTitle }"/></td>
 				<td><c:out value="${docList.dmCode }"/></td>				
 				<td><c:out value="${docList.dmWriter }"/></td>

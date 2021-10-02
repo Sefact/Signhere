@@ -364,7 +364,7 @@ function dupUserIdCheck(){
 		if(!isValidateCheck(1,userId.value)){			
 			userId.value="";
 			userId.focus();
-			alert("ID가 조건에 맞지 않습니다.");				
+			alert("ID는 영문으로 시작 12자 이상이여야 합니다.");				
 		}
 			fetchAjax('/employeeDup','post',jsonData,dupUserIdCheck2);
 	}
@@ -421,10 +421,13 @@ function pwdValidate(obj){
 	let pwdMsg=document.getElementById("pwdMsg");	
 	if(charCount(obj.value,8,12)){
 		if(!isValidateCheck(2,obj.value)){
+			alert("비밀번호는 영소문자,대문자,숫자,특수문자를 3가지 이상 혼합하여야 합니다.");	
 			obj.value="";
-			obj.focus();
-			pwdMsg.innerText = "비밀번호는 영소문자,대문자,숫자,특수문자를 3가지 이상 혼합하여야 합니다.";	
-			//alert("비밀번호는 영소문자,대문자,숫자,특수문자를 3가지 이상 혼합해주세요.");		
+			
+			selTimeout(function(){
+				
+					obj.focus();
+			},2000);	
 		}else{
 			obj.readOnly=false;
 			pwdMsg.innerHTML="<span style='font-size:1.2em; color: green;'>사용가능한 비밀번호 입니다. </span>";
