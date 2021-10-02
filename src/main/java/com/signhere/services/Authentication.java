@@ -562,6 +562,7 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mHome(@ModelAttribute UserBean ub) {
 		Criteria cri = new Criteria();
 		ModelAndView mav =new ModelAndView();
+		mav.setViewName("login/home");
 		
 		
 		try {
@@ -587,7 +588,8 @@ public class Authentication implements AuthentInter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mav.setViewName("login/home");
+		mav.setViewName("login/main");
+		
 		return mav;
 	}
 

@@ -47,14 +47,14 @@ public class Document {
 	private DefaultTransactionDefinition def;
 	private TransactionStatus status;
 	
-	private String uploadPath = "C:\\Users\\H\\Documents\\Final\\Signhere\\git\\Signhere\\src\\main\\webapp\\resources\\img";
-	private String signPath = "C:\\Users\\H\\Documents\\Final\\Signhere\\git\\Signhere\\src\\main\\webapp\\resources\\img";
+	//private String uploadPath = "C:\\Users\\H\\Documents\\Final\\Signhere\\git\\Signhere\\src\\main\\webapp\\resources\\img";
+	//private String signPath = "C:\\Users\\H\\Documents\\Final\\Signhere\\git\\Signhere\\src\\main\\webapp\\resources\\img";
 	
 	//private String uploadPath = "C:\\Users\\Dongmin Geum\\git\\Signherev2\\Signhere\\src\\main\\webapp\\resources\\img";
 	//private String signPath = "C:\\Users\\Dongmin Geum\\git\\Signherev2\\Signhere\\src\\main\\webapp\\resources\\img";
 
-	//private String uploadPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
-	//private String signPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
+	private String uploadPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
+	private String signPath = "/Users/tagdaeyeong/git/Signhere/src/main/webapp/resources/img/";
 	
 	public List<DocumentBean> mSearchText(DocumentBean db){
 
@@ -307,9 +307,9 @@ public class Document {
 			try {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = multipartFile.getOriginalFilename();
-			//운영체제에 따라 슬러시 바꾸기
-				uploadPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
-				//uploadPath += (String)ssn.getAttribute("cmCode")+"/";
+				//운영체제에 따라 슬러시 바꾸기
+				//uploadPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
+				uploadPath += (String)ssn.getAttribute("cmCode")+"/";
 				String fileLoc = uploadPath + multipartFile.getOriginalFilename();
 				File tmpDir = new File(uploadPath);
 				File tmp = new File(uploadPath + fileName);
@@ -346,7 +346,8 @@ public class Document {
 				//String fileName = "" + generateFileName(multipartFile);
 				String fileName = ssn.getAttribute("userId") + ".png";
 				//
-				signPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
+				//signPath += "\\"+(String)ssn.getAttribute("cmCode")+"\\";
+				signPath += ""+(String)ssn.getAttribute("cmCode")+"/";
 				File tmpDir = new File(signPath);
 
 				String signLoc = signPath + fileName;
@@ -481,8 +482,11 @@ public class Document {
 	public ModelAndView apToDoList(Criteria cri) {		
 		mav = new ModelAndView();
 		
+		
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			ssn.setAttribute("Button", "approval");
+			ssn.setAttribute("Button2", "approval");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -493,17 +497,27 @@ public class Document {
 		
 		List<Map<String,Object>> waitList = sqlSession.selectList("waitApproval",cri);
 		
+	
+		
+	
+		
 		mav.setViewName("document/waitApproval");
 		mav.addObject("docList", waitList);
 		mav.addObject("pagination", pgn);
+		
+	
+		
 		
 		return mav;
 	}
 	
 	public ModelAndView apIngList(Criteria cri) {
 		mav = new ModelAndView();
+	
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			ssn.removeAttribute("Button");
+			ssn.removeAttribute("Button2");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -514,9 +528,13 @@ public class Document {
 		
 		List<Map<String,Object>> ingList = sqlSession.selectList("approvalProcced",cri);
 		
+		mav.addObject("Button","approval2");
+		
 		mav.setViewName("document/approvalProcced");
 		mav.addObject("docList", ingList);
 		mav.addObject("pagination", pgn);
+	
+		
 		
 		return mav;
 	}
@@ -525,6 +543,7 @@ public class Document {
 		mav = new ModelAndView();
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -567,6 +586,8 @@ public class Document {
 		mav = new ModelAndView();
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			ssn.setAttribute("Button", "approval");
+			ssn.removeAttribute("Button2");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -654,6 +675,8 @@ public class Document {
 		mav = new ModelAndView();
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			ssn.removeAttribute("Button");
+			ssn.removeAttribute("Button2");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -676,6 +699,8 @@ public class Document {
 		mav = new ModelAndView();
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			ssn.removeAttribute("Button");
+			ssn.removeAttribute("Button2");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -759,8 +784,8 @@ public class Document {
 			e.printStackTrace();
 		}
 		
-		int beginIndex = fileLoc.indexOf("\\img");
-		//int beginIndex = fileLoc.indexOf("/img");
+		//int beginIndex = fileLoc.indexOf("\\img");
+		int beginIndex = fileLoc.indexOf("/img");
 		int lastIndex = fileLoc.length();	
 		String fileLocResult=fileLoc.substring(beginIndex,lastIndex);
 		
@@ -775,8 +800,10 @@ public class Document {
 		//사인로케이션에 /img 부터의 경로를 저장하는 메소드
 		List<Map<String, Object>> signLocList = new ArrayList<Map<String, Object>>();
 		
-		int beginIndex2 = signList.get(0).getAplLocation().indexOf("\\img");
-		//int beginIndex2 = signList.get(0).getAplLocation().indexOf("/img");
+		//int beginIndex2 = signList.get(0).getAplLocation().indexOf("\\img");
+	
+		int beginIndex2 = signList.get(0).getAplLocation().indexOf("/img");
+	
 		for(int i=0; i<signList.size(); i++) {
 			Map<String, Object> signLocListPut = new HashMap<String, Object>();
 			if(signList.get(i).getAplLocation()!=null) {

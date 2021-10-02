@@ -85,7 +85,7 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12" id="docUploadForm">
-					<input type="button" id="docUpload" value="Submit" />
+					<input type="button" class="btn btn-primary"  id="docUpload" value="Submit" />
 				</div>
 			</div>
 			<div class="form-row">
@@ -121,7 +121,7 @@
 				<div class="form-group col-md-4">
 					<div id="signature-pad" class="m-signature-pad">
 				        <div class="m-signature-pad--body">
-				            <canvas id="signature-canvas"></canvas>
+				            <canvas id="signature-canvas" style="border: 2px solid black;"></canvas>
 				        </div>
 				        <div class="m-signature-pad--footer" id="signUpClear">
 				            <button type="button" id="signClear" class="btn btn-primary" data-action="clear">지우기</button>
