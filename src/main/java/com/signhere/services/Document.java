@@ -69,13 +69,12 @@ public class Document {
 		System.out.println("cmCode:" + db.getCmCode());
 		System.out.println("dmNum:" + db.getDmNum());
 		System.out.println("dmwriter:" + db.getDmWriter());
-		System.out.println("dmCode:" + db.getDmCode());
-		System.out.println("dmName:" + db.getDmName());
-		System.out.println("apcode:" + db.getApCode());
 		System.out.println("dmtitle:" + db.getDmTitle());
+		System.out.println("dmCode:" + db.getDmCode());
+		System.out.println("apcode:" + db.getApCode());
+		System.out.println("dmWriteID:" + db.getDmWriteId());		
 		System.out.println("dmdate:" + db.getDmDate());
 		System.out.println("dmdate2:" + db.getDmDate2());
-		System.out.println("dmWriteId:" + db.getDmWriteId());
 		
 		
 		
@@ -91,14 +90,36 @@ public class Document {
 			break;
 		case "C":
 			docList = sqlSession.selectList("searchCDocs", db);
+			break;
+		case "R":
+			docList = sqlSession.selectList("searchRDocs", db);
+			break;
+		case "D":
+			docList = sqlSession.selectList("searchDDocs", db);
+			break;
+		case "RF":
+			docList = sqlSession.selectList("searchRFDocs", db);
+			break;
+		case "RL":
+			docList = sqlSession.selectList("searchRLDocs", db);
+			break;
+		case "ML":
+			docList = sqlSession.selectList("searchMLDocs", db);
+			break;
+		default:
+			System.out.println("검색에러");
+			break;
 		}
 		
 		System.out.println(docList.toString());
+		System.out.println(docList.size());
 		
 		if(docList.size() == 0) {
 			db.setDmNumCheck("0");
 			docList.add(0, db);
 		}
+		
+		System.out.println(docList);
 		
 		return docList;
 	}

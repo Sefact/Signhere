@@ -88,6 +88,9 @@ function searchText(apCode,searchCode) {
 	if(dmCode == "선택"){
 		dmCode ="";
 	}
+	if(searchCode == "RF"){
+		const apCode = document.getElementById("apCode").value;
+	}
 	
 	console.log(dmCode);
 	

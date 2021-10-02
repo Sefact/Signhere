@@ -242,10 +242,10 @@
 		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
 		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
 		WHERE DM.COMPANY_CODE=#{cmCode} 
-        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%' 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
 		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
 		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
-		AND DM.DOCUMENT_CODE = #{dmCode} 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
 		AND APPROVAL_CODE = #{apCode}
 		AND AL.APPROVAL_ID = #{dmWriteId}
 		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
@@ -280,6 +280,32 @@
 		]]>
 	</select>
 	
+	<select id="searchRDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE = #{apCode}
+		AND AL.APPROVAL_ID = #{dmWriteId}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+	
 	<select id="countReturnedDocs" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
@@ -308,6 +334,32 @@
 		]]>
 	</select>
 	
+	<select id="searchDDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE = #{apCode}
+		AND AL.APPROVAL_ID = #{dmWriteId}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+	
 	<select id="countdeferredDocs" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
@@ -333,6 +385,32 @@
         		WHERE DM.APPROVAL_CODE = 'D' AND AL.APPROVAL_ID = #{senderId} 
 				AND ROWNUM <= #{page} * #{perPageNum}) 
 				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchRFDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        INNER JOIN RF ON DM.DOCUMENT_NUM = RF.DOCUMENT_NUM
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE LIKE '%'|| #{apCode} ||'%' 
+		AND RF.REFERENCE_ID = #{dmWriteId}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
 		]]>
 	</select>
 
@@ -365,6 +443,29 @@
 		]]>
 	</select>
 	
+	<select id="searchRLDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT RL.DOCUMENT_NUM AS dmNum,
+		RL.DOCUMENT_NUM AS "dmNum",
+        RL.DOCUMENT_TITLE AS "dmTitle",
+        DS.DOCUMENT_TITLE AS "dmCode",
+        RL.COMPANY_CODE AS "sentCmCode",
+		CM.COMPANY_NAME AS "cmName",
+        DOCUMENT_DATE AS "dmDate",
+		MM.NAME AS "writer" 
+		FROM RL 
+		INNER JOIN DS ON RL.DOCUMENT_TYPE = DS.DOCUMENT_CODE
+        INNER JOIN CM ON RL.COMPANY_CODE = CM.COMPANY_CODE 
+		INNER JOIN MM ON RL.COMPANY_CODE = MM.COMPANY_CODE AND RL.WRITER=MM.ID
+		WHERE 
+        RL.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND RL.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%'  
+		AND RL.RECEIVE_COMPANY = #{cmCode}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+	
 	<select id="countReceiveDocs" resultType="Integer">
 		SELECT COUNT(*) 
 		FROM RL 
@@ -387,10 +488,34 @@
         		FROM RL 
         		INNER JOIN DS ON RL.DOCUMENT_TYPE = DS.DOCUMENT_CODE
         		INNER JOIN CM ON RL.COMPANY_CODE = CM.COMPANY_CODE 
-				INNER JOIN MM ON RL.WRITER = MM.ID
+				INNER JOIN MM ON RL.COMPANY_CODE = MM.COMPANY_CODE AND RL.WRITER=MM.ID
         		WHERE RL.RECEIVE_COMPANY = #{senderId}      
 				AND ROWNUM <= #{page} * #{perPageNum}) 
 				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchMLDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT  
+		DM.DOCUMENT_NUM AS "dmNum",
+        DM.DOCUMENT_TITLE AS "dmTitle",
+        DS.DOCUMENT_TITLE AS "dmCode",
+        MM.NAME AS "dmWriter",
+        DOCUMENT_DATE AS "dmDate",
+		ROWNUM AS RNUM 
+        FROM DM 
+        INNER JOIN PL ON dm.document_num = pl.document_num
+        INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER = MM.ID
+        INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE LIKE '%'|| #{apCode} ||'%' 
+        AND PL.ID = #{dmWriteId}   
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD')
 		]]>
 	</select>
 	

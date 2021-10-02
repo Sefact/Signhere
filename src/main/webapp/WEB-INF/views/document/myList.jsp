@@ -10,6 +10,7 @@
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
+	<script src="/resources/js/document/searchAndList.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
 	<!-- Jquery Core JS -->
@@ -40,7 +41,7 @@
 				<label for="inputDocumentNum">제목</label>
 			</div>
 			<div class="form-group col-md-11">
-				 <input type="text" class="form-control" name="dmTitle" placeholder="제목">
+				 <input type="text" class="form-control" id="dmTitle" name="dmTitle" placeholder="제목">
 			</div>
 		</div>
 		<div class="form-row">
@@ -48,7 +49,7 @@
 				<label for="inputDocumentNum">문서상태</label>
 			</div>
 			<div class="form-group col-md-5">
-				<select name="apCode"
+				<select name="apCode" id="apCode"
 					class="form-control">
 					<option>선택</option>
 					<option value="P">진행</option>
@@ -62,7 +63,7 @@
 				<label for="inputDocumentNum">문서종류</label>
 			</div>
 			<div class="form-group col-md-5">
-				<select name="dmCode"
+				<select name="dmCode" id="dmCode"
 					class="form-control">
 					<option>선택</option>
 					<option value="D">기안</option>
@@ -81,7 +82,7 @@
 				<input type="date" class="form-control" name="dmDate"/>
 			</div>
 			<div class="form-group col-md-1">
-				<input type="button" class="btn btn-primary" value="Search" onClick="sampleFunction()"/>
+				<input type="button" class="btn btn-primary" value="Search" onClick="searchText('','ML')"/>
 			</div>
 		</div>
 		

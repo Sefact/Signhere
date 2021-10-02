@@ -8,7 +8,8 @@
    
    <!-- Resources JS -->
    <script src="/resources/js/login/main.js"></script>
-   <script src="/resources/js/admin/aplistAdmin.js"></script>
+   <script src="/resources/js/admin/searchAndList.js"></script>
+   <script src="/resources/js/document/searchAndList.js"></script>
    <!-- Bootstrap core CSS -->
    <link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
    <!-- Jquery Core JS -->
@@ -40,7 +41,7 @@
 				<label for="inputDocumentNum">제목</label>
 			</div>
 			<div class="form-group col-md-11">
-				 <input type="text" class="form-control" name="dmTitle" placeholder="제목">
+				 <input type="text" class="form-control" id="dmTitle" name="dmTitle" placeholder="제목">
 			</div>
 		</div>
 		<div class="form-row">
@@ -99,9 +100,7 @@
 				<tr>
 
 				<td><input class="docListRow" type="checkBox" value="${docList.dmNum}"></td>
-				<td><c:out value="${docList.dmNum }"/></td>
 				<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum }"/></a></td>
-
 				<td><c:out value="${docList.dmTitle }"/></td>
 				<td><c:out value="${docList.dmCode }"/></td>				
 				<td><c:out value="${docList.dmWriter }"/></td>
@@ -130,6 +129,7 @@
 		</ul>
 	</div>
 </body>
+
 <script>
 function addToMyList(){
 	let docList = document.querySelectorAll(".docListRow");
