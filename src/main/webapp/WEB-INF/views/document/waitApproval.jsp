@@ -102,15 +102,17 @@
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach var="docList" items="${docList}">
-						<tr class = "waitDocListRow" id="${docList.dmNum }" onClick="showDocDetail(${docList.dmNum })">
-							<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}" /></a></td>
-							<td><c:out value="${docList.dmTitle }" /></td>
-							<td><c:out value="${docList.dmCode }" /></td>
-							<td><c:out value="${docList.dmWriter }" /></td>
-							<td><c:out value="${docList.dmDate }" /></td>
-						</tr>
-					</c:forEach>
+
+			<c:forEach var="docList" items="${docList}">
+				<tr>			
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}" /></a></td>
+					<td><c:out value="${docList.dmTitle}"/></td>
+					<td><c:out value="${docList.dmCode}"/></td>				
+					<td><c:out value="${docList.dmWriter}"/></td>
+					<td><c:out value="${docList.dmDate}"/></td>
+				</tr>
+			</c:forEach>	
+
 				</tbody>
 			</table>
 		</div>
