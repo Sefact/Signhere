@@ -32,8 +32,8 @@
 				<!-- Authentication.java 130번째줄 참조. -->
 			<c:forEach var="docList" items="${docList}">
 				<tr>
-					<td><c:out value="${docList.dmNum }"/></td>
-					<td><c:out value="${docList.dmTitle }"/></td>
+					<td><<c:out value="${docList.dmNum}" /></td>
+					<td><c:out value="${docList.dmTitle}"/></td>
 					<td><c:out value="${docList.dmCode }"/></td>				
 					<td><c:out value="${docList.dmWriter }"/></td>
 					<td><c:out value="${docList.dmDate }"/></td>
@@ -59,8 +59,8 @@
 				<tbody>
 			<c:forEach var="docList2" items="${docList2}">
 				<tr>
-					<td><c:out value="${docList2.dmNum }"/></td>
-					<td><c:out value="${docList2.dmTitle }"/></td>
+					<td><c:out value="${docList2.dmNum}" /></td>
+					<td><c:out value="${docList2.dmTitle}"/></td>
 					<td><c:out value="${docList2.dmCode }"/></td>				
 					<td><c:out value="${docList2.dmWriter }"/></td>
 					<td><c:out value="${docList2.dmDate }"/></td>
