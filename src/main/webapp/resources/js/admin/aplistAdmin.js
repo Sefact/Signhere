@@ -50,9 +50,12 @@ function requestAddNewEmp(){
 	
 	const jsonData = {userId:userId,userName:userName,grCode:grCode,dpCode:dpCode};
 	
+	if(newIdCheck==1){
+		alert("사원아이디가 중복됩니다 체크해주세요.");
+		
+	}
 	
-	
-	fetchAjax('/addEmployee','post',jsonData,afterAddEmp);
+	else{fetchAjax('/addEmployee','post',jsonData,afterAddEmp);}
 }
 
 function afterAddEmp(data){

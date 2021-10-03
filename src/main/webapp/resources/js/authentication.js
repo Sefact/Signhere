@@ -5,6 +5,8 @@ var dupCmCheck;
 var userIdCheck;
 var userMailCheck;
 
+var newIdCheck;
+
 
 function fetchAjax(action,method,data,afterFunction){
 fetch(action,{
@@ -472,31 +474,41 @@ function userIdNewDupCheck(){
 	
 	const userId=document.getElementsByName("userIdNew")[0];
 	
+	
 	data={userId:userId.value};
 	
-fetchAjax('/employeeDup','post',data,userIdNewDupCheck2);
+	fetchAjax('/employeeDup','post',data,userIdNewDupCheck2);
+
 
 }
 
 function userIdNewDupCheck2(data){
+
 	data = JSON.parse(data);
+
 	
 	const userId=document.getElementsByName("userIdNew")[0];
 	
+	
+	
 	if(data.message=="사용불가"){
-		alert("이미 존재하는 ID입니다.")
-		userId.value="";
-		userid.focus();
-	;
+		alert("이미 존재하는 아이디입니다.")
+		userId.value="";		
+	 	setTimeout(function(){
+		serId.focus();
+		 },1000);
+		newIdCheck="1";
+		
+	}else if(data.message=="사용가능"){
+		alert("사용가능한 아이디입니다");
+	
+		
+		
 	}
 	
+	
+	
 }
-
-
-
-
-
-
 
 
 
