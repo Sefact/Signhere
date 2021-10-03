@@ -138,8 +138,7 @@ public class Document {
 			ogDocMapPut.put("aplId", db.getAplBean().get(i).getAplId());
 			ogDocMapPut.put("aplName", db.getAplBean().get(i).getAplName());
 			ogDocMap.add(ogDocMapPut);
-		}
-		
+		}		
 		try {
 			ssn.setAttribute("ogAplMap", ogAplMap);
 			ssn.setAttribute("ogDocMap", ogDocMap);
