@@ -27,7 +27,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.ApprovalCommentBean;
-import com.signhere.beans.CompanionDeferBean;
+import com.signhere.beans.CompanionBean;
+import com.signhere.beans.DeferBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.UserBean;
 import com.signhere.beans.WriteBean;
@@ -95,17 +96,43 @@ public class DraftController {
 	
 	//documentBox에서 보류버튼
 	@GetMapping("/companionDraft")
-	private ModelAndView companionDraft(@ModelAttribute DocumentBean db, @ModelAttribute CompanionDeferBean cdb) {
+	private ModelAndView companionDraft(@ModelAttribute DocumentBean db, @ModelAttribute CompanionBean cb) {
 			
 		ModelAndView mav =new ModelAndView();
+		
 			try {
+				
 				db.setDmNum((String)ssn.getAttribute("dmNum"));
 			} catch (Exception e) {
 			
 				e.printStackTrace();
 			}
 			
-		doc.confirmCompanion(db,cdb);
+			System.out.println("니"+cb.getCpContents());
+		doc.confirmCompanion(db,cb);
+		
+		mav.setViewName("document/companionApproval");
+		
+		return mav;
+	}
+	
+	
+	//documentBox에서 보류버튼
+	@GetMapping("/deferDraft")
+	private ModelAndView dferDraft(@ModelAttribute DocumentBean db, @ModelAttribute DeferBean deb) {
+			
+		ModelAndView mav =new ModelAndView();
+		
+			try {
+				
+				db.setDmNum((String)ssn.getAttribute("dmNum"));
+			} catch (Exception e) {
+			
+				e.printStackTrace();
+			}
+			
+			System.out.println("니"+deb.getCpContents());
+		doc.confirmDefer(db,deb);
 		
 		mav.setViewName("document/companionApproval");
 		
@@ -125,9 +152,7 @@ public class DraftController {
 	@ResponseBody
 	public List<DocumentBean> modifyDraft(@RequestBody List<DocumentBean> dlist) {
 		List<DocumentBean> tempList;
-		
-		System.out.println(dlist.get(0));
-		
+				
 		tempList = doc.mModifyDraft(dlist.get(0));
 		
 		return tempList;
@@ -238,5 +263,16 @@ public class DraftController {
 		writeList = doc.mRequestDraft(wlist.get(0));
 		
 		return writeList;
+	}
+	
+	@RequestMapping(value="/draftTest")
+	public ModelAndView draftTest(DocumentBean db) throws Exception {
+		mav = new ModelAndView();
+		
+		System.out.println(db);
+		
+		mav.setViewName("home");
+		
+		return mav;
 	}
 }

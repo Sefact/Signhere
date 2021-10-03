@@ -18,7 +18,8 @@
 	
 </head>
 <body>  
-<div id="findMessage"> ${message}</div> 
+<br><br><br>
+<div id="findMessage" style="font-size:1.4em; color: red; text-align:center;"> ${message}</div> 
     <div class="login-form">
         <h2 class="text-center">Login</h2>   
         <div class="form-group has-error">

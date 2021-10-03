@@ -19,12 +19,14 @@
 	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 	<!-- Resources CSS -->
 	<link href="/resources/css/login/main.css" rel="stylesheet">
+	<link href="/resources/css/login/login.css" rel="stylesheet">
 </head>
 <body>
 	<body>   
     <div class="login-form">
         <h2 class="text-center">Sign Here</h2>   
-        <input type="button" onClick="logOut()">Logout
+        <h2 class="text-center">내정보수정</h2>   
+ 
   
 		<div class="form-group">
             <input type="text" class="form-control" name="cmName" placeholder="회사이름" value="${sessionScope.cmName}" disabled>
@@ -55,8 +57,9 @@
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="requestNewInfo()">확인</button>
         </div>
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="cancelNewInfo()">취소</button>
+            <a href="/"><button type="submit" class="btn btn-primary btn-lg btn-block" onClick="cancelNewInfo()">취소</button></a>
         </div>
+         <button type="submit" class="btn btn-primary btn-deafult btn-block" onClick="logOut()" value="로그아웃">Logout</button>
 	</div>
 
 </body>

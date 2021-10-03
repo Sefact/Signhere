@@ -18,14 +18,12 @@
             <li><a id="modalOrgChart" href="#">조직도</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a onClick="myInfoAccess()">My Info</a></li>
-            <li><a onClick="logOut()">Logout</a></li>
+           
+       
+            <li><a onClick="myInfoAccess()">내 정보</a></li>
+            <li><a onClick="logOut()">로그아웃</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
+
         </div>
       </div>
     </nav>
@@ -37,6 +35,7 @@
 				<li class="active"><a id="approvalModal" href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
 			</ul>
 			<ul class="nav nav-sidebar"> 
+
 				<li id="sent"><a class="sideTab" onclick="changePage('myDraft','post')">내가보낸 기안문</a></li>
             	<li><a class="sideTab" onclick="myEnforceMent();">내가보낸 시행문</a></li>
 			</ul>
@@ -50,12 +49,14 @@
             <li><a class="sideTab" onclick="receiveNotice();">공문 수신함</a></li>
             <li><a class="sideTab" onclick="myList();">개인 보관함</a></li>
 			<li><a class="sideTab" onclick="setEntrust();">위임권 관리</a></li>
+
 		</ul>
     
 		<c:if test="${sessionScope.admin eq 'Y'}">
 	    <ul class="nav nav-sidebar">
 			<li><a class="sideTab" onclick="admin();">직원 관리</a></li>
 			<li><a class="sideTab" onclick="apListAdmin();">결재문서 관리</a></li>
+
 		</ul>
 	    </c:if>
         </div>

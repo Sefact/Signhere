@@ -78,7 +78,7 @@
 
 	</form>
 	<input id="updatedList" style="display: none;" value="${docList}" />
-	<h2 class="sub-header">문서리스트</h2>
+	<h2 class="sub-header">문서 목록</h2>
 	<input type="button" class="btn btn-primary" value="Delete"
 		onClick="deleteDoc()" />
 	<div class="table-responsive">
