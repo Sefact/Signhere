@@ -210,7 +210,7 @@
 						<td><c:out value="${cpCommentList.cpDate }"/></td>
 						</tr>	
 				</c:forEach>				
-						
+									
 				</tbody>
 				</table>
 				
