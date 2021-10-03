@@ -10,7 +10,7 @@
 	<div class="row placeholders col-sm-10">
 	
 	
-		<canvas id="myChart" ></canvas>
+		<canvas id="myChart"> </canvas>
 	
 
 	</div>
@@ -32,7 +32,7 @@
 				<!-- Authentication.java 130번째줄 참조. -->
 			<c:forEach var="docList" items="${docList}">
 				<tr>
-					<td><<c:out value="${docList.dmNum}" /></td>
+					<td><c:out value="${docList.dmNum}" /></td>
 					<td><c:out value="${docList.dmTitle}"/></td>
 					<td><c:out value="${docList.dmCode }"/></td>				
 					<td><c:out value="${docList.dmWriter }"/></td>

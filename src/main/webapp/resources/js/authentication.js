@@ -501,12 +501,7 @@ function userIdNewDupCheck2(data){
 		
 	}else if(data.message=="사용가능"){
 		alert("사용가능한 아이디입니다");
-	
-		
-		
 	}
-	
-	
 	
 }
 

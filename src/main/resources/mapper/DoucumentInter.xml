@@ -510,7 +510,9 @@
 	
 		
 	<insert id ="insertApprovalComment" parameterType="ApprovalCommentBean">
-		INSERT INTO AC VALUES (#{dmNum},#{acContents},#{acId},SYSDATE)
+		INSERT INTO AC VALUES (#{dmNum},#{acContents},#{acId}, SYSDATE)
+
+
 	</insert>
 	
 	

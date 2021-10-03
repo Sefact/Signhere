@@ -14,6 +14,6 @@ public class CompanionBean {
 	private String cpContents;
 	private String cpId;
 	private String cpName;
-	private Date cpDate;
+	private String cpDate;
 
 }

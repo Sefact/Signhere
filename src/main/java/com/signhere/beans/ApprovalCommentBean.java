@@ -13,5 +13,5 @@ public class ApprovalCommentBean {
 	private String acContents;
 	private String acId;
 	private String acName;
-	private Date acDate;
+	private String acDate;
 }

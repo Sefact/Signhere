@@ -543,6 +543,8 @@ public class Document {
 		mav = new ModelAndView();
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			ssn.removeAttribute("Button");
+			ssn.removeAttribute("Button2");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -565,6 +567,8 @@ public class Document {
 		mav = new ModelAndView();
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			ssn.removeAttribute("Button");
+			ssn.removeAttribute("Button2");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -608,6 +612,8 @@ public class Document {
 		mav = new ModelAndView();
 		try {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
+			ssn.removeAttribute("Button");
+			ssn.removeAttribute("Button2");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
