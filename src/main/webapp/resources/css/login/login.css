@@ -31,12 +31,12 @@
 .login-form .btn {        
 	font-size: 16px;
 	font-weight: bold;
-	background: #fee9e0;
+	background: #2DB400;
 	border: none;
 	outline: none !important;
 }
 .login-form .btn:hover, .login-form .btn:focus {
-	background: #fee9e0;
+	background: #2DB400;
 }
 .login-form a {
 	color: #fff;

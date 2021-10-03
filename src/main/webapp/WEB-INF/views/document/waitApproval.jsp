@@ -134,7 +134,6 @@
 				    </c:if>
 		</ul>
 	</div>
-<jsp:include page="../utils/navigation.jsp" />
 </body>
 <script src="/resources/js/document/searchAndList.js"></script>
 </html>

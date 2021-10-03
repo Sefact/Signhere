@@ -573,7 +573,6 @@ public class Authentication implements AuthentInter {
 			mav.addObject("docList2", this.apIngList(cri));
 
 	
-			
 			if(((String)ssn.getAttribute("pwInitial")).equals("1")) {
 				
 		

@@ -32,8 +32,8 @@
 				<!-- Authentication.java 130번째줄 참조. -->
 			<c:forEach var="docList" items="${docList}">
 				<tr>
-					<td><c:out value="${docList.dmNum}" /></td>
-					<td><c:out value="${docList.dmTitle}"/></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}" /></a></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmTitle}"/></a></td>
 					<td><c:out value="${docList.dmCode }"/></td>				
 					<td><c:out value="${docList.dmWriter }"/></td>
 					<td><c:out value="${docList.dmDate }"/></td>
@@ -59,8 +59,8 @@
 				<tbody>
 			<c:forEach var="docList2" items="${docList2}">
 				<tr>
-					<td><c:out value="${docList2.dmNum}" /></td>
-					<td><c:out value="${docList2.dmTitle}"/></td>
+					<td><a href="/documentBox?dmNumCheck=${docList2.dmNum}" ><c:out value="${docList2.dmNum}" /></a></td>
+					<td><a href="/documentBox?dmNumCheck=${docList2.dmNum}" ><c:out value="${docList2.dmTitle}"/></a></td>
 					<td><c:out value="${docList2.dmCode }"/></td>				
 					<td><c:out value="${docList2.dmWriter }"/></td>
 					<td><c:out value="${docList2.dmDate }"/></td>
@@ -87,14 +87,14 @@ var chart = new Chart(ctx, {
 	data : {
 		labels : [ '처리해야 할 결재', '내가 보낸 결재', '진행중인 결재' ],
 		datasets : [ {
-			label : 'chart1',
+			label : '결재차트',
 			data : [ ${sessionScope.waitChart}, ${sessionScope.myDraftChart}, ${sessionScope.ingChart} ],
 			backgroundColor : [ 'rgb(255, 99, 132)', 'rgb(54, 162, 235)',
 					'rgb(255, 205, 86)' ],
 			hoverOffset : 4
 			
 		} ]
-	}
+	},
 }); 
 
 

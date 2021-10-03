@@ -85,7 +85,7 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12" id="docUploadForm">
-					<input type="button" class="btn btn-primary"  id="docUpload" value="Submit" />
+					<input type="button" class="btn btn-primary"  id="docUpload" value="저장" />
 				</div>
 			</div>
 			<div class="form-row">
@@ -717,7 +717,7 @@
 					console.log(data.result);
 					
 					var delHtml = "";
-					delHtml += "<input type='button' data-src="+ data.result +" id='docDelete' value='Delete'/>";
+					delHtml += "<input type='button'  class='btn btn-primary' data-src="+ data.result +" id='docDelete' value='지우기'/>";
 					
 					if($("#docDelete").length > 0) {
 						console.log("Delete Button already");
@@ -749,7 +749,7 @@
 				$("#imgPreview").attr("src", "");
 				
 				var uploadHtml = "";
-				uploadHtml += "<input type='button' id='docUpload' value='Submit' />";
+				uploadHtml += "<input type='button'  class='btn btn-primary'  id='docUpload' value='저장' />";
 				
 				$('#docUploadForm').html(uploadHtml);
 				

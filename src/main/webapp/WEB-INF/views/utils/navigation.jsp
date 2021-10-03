@@ -18,14 +18,12 @@
             <li><a id="modalOrgChart" href="#">조직도</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a onClick="myInfoAccess()">My Info</a></li>
-            <li><a onClick="logOut()">Logout</a></li>
+           
+       
+            <li><a onClick="myInfoAccess()">내 정보</a></li>
+            <li><a onClick="logOut()">로그아웃</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
+
         </div>
       </div>
     </nav>
