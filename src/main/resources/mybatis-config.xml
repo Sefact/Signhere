@@ -13,6 +13,8 @@
 		<typeAlias type="com.signhere.beans.ReadingReferenceBean" alias="ReadingReferenceBean"/>
 		<typeAlias type="com.signhere.beans.ApprovalBean" alias="ApprovalBean"/>
 		<typeAlias type="com.signhere.beans.ApprovalCommentBean" alias="ApprovalCommentBean"/>
+		<typeAlias type="com.signhere.beans.CompanionBean" alias="CompanionBean"/>
+		<typeAlias type="com.signhere.beans.DeferBean" alias="DeferBean"/>
 		<typeAlias type="com.signhere.beans.CompanionDeferBean" alias="CompanionDeferBean"/>
 		
 		
