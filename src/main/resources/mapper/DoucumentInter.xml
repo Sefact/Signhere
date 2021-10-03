@@ -26,7 +26,7 @@
 	</select>
 
 	
-	<select id="adminSearchDocs">
+	<select id="adminSearchDocs" parameterType="DocumentBean" resultType="DocumentBean">
 		SELECT DM.DOCUMENT_NUM AS dmNum,
 		DM.COMPANY_CODE AS cmCode,
 		DM.DOCUMENT_TITLE AS dmTitle,

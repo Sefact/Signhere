@@ -103,7 +103,7 @@
 						
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="docListBody">
 			<c:forEach var="docList" items="${docList}">
 				<tr>
 					<td><c:out value="${docList.dmNum }"/></td>

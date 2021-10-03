@@ -103,7 +103,7 @@
 						<th>날짜</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="docListBody">
 			<c:forEach var="docList" items="${docList}">
 				<tr>
 					<td><input type="checkBox" class="docListRow" value="${docList.dmNum }"  /></td>
