@@ -35,25 +35,28 @@
 				<li class="active"><a id="approvalModal" href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
 			</ul>
 			<ul class="nav nav-sidebar"> 
-				<li id="sent"><a onclick="changePage('myDraft','post')">내가 보낸 기안문</a></li>
-            	<li><a onclick="myEnforceMent();">내가 보낸 시행문</a></li>
+
+				<li id="sent"><a class="sideTab" onclick="changePage('myDraft','post')">내가보낸 기안문</a></li>
+            	<li><a class="sideTab" onclick="myEnforceMent();">내가보낸 시행문</a></li>
 			</ul>
 		<ul class="nav nav-sidebar">
-            <li><a onclick="waitApproval();">결재 대기함</a></li>
-            <li><a onclick="approvalProcced();">결재 진행함</a></li>
-            <li><a onclick="completeApproval();">완료 문서함</a></li>
-            <li><a onclick="companionApproval();">반려 문서함</a></li>
-            <li><a onclick="deferList();">보류 문서함</a></li>
-            <li><a onclick="referenceApproval();">참조 문서함</a></li>
-            <li><a onclick="receiveNotice();">공문 수신함</a></li>
-            <li><a onclick="myList();">개인 보관함</a></li>
-			<li><a onclick="setEntrust();">위임권 관리</a></li>
+            <li><a class="sideTab" onclick="waitApproval();">결재 대기함</a></li>
+            <li><a class="sideTab" onclick="approvalProcced();">결재 진행함</a></li>
+            <li><a class="sideTab" onclick="completeApproval();">완료 문서함</a></li>
+            <li><a class="sideTab" onclick="companionApproval();">반려 문서함</a></li>
+            <li><a class="sideTab" onclick="deferList();">보류 문서함</a></li>
+            <li><a class="sideTab" onclick="referenceApproval();">참조열람 문서함</a></li>
+            <li><a class="sideTab" onclick="receiveNotice();">공문 수신함</a></li>
+            <li><a class="sideTab" onclick="myList();">개인 보관함</a></li>
+			<li><a class="sideTab" onclick="setEntrust();">위임권 관리</a></li>
+
 		</ul>
     
 		<c:if test="${sessionScope.admin eq 'Y'}">
 	    <ul class="nav nav-sidebar">
-			<li><a onclick="admin();">직원 관리</a></li>
-			<li><a onclick="apListAdmin();">결재문서 관리</a></li>
+			<li><a class="sideTab" onclick="admin();">직원 관리</a></li>
+			<li><a class="sideTab" onclick="apListAdmin();">결재문서 관리</a></li>
+
 		</ul>
 	    </c:if>
         </div>
@@ -679,4 +682,69 @@
 			})
 		})
 	});
+	</script>
+	
+	<script>
+	const navFontColorOnActive = "white";
+	const backgroundColor = "#2DB400";
+	
+	function changeNavColor(){
+		const pageName = document.querySelector("title").innerHTML;
+		const tabs = document.querySelectorAll(".sideTab");
+		
+		
+		console.dir(tabs);
+		
+		switch(pageName){
+		case "myDraft":
+			changeCol(tabs[0]);
+			break;
+		case "myEnforceMent":
+			changeCol(tabs[1]);
+			break;
+		case "WaitApproval":
+			changeCol(tabs[2]);
+			break;
+		case "approval Proceed":
+			changeCol(tabs[3]);
+			break;
+		case "결재완료함":
+			changeCol(tabs[4]);
+			break;
+		case "Companion Approval":
+			changeCol(tabs[5]);
+			break;
+		case "DeferList":
+			changeCol(tabs[6]);
+			break;
+		case "Reference Approval":
+			changeCol(tabs[7]);
+			break;
+		case "ReceiveNotice":
+			changeCol(tabs[8]);
+			break;
+		case "MyList":
+			changeCol(tabs[9]);
+			break;
+		case "SetEntrust":
+			changeCol(tabs[10]);
+			break;
+		case "Admin":
+			changeCol(tabs[11]);
+			break;
+		case "apListAdmin":
+			changeCol(tabs[12]);
+			break;
+		default:
+			console.log("error Tab: " + pageName);
+		}
+	}
+	
+	function changeCol(active){
+		active.style.color= navFontColorOnActive;
+		active.style.backgroundColor=backgroundColor;
+	}
+
+	changeNavColor();
+
 	</script>

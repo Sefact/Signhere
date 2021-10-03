@@ -562,17 +562,20 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mHome(@ModelAttribute UserBean ub) {
 		Criteria cri = new Criteria();
 		ModelAndView mav =new ModelAndView();
+
 		mav.setViewName("login/home");
+
 		
 		
 		try {
 
 			if(ssn.getAttribute("userId") != null) {
+
 			
 		    mav.addObject("docList", this.waitApprovalList(cri));
 			mav.addObject("docList2", this.apIngList(cri));
 
-	
+
 			if(((String)ssn.getAttribute("pwInitial")).equals("1")) {
 				
 		
@@ -587,8 +590,10 @@ public class Authentication implements AuthentInter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		mav.setViewName("login/main");
 		
+
 		return mav;
 	}
 

@@ -1,4 +1,3 @@
-
 function fetchAjax(action,method,data,afterFunction){
 fetch(action,{
 		method:method,
@@ -75,4 +74,61 @@ function handleDelMyList(data){
 	JSON.parse(data);
 	console.log(data);
 	location.reload();
+}
+
+function searchText(apCode,searchCode) {
+	
+	const dmNum = document.getElementsByName("dmNum")[0].value;
+	const dmTitle = document.getElementById("dmTitle").value;
+	let dmWriter = "";
+	let dmCode = document.getElementById("dmCode").value;
+	const dmDate = document.getElementsByName("dmDate")[0].value;
+	const dmDate2 = document.getElementsByName("dmDate")[1].value;
+	
+	if(dmCode == "선택"){
+		dmCode ="";
+	}
+	if(searchCode == "RF"){
+		const apCode = document.getElementById("apCode").value;
+	}
+	
+	console.log(dmCode);
+	
+	let searchParams ={
+			dmNum : dmNum,
+			dmTitle : dmTitle,
+			dmWriter : dmWriter,
+			searchCode : searchCode,
+			apCode : apCode,
+			dmCode : dmCode,
+			dmDate : dmDate,
+			dmDate2 : dmDate2}
+			
+		fetchAjax('searchText','post',searchParams,handleSearch);
+	
+}
+
+function handleSearch(data){
+	let docList = JSON.parse(data);
+	
+	docListBody = document.querySelector("#docListBody");
+	docListBody.innerHTML="";
+	let tr = ``;
+	if(docList[0].dmNumCheck != "0"){
+		for(i=0; i<docList.length; i++){
+		
+		tr += `<tr>
+					<td><a href="/documentBox?dmNumCheck=${docList[i].dmNum}" >${docList[i].dmNum}</td>
+					<td>${docList[i].dmTitle}</td>
+					<td>${docList[i].dmName}</td>
+					<td>${docList[i].dmWriter}</td>
+					<td>${docList[i].dmDate}</td>
+				</tr>`
+		}
+	}else{
+		tr += `<tr></tr>`
+		alert(`해당문서는 존재하지 않습니다.`);
+	}
+	
+	docListBody.innerHTML = tr;
 }

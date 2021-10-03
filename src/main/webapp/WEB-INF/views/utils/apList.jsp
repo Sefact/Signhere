@@ -72,7 +72,7 @@
 			</div>
 			<div class="form-group col-md-1">
 				<input type="button" class="btn btn-primary" value="Search"
-					onClick="searchText()" />
+					onClick="adminSearchText()" />
 			</div>
 		</div>
 
