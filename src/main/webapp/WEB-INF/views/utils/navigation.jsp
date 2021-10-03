@@ -18,14 +18,12 @@
             <li><a id="modalOrgChart" href="#">조직도</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a onClick="myInfoAccess()">My Info</a></li>
-            <li><a onClick="logOut()">Logout</a></li>
+           
+       
+            <li><a onClick="myInfoAccess()">내 정보</a></li>
+            <li><a onClick="logOut()">로그아웃</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
+
         </div>
       </div>
     </nav>
@@ -39,19 +37,19 @@
 				</li>
 			</ul>
 			<ul class="nav nav-sidebar"> 
-				<li class="nav-item" id="sent"><a class="nav-link" onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
-            	<li class="nav-item"><a class="nav-link" onclick="myEnforceMent();">내가보낸 시행문</a></li>
+				<li id="sent"><a onclick="changePage('myDraft','post')">내가 보낸 기안문</a></li>
+            	<li><a onclick="myEnforceMent();">내가 보낸 시행문</a></li>
 			</ul>
 		<ul class="nav nav-sidebar">
-            <li class="nav-item"><a class="nav-link" onclick="waitApproval();">결재 대기함</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="approvalProcced();">결재 진행함</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="completeApproval();">완료 문서함</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="companionApproval();">반려 문서함</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="deferList();">보류 문서함</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="referenceApproval();">참조열람 문서함</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="receiveNotice();">공문 수신함</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="myList();">개인 보관함</a></li>
-			<li class="nav-item"><a class="nav-link" onclick="setEntrust();">위임권 관리</a></li>
+            <li><a onclick="waitApproval();">결재 대기함</a></li>
+            <li><a onclick="approvalProcced();">결재 진행함</a></li>
+            <li><a onclick="completeApproval();">완료 문서함</a></li>
+            <li><a onclick="companionApproval();">반려 문서함</a></li>
+            <li><a onclick="deferList();">보류 문서함</a></li>
+            <li><a onclick="referenceApproval();">참조 문서함</a></li>
+            <li><a onclick="receiveNotice();">공문 수신함</a></li>
+            <li><a onclick="myList();">개인 보관함</a></li>
+			<li><a onclick="setEntrust();">위임권 관리</a></li>
 		</ul>
     
 		<c:if test="${sessionScope.admin eq 'Y'}">

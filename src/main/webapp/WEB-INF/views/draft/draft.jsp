@@ -85,7 +85,7 @@
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-12" id="docUploadForm">
-					<input type="button" id="docUpload" value="Submit" />
+					<input type="button" class="btn btn-primary"  id="docUpload" value="저장" />
 				</div>
 			</div>
 			<div class="form-row">
@@ -121,7 +121,7 @@
 				<div class="form-group col-md-4">
 					<div id="signature-pad" class="m-signature-pad">
 				        <div class="m-signature-pad--body">
-				            <canvas id="signature-canvas"></canvas>
+				            <canvas id="signature-canvas" style="border: 2px solid black;"></canvas>
 				        </div>
 				        <div class="m-signature-pad--footer" id="signUpClear">
 				            <button type="button" id="signClear" class="btn btn-primary" data-action="clear">지우기</button>
@@ -717,7 +717,7 @@
 					console.log(data.result);
 					
 					var delHtml = "";
-					delHtml += "<input type='button' data-src="+ data.result +" id='docDelete' value='Delete'/>";
+					delHtml += "<input type='button'  class='btn btn-primary' data-src="+ data.result +" id='docDelete' value='지우기'/>";
 					
 					if($("#docDelete").length > 0) {
 						console.log("Delete Button already");
@@ -749,7 +749,7 @@
 				$("#imgPreview").attr("src", "");
 				
 				var uploadHtml = "";
-				uploadHtml += "<input type='button' id='docUpload' value='Submit' />";
+				uploadHtml += "<input type='button'  class='btn btn-primary'  id='docUpload' value='저장' />";
 				
 				$('#docUploadForm').html(uploadHtml);
 				
@@ -862,10 +862,10 @@
 			var acReason = document.getElementById("commentTextArea").value;
 			
 			if(dmCode == "기안") {
-				dmCode = "D";
-			} else {
-				dmCode = "E";
-			}
+	            dmCode = "D";
+	         } else {
+	            dmCode = "E";
+	         }
 			
 			var approvalSize = '${sessionScope.aplMap.size()}';
 			var departmentSize = '${sessionScope.docMap.size()}';

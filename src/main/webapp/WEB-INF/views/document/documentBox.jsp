@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>문서보여주기페이지</title>
+<title>Document</title>
 
 	
 	<!-- Resources JS -->
@@ -29,18 +29,26 @@
 	<jsp:include page="../utils/navigation.jsp" />
 	
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-		<h1 class="page-header">Approval</h1>
+		<h1 class="page-header">문서</h1>
 		
 			<div class="form-row">
-				<div class="form-group col-md-8">
-					
+				<div class="form-group col-md-6">
+
+				</div>
+			
+				<div class="form-group col-md-2">
+				<c:if test="${sessionScope.Button eq 'approval'}"><button type="button" class="btn btn-primary btn-block" id="onAplModal" >결재</button>
+				</c:if>
 				</div>
 				<div class="form-group col-md-2">
-					<button type="button" class="btn btn-primary btn-block" id="onAplModal" >결재</button>
+				<c:if test="${sessionScope.Button eq 'approval'}"><button type="button" class="btn btn-primary btn-block" id="onAplModal2">반려</button>
+				</c:if>
 				</div>
 				<div class="form-group col-md-2">
-					<button type="button" class="btn btn-primary btn-block" id="onAplModal2">반려</button>
+				<c:if test="${sessionScope.Button2 eq 'approval'}">	<button type="button" class="btn btn-primary btn-block" id="onAplModal3">보류</button>
+				</c:if>
 				</div>
+				
 			</div>
 			<c:set var="docList" value="${docList}" />
 			
@@ -88,8 +96,20 @@
 				
 				</div>
 			</div>
+			<div class="writerSign col-md-12">
+			<font size="5em">기안자 서명</font>
+						<c:choose>
+					    <c:when test="${signList[0].signLocation ne null}">
+							<div><img style="border: 2px solid black" src="${signList[0].signLocation}" width="300px" height="300px" /></div>
+					    </c:when>
+					    <c:otherwise>
+							<div><img style="border: 2px solid black" src="\img\signNull.jpeg" width="300px" height="300px" /></div>
+					    </c:otherwise>
+					    </c:choose>
+			
+			</div>
 			<div class="form-row">
-				<font size="10em">결재선</font>
+				<font size="5em">결재선</font>
 			</div>
 			<div class="form-row">
 				<div class="form-group col-md-4">
@@ -101,10 +121,10 @@
 					<br>
 					<c:choose>
 					    <c:when test="${signList[1].signLocation ne null}">
-							<div><img style="border: 2px solid black" src="${signList[1].signLocation}" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="${signList[1].signLocation}" width="300px" height="300px" /></div>
 					    </c:when>
 					    <c:otherwise>
-							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="\img\signNull.jpeg" width="300px" height="300px" /></div>
 					    </c:otherwise>
 					</c:choose>
 				</div>
@@ -117,10 +137,10 @@
 					<br>
 					<c:choose>
 					    <c:when test="${signList[2].signLocation ne null}">
-							<div><img style="border: 2px solid black" src="${signList[2].signLocation}" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="${signList[2].signLocation}" width="300px" height="300px" /></div>
 					    </c:when>
 					    <c:otherwise>
-							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="\img\signNull.jpeg" width="300px" height="300px" /></div>
 					    </c:otherwise>
 					</c:choose>					
 				</div>
@@ -133,10 +153,10 @@
 					<br>
 					<c:choose>
 					    <c:when test="${signList[3].signLocation ne null}">
-							<div><img style="border: 2px solid black" src="${signList[3].signLocation}" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="${signList[3].signLocation}" width="300px" height="300px" /></div>
 					    </c:when>
 					    <c:otherwise>
-							<div><img style="border: 2px solid black" src="\img\signNull.png" width="300px" height="200px" /></div>
+							<div><img style="border: 2px solid black" src="\img\signNull.jpeg" width="300px" height="300px" /></div>
 					    </c:otherwise>
 					</c:choose>	
 				</div>
@@ -148,7 +168,7 @@
 					<font size="40em">Sign Here</font>
 					<div id="signature-pad" class="m-signature-pad">
 				        <div class="m-signature-pad--body">
-				            <canvas id="signature-canvas" style="border: 2px solid black" width="900px" height="150px"></canvas>
+				            <canvas id="signature-canvas" style="border: 2px solid black" width="500px" height="150px"></canvas>
 				        </div>
 				        <div class="m-signature-pad--footer" id="signUpClear">
 				            <button type="button" id="signClear" class="btn btn-primary" data-action="clear">지우기</button>
@@ -160,6 +180,7 @@
 				<table class="table table-striped">
 				<thead>
 					<tr>
+						<th class ="col-md-1">구분</th>
 						<th class ="col-md-1">결재자</th>
 						<th class ="col-md-1">부서</th>
 						<th class ="col-md-1">직급</th>
@@ -170,6 +191,7 @@
 				<tbody>
 				<c:forEach var="apCommentList" items="${apCommentList}">
 					<tr>
+						<td><c:out value="결재"/></td>
 						<td><c:out value="${apCommentList.acName }"/></td>
 						<td><c:out value="${apCommentList.dpName }"/></td>
 						<td><c:out value="${apCommentList.grName }"/></td>
@@ -180,14 +202,15 @@
 							
 				<c:forEach var="cpCommentList" items="${cpCommentList}">
 					<tr>
+						<td><c:out value="반려/보류"/></td>
 						<td><c:out value="${cpCommentList.cpName }"/></td>
-						<td><c:out value="${cpCommentList.cpName }"/></td>
-						<td><c:out value="${cpCommentList.cpName }"/></td>
+						<td><c:out value="${cpCommentList.dpName }"/></td>
+						<td><c:out value="${cpCommentList.grName }"/></td>
 						<td><c:out value="${cpCommentList.cpContents }"/></td>
 						<td><c:out value="${cpCommentList.cpDate }"/></td>
 						</tr>	
 				</c:forEach>				
-						
+									
 				</tbody>
 				</table>
 				
@@ -365,7 +388,32 @@
 		</div>
 		</div>
 	</div>
+
 	
+	<div id="defRequestModal" role="dialog" class="modal fade">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" data-dismiss="modal" class="close">&times;</button>
+				<h4 class="modal-title">보류의견</h4>
+			</div>
+			<div class="modal-body">
+		
+				<div class="form-group">
+					<textarea class="form-control" name="cpContents" rows="3"></textarea>
+				</div>
+	
+			</div>
+			<div class="modal-footer">
+				<button type="button" id="requestDefer" class="btn btn primary">Send</button>
+				<button type="button" data-dismiss="modal" class="btn btn-default">Close</button>
+			</div>
+		</div>
+		</div>
+	</div>
+	
+	
+
 	<script type="text/javascript">
       $('document').ready(function() {
          $('#onAplModal').click(function() {
@@ -390,11 +438,22 @@
       $('document').ready(function() {
           $('#onAplModal2').click(function() {
      
-      
              $('#cpnRequestModal').modal('show');
              
           })
        });
+      
+      
+      
+      $('document').ready(function() {
+          $('#onAplModal3').click(function() {
+       
+             $('#defRequestModal').modal('show');
+             
+          })
+       });
+      
+      
        
        $('#requestCompanion').click(function(){
      	  let cpContents=document.getElementsByName("cpContents")[0];
@@ -410,7 +469,31 @@
      	  
      	  
        });
-   </script>	
+
+       
+       
+       $('#requestDefer').click(function(){
+      	  let cpContents=document.getElementsByName("cpContents")[1];
+
+      
+      	  let form = makeForm("deferDraft","get");
+      	  
+      	  form.appendChild(cpContents);
+      	  
+      	  document.body.appendChild(form);
+      	  
+      	  form.submit();
+      	  
+      	  
+        });
+      
+      
+      
+      
+   </script>
+	
+	
+
 	
 	<!-- IMG Preview -->
 	<script type="text/javascript">	

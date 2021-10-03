@@ -101,11 +101,14 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("grName",tmplist.get(0).getGrName());
 							ssn.setAttribute("userMail",tmplist.get(0).getUserMail());
 
-
 							//최초로그인(pwIntial(최초기본설정여부)판단 후  ID,cmCode,Admin => Session 저장.)
 							if(tmplist.get(0).getPwInitial().equals("1")) {
+								
+						
+								
+							
 
-								//mav.setViewName("login/main");								
+								mav.setViewName("login/main");								
 							} else {
 								ssn.setAttribute("cmName",tmplist.get(0).getCmName());
 								ssn.setAttribute("userName",tmplist.get(0).getUserName());
@@ -123,12 +126,24 @@ public class Authentication implements AuthentInter {
 							ssn.setAttribute("cmCode", tmplist.get(0).getCmCode());
 							ssn.setAttribute("admin", tmplist.get(0).getAdmin());
 							ssn.setAttribute("userName",tmplist.get(0).getUserName());
-							DocumentBean db = new DocumentBean();
 							
-							//mav.addObject("waitChart", this.waitApprovalChart(db));
-							//mav.addObject("docList", this.waitApprovalList(db));
-							mav.addObject("docList2", this.apIngList(db));
-							//결제대기함의 수를 addObject해줌.
+							
+							Criteria cri = new Criteria();
+							
+							
+
+							//차트 결재대기함 갯수
+							ssn.setAttribute("waitChart", this.waitApprovalChart(cri));				
+							//차트 결재 진행함 갯수
+							ssn.setAttribute("ingChart", this.apIngChart(cri));
+							//내가 보낸 결재수
+							ssn.setAttribute("myDraftChart", this.myDraftChart(cri));
+							
+				
+							mav.addObject("docList", this.waitApprovalList(cri));
+							mav.addObject("docList2", this.apIngList(cri));
+						
+
 						
 
 							ssn.setAttribute("pwInitial", tmplist.get(0).getPwInitial());
@@ -138,11 +153,12 @@ public class Authentication implements AuthentInter {
 
 							ssn.setAttribute("apCheck", tmplist.get(0).getDpCode());
 
-						
+		
 
 							ab.setUserId((String)ssn.getAttribute("userId"));
 							
-							mav.setViewName("login/main");						
+							
+													
 						
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -173,15 +189,64 @@ public class Authentication implements AuthentInter {
 		
 		return size;
 	}
+	//결재진행함 수
+		public int apIngChart(Criteria cri) {	
+			List <DocumentBean> docList;	
+			try {
+				cri.setSenderId((String)ssn.getAttribute("userId"));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+			docList=sqlSession.selectList("approvalProcced",cri);		
+			int size = docList.size();
+			
+			return size;
+		}
+		
+		//내가보낸결재수
+		public int myDraftChart(Criteria cri) {	
+			List <DocumentBean> docList;	
+			List <DocumentBean> docList2;	
+			try {
+				cri.setSenderId((String)ssn.getAttribute("userId"));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+			docList=sqlSession.selectList("myDraft",cri);
+			docList2=sqlSession.selectList("myEnforceMent",cri);	
+			int size = docList.size()+docList2.size();
+			
+			return size;
+		}
+		
+		
+		public int completeChart(DocumentBean db) {	
+			List <DocumentBean> docList;	
+
+			try {
+				db.setApId((String)ssn.getAttribute("userId"));	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		
+			docList=sqlSession.selectList("myDraft",db);
+			
+			int size = docList.size();
+			
+			
+			return size;
+		}
+	
+	
+	
 	//결제대기함의 문서들 최근꺼부터 5개만 메인에 표시
-	public List<DocumentBean> waitApprovalList(DocumentBean db) {	
+	public List<DocumentBean> waitApprovalList(Criteria cri) {	
 		List <DocumentBean> docList;	
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));	
+			cri.setSenderId((String)ssn.getAttribute("userId"));	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
-		docList=sqlSession.selectList("waitApproval",db);		
+		docList=sqlSession.selectList("waitApproval",cri);		
 
 		
 		return docList;
@@ -189,17 +254,19 @@ public class Authentication implements AuthentInter {
 	
 	
 	
+	
+	
 	//결제진행함의 문서들 최근꺼부터 5개만 메인에 표시
-	public List<DocumentBean> apIngList(DocumentBean db) {	
+	public List<DocumentBean> apIngList(Criteria cri) {	
 		List <DocumentBean> docList;	
 		try {
-			db.setApId((String)ssn.getAttribute("userId"));	
+			cri.setSenderId((String)ssn.getAttribute("userId"));	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		
-		//docList=sqlSession.selectList("approvalProcced",db);		
+		docList=sqlSession.selectList("approvalProcced",cri);		
 		
-		return null;
+		return docList;
 	}
 	
 	
@@ -249,6 +316,7 @@ public class Authentication implements AuthentInter {
 
 		//1.비밀번호는 복호화 하면 안되기 때문에 enc.encode()로 인코딩
 		ub.setUserPwd(enc.encode(ub.getUserPwd()));
+		String failMessage="중복되는 정보가 있습니다. 다시 확인 해주세요.";
 
 
 		//2.아이디를 제외한 나머지는 enc.aesEncode()로 인코딩 이때 hint는 userId
@@ -266,14 +334,19 @@ public class Authentication implements AuthentInter {
 		//3. insert mm 테이블 + cm 테이블 + gr 테이블 + dp 테이블
 		this.setTransactionConf(TransactionDefinition.PROPAGATION_REQUIRED, TransactionDefinition.ISOLATION_READ_COMMITTED, false);
 
+		
 		if(this.convertToBoolean(sqlSession.insert("insNewCompany",ub))) {
 			if(this.convertToBoolean(sqlSession.insert("insTmpDp",ub))){
 				if(this.convertToBoolean(sqlSession.insert("JoinRequest",ub))){
 					this.setTransactionResult(true);
 				}else {
 					this.setTransactionResult(false);
+					mav.addObject("failMessage",failMessage);
+					mav.setViewName("redirect:/");
+				
 				}
 			}
+			
 		}
 		//mav.setViewName("myInfo");
 
@@ -324,6 +397,7 @@ public class Authentication implements AuthentInter {
 		if(ub.getUserPwd().isEmpty()) {
 			ub.setUserPwd("");
 		}
+	
 
 	}
 
@@ -402,20 +476,19 @@ public class Authentication implements AuthentInter {
 	public ModelAndView mMyInfoConfirm(UserBean ub) {
 		mav = new ModelAndView();
 		String pwdCheck;
-		String message="비밀번호가 일치하지 않습니다.";
-
+		String failMessage="비밀번호가 일치하지 않습니다";
+		
 
 		//비번확인하고  직접적 내 정보를 수정하는 페이지로 고	
 		pwdCheck = sqlSession.selectOne("checkPwd",ub);
-		System.out.println(ub.getUserId());
-		System.out.println(ub.getUserPwd());
 
 		if(enc.matches(ub.getUserPwd(), pwdCheck)) {
 			mav.setViewName("login/myInfo");
 
 		}else {
-			mav.addObject("message",message);
-			mav.addObject("login/home");
+      mav.setViewName("login/myInfoAccess");
+			mav.addObject("failMessage",failMessage);
+
 
 		}
 
@@ -487,36 +560,35 @@ public class Authentication implements AuthentInter {
 	}
 
 	public ModelAndView mHome(@ModelAttribute UserBean ub) {
-		DocumentBean db = new DocumentBean();
+		Criteria cri = new Criteria();
 		ModelAndView mav =new ModelAndView();
 		mav.setViewName("login/home");
+		
+		
 		try {
-			if(ssn.getAttribute("userId") != null) {	
-			//mav.addObject("waitChart", this.waitApprovalChart(db));
-			//mav.addObject("docList", this.waitApprovalList(db));
-			mav.addObject("docList2", this.apIngList(db));
-			//auth.mUpdateMemberTable(ub);에서 저장한 Initial을 세션으로 저장한 뒤
-			//로그인한 상태에서 main으로 가면 자꾸 newInfo로감.. 심지어 pwInitial은 1로 잘 나옴	
-				
-			//equals가 실제값으로 비교하는거. ==하면 참조변수끼리 비교..
-	
+
+			if(ssn.getAttribute("userId") != null) {
 			
-			if(((String)ssn.getAttribute("pwInitial")).equals("1") || 				
-					((String)ssn.getAttribute("pwIntialCheck")).equals("1")) {
+		    mav.addObject("docList", this.waitApprovalList(cri));
+			mav.addObject("docList2", this.apIngList(cri));
+
+	
+			if(((String)ssn.getAttribute("pwInitial")).equals("1")) {
 				
 		
-				mav.setViewName("login/main");
-		
-	
-				System.out.println(ssn.getAttribute("pwInitial")+"메인으로타야지");
-			}else{			
-				System.out.println("여기라고? ");
+			mav.setViewName("login/main");
+		//  애초에 pwinitial이 1이면 무조건 메인 페이지.   pwInitialCheck=null이라는건 비번 업뎃 안했다는 뜻. or pwinitial이 0
+			
+			}else if(((String)ssn.getAttribute("pwIntialCheck")==null) || ((String)ssn.getAttribute("pwIntial")).equals("0"))  {			
+			
 				mav.setViewName("login/newInfo");
 			} 		
 		}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		mav.setViewName("login/main");
+		
 		return mav;
 	}
 
@@ -546,5 +618,10 @@ public class Authentication implements AuthentInter {
 			e.printStackTrace();
 		}
 		return browser;
+	}
+	@Override
+	public List<DocumentBean> waitApprovalList(DocumentBean db) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

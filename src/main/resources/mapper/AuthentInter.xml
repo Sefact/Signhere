@@ -4,6 +4,7 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.signhere.mapper.AuthentInter">
+
 	<insert id="insNewCompany" parameterType = "CompanyBean">
 		INSERT INTO CM VALUES(#{cmCode},#{cmName})
 	</insert>
@@ -13,7 +14,7 @@
 	</insert>
 	
 	<insert id="JoinRequest" parameterType="UserBean">
-		INSERT INTO MM VALUES(#{userId},#{userPwd},'N','V',#{cmCode},#{userName},#{userMail},'0','Y')
+		INSERT INTO MM VALUES(#{userId},#{userPwd},'N','V',#{cmCode},#{userName},#{userMail},'1','Y')
 	</insert>
 	
 	<select id="getLogInInfo" parameterType="AccessBean" resultType="AccessBean"> 
@@ -88,7 +89,7 @@
 	<select id="checkPwd" parameterType="userBean" resultType="String">
 		SELECT PW
 		FROM MM 
-		WHERE ID=#{userId}
-	
+		WHERE ID=#{userId}	
 	</select>
+	
 </mapper>

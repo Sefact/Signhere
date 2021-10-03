@@ -7,10 +7,11 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	<h1 class="page-header"></h1>
 
-	<div class="row placeholders col-sm-8">
+	<div class="row placeholders col-sm-10">
 	
 	
-		<canvas id="myChart" ></canvas>
+		<canvas id="myChart"> </canvas>
+	
 
 	</div>
 
@@ -31,8 +32,8 @@
 				<!-- Authentication.java 130번째줄 참조. -->
 			<c:forEach var="docList" items="${docList}">
 				<tr>
-					<td><c:out value="${docList.dmNum }"/></td>
-					<td><c:out value="${docList.dmTitle }"/></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}" /></a></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmTitle}"/></a></td>
 					<td><c:out value="${docList.dmCode }"/></td>				
 					<td><c:out value="${docList.dmWriter }"/></td>
 					<td><c:out value="${docList.dmDate }"/></td>
@@ -58,8 +59,8 @@
 				<tbody>
 			<c:forEach var="docList2" items="${docList2}">
 				<tr>
-					<td><c:out value="${docList2.dmNum }"/></td>
-					<td><c:out value="${docList2.dmTitle }"/></td>
+					<td><a href="/documentBox?dmNumCheck=${docList2.dmNum}" ><c:out value="${docList2.dmNum}" /></a></td>
+					<td><a href="/documentBox?dmNumCheck=${docList2.dmNum}" ><c:out value="${docList2.dmTitle}"/></a></td>
 					<td><c:out value="${docList2.dmCode }"/></td>				
 					<td><c:out value="${docList2.dmWriter }"/></td>
 					<td><c:out value="${docList2.dmDate }"/></td>
@@ -80,20 +81,28 @@ var ctx = document.getElementById('myChart').getContext('2d');
 
 
 
+
 var chart = new Chart(ctx, {
 	type : 'bar',
 	data : {
-		labels : [ '내가 보낸 결재', '내가 보낸 시행', '처리해야 할 결재 (결재대기함))' ],
+		labels : [ '처리해야 할 결재', '내가 보낸 결재', '진행중인 결재' ],
 		datasets : [ {
-			label : 'My First Dataset',
-			data : [ 2, 1, ${waitChart} ],
+			label : '결재차트',
+			data : [ ${sessionScope.waitChart}, ${sessionScope.myDraftChart}, ${sessionScope.ingChart} ],
 			backgroundColor : [ 'rgb(255, 99, 132)', 'rgb(54, 162, 235)',
 					'rgb(255, 205, 86)' ],
 			hoverOffset : 4
 			
 		} ]
-	}
+	},
 }); 
+
+
+
+
+
+
+
 
 </script>
 

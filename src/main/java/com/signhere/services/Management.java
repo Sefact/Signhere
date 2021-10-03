@@ -61,8 +61,7 @@ public class Management {
 		List<Map<String,Object>> dpList = sqlSession.selectList("getAllDp",cri);
 		List<Map<String,Object>> grList = sqlSession.selectList("getAllGr",cri);
 		
-		System.out.println(dpList);
-		System.out.println(grList);
+	
 		
 		mav.addObject("grList",grList);
 		mav.addObject("dpList",dpList);
@@ -109,12 +108,6 @@ public class Management {
 		int result = sqlSession.insert("addNewEmp",ub);
 		
 
-		System.out.println(this.generatePw());
-		
-
-		
-		System.out.println("비번난수"+this.generatePw());
-
 		return result+"";
 	}
 
@@ -132,6 +125,7 @@ public class Management {
 		}
 		
 		cb.setMessage(dupCheck);
+		
 		
 		return cb;
 	}
@@ -153,6 +147,8 @@ public class Management {
 			
 		}
 		ub.setMessage(dupCheck);
+		
+
 		return ub;
 	}
 

@@ -506,10 +506,21 @@
 		(SELECT APPROVAL_SEQ FROM AL WHERE APPROVAL_ID = #{apId} AND DOCUMENT_NUM=#{dmNum} )+'1'
 		AND DOCUMENT_NUM=#{dmNum}
 	</update>
+	
+	
 		
 	<insert id ="insertApprovalComment" parameterType="ApprovalCommentBean">
-		INSERT INTO AC VALUES (#{dmNum},#{acContents},#{acId},SYSDATE)
+		INSERT INTO AC VALUES (#{dmNum},#{acContents},#{acId}, SYSDATE)
+
+
 	</insert>
+	
+	
+<update id ="approvalFinalUpdateNextAplSeqCheck" parameterType="DocumentBean">
+		UPDATE DM
+		SET APPROVAL_CODE='C'
+		WHERE DOCUMENT_NUM=#{dmNum}
+	</update>
 		
 	<update id ="approvalFinalUpdateMyAplSeqCheck" parameterType="DocumentBean">
 		UPDATE AL
@@ -518,19 +529,34 @@
 		AND DOCUMENT_NUM=#{dmNum}
 	</update>
 		
-	<update id ="approvalFinalUpdateNextAplSeqCheck" parameterType="DocumentBean">
-		UPDATE DM
-		SET APPROVAL_CODE='C'
-		WHERE DOCUMENT_NUM=#{dmNum}
-	</update>
+
+		<update id="confirmDefer" parameterType="DocumentBean">
+			UPDATE DM
+			SET APPROVAL_CODE='D'
+			WHERE DOCUMENT_NUM=#{dmNum}
+		
+		</update>
+		
+		
+		<insert id ="insertCompanionComment" parameterType="CompanionBean">
+				
+			INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
+		
+		</insert>
+		
+			
+		<insert id ="insertDeferComment" parameterType="DeferBean">
+				
+			INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
+			
+			</insert>
+
+
 		
 	<update id="confirmCompanion" parameterType="DocumentBean">
 		UPDATE DM
 		SET APPROVAL_CODE='R'
 		WHERE DOCUMENT_NUM=#{dmNum}
 	</update>
-		
-	<insert id ="insertCompanionComment" parameterType="ApprovalCommentBean">		
-		INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
-	</insert>
+
 </mapper>

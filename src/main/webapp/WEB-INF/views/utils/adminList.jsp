@@ -2,6 +2,7 @@
 <%@ taglib prefix="c"  uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 	<script src="/resources/js/authentication.js"></script>
+	<script src="/resources/js/admin/aplistAdmin.js"></script>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	<h1 class="page-header">Employees</h1>
@@ -124,7 +125,7 @@
             <form>
 	            <div class="form-group">
 	            	<label for="userIdNew">아이디</label>
-	            	<input id="userIdNewBox" class="form-control" name="userIdNew" placeholder="사번입력" onBlur="userIdNewCheck(this)"/>
+	            	<input id="userIdNewBox" class="form-control" name="userIdNew" placeholder="아이디입력" onBlur="userIdNewCheck(this)"/>
 		        </div>
 		        <div class="form-group">
 		        	<input type="button" class="btn btn-primary" value="중복체크" onClick="userIdNewDupCheck()">

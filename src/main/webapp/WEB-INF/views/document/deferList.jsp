@@ -24,7 +24,7 @@
 	<jsp:include page="../utils/navigation.jsp" />
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-	<h1 class="page-header">보류함</h1>
+	<h1 class="page-header">보류 문서함</h1>
 
 	<form>
 		<div class="form-row">
@@ -103,8 +103,8 @@
 				<tbody>
 			<c:forEach var="docList" items="${docList}">
 				<tr>
-					<td><c:out value="${docList.dmNum }"/></td>
-					<td><c:out value="${docList.dmTitle }"/></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum }"/></a></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmTitle }"/></a></td>
 					<td><c:out value="${docList.dmCode }"/></td>				
 					<td><c:out value="${docList.dmWriter }"/></td>
 					<td><c:out value="${docList.dmDate }"/></td>
