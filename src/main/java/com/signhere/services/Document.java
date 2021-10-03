@@ -642,6 +642,7 @@ public class Document {
 			cri.setSenderId((String)ssn.getAttribute("userId"));
 			ssn.setAttribute("Button", "approval");
 			ssn.removeAttribute("Button2");
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}	
@@ -942,6 +943,7 @@ public class Document {
 		try {
 			cb.setCpId((String)ssn.getAttribute("userId"));
 			cb.setDmNum((String)ssn.getAttribute("dmNum"));
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
