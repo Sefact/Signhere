@@ -34,22 +34,24 @@
 		<div class="row">
 		<div class="col-sm-3 col-md-2 sidebar">
 			<ul class="nav nav-sidebar">
-				<li class="active"><a id="approvalModal" href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
+				<li class="nav-item">
+					<a class="nav-link" id="approvalModal" href="#">결재문 작성 <span class="sr-only">(current)</span></a>
+				</li>
 			</ul>
 			<ul class="nav nav-sidebar"> 
-				<li id="sent"><a onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
-            	<li><a onclick="myEnforceMent();">내가보낸 시행문</a></li>
+				<li class="nav-item" id="sent"><a class="nav-link" onclick="changePage('myDraft','post')">내가보낸 결재</a></li>
+            	<li class="nav-item"><a class="nav-link" onclick="myEnforceMent();">내가보낸 시행문</a></li>
 			</ul>
 		<ul class="nav nav-sidebar">
-            <li><a onclick="waitApproval();">결재 대기함</a></li>
-            <li><a onclick="approvalProcced();">결재 진행함</a></li>
-            <li><a onclick="completeApproval();">완료 문서함</a></li>
-            <li><a onclick="companionApproval();">반려 문서함</a></li>
-            <li><a onclick="deferList();">보류 문서함</a></li>
-            <li><a onclick="referenceApproval();">참조열람 문서함</a></li>
-            <li><a onclick="receiveNotice();">공문 수신함</a></li>
-            <li><a onclick="myList();">개인 보관함</a></li>
-			<li><a onclick="setEntrust();">위임권 관리</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="waitApproval();">결재 대기함</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="approvalProcced();">결재 진행함</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="completeApproval();">완료 문서함</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="companionApproval();">반려 문서함</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="deferList();">보류 문서함</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="referenceApproval();">참조열람 문서함</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="receiveNotice();">공문 수신함</a></li>
+            <li class="nav-item"><a class="nav-link" onclick="myList();">개인 보관함</a></li>
+			<li class="nav-item"><a class="nav-link" onclick="setEntrust();">위임권 관리</a></li>
 		</ul>
     
 		<c:if test="${sessionScope.admin eq 'Y'}">
@@ -169,6 +171,22 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- Nav Active -->
+	<script>
+		$(function () {
+			// actvie 활성화
+			$(".nav-item > .active").css("color", "red");
+			$('.nav-link').click(function () {
+				// .nav-link 클릭시 이전의 active 값 해제 후,
+				$(".nav-item > .active").css("color", "#007bff");
+				$('.nav-link').removeClass('active'); 
+				// 클릭한 위치 active 적용 
+				$(this).addClass('active'); 
+				$(".nav-item > .active").css("color", "red"); 
+			}); 
+		});
+	</script>	
 	
 	<!-- Organization Chart -->
 	<div id="organizationModal" role="dialog" class="modal fade">
