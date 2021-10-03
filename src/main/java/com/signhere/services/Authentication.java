@@ -587,7 +587,6 @@ public class Authentication implements AuthentInter {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mav.setViewName("login/main");
 		
 		return mav;
 	}
