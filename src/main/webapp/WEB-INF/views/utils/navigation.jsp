@@ -35,8 +35,10 @@
 				<li class="active"><a id="approvalModal" href="#">결재문 작성 <span class="sr-only">(current)</span></a></li>
 			</ul>
 			<ul class="nav nav-sidebar"> 
+
 				<li id="sent"><a onclick="changePage('myDraft','post')">내가 보낸 기안문</a></li>
             	<li><a onclick="myEnforceMent();">내가 보낸 시행문</a></li>
+
 			</ul>
 		<ul class="nav nav-sidebar">
             <li><a onclick="waitApproval();">결재 대기함</a></li>

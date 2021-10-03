@@ -8,7 +8,8 @@
    
    <!-- Resources JS -->
    <script src="/resources/js/login/main.js"></script>
-   <script src="/resources/js/admin/aplistAdmin.js"></script>
+   <script src="/resources/js/admin/searchAndList.js"></script>
+   <script src="/resources/js/document/searchAndList.js"></script>
    <!-- Bootstrap core CSS -->
    <link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
    <!-- Jquery Core JS -->
@@ -40,7 +41,7 @@
 				<label for="inputDocumentNum">제목</label>
 			</div>
 			<div class="form-group col-md-11">
-				 <input type="text" class="form-control" name="dmTitle" placeholder="제목">
+				 <input type="text" class="form-control" id="dmTitle" name="dmTitle" placeholder="제목">
 			</div>
 		</div>
 		<div class="form-row">
@@ -48,21 +49,15 @@
 				<label for="inputDocumentNum">문서상태</label>
 			</div>
 			<div class="form-group col-md-5">
-				<select name="apCode"
-					class="form-control">
-					<option>선택</option>
-					<option value="P">진행</option>
-					<option value="C">완료</option>
-					<option value="R">반려</option>
-					<option value="D">보류</option>
-					<option value="F">회수</option>
-				</select>
+				<span name="apCode" value="C" class="form-control">
+						완료
+					</span>
 			</div>
 			<div class="form-group col-md-1">
 				<label for="inputDocumentNum">문서종류</label>
 			</div>
 			<div class="form-group col-md-5">
-				<select name="dmCode"
+				<select name="dmCode" id = "dmCode"
 					class="form-control">
 					<option>선택</option>
 					<option value="D">기안</option>
@@ -81,7 +76,7 @@
 				<input type="date" class="form-control" name="dmDate"/>
 			</div>
 			<div class="form-group col-md-1">
-				<input type="button" class="btn btn-primary" value="Search" onClick="sampleFunction()"/>
+				<input type="button" class="btn btn-primary" value="Search" onClick="searchText('C','C')"/>
 			</div>
 		</div>
 		
@@ -101,7 +96,7 @@
 						<th>날짜</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id = "docListBody">
 				<c:forEach var="docList" items="${docList}">
 				<tr>
 
@@ -135,6 +130,7 @@
 		</ul>
 	</div>
 </body>
+
 <script>
 function addToMyList(){
 	let docList = document.querySelectorAll(".docListRow");

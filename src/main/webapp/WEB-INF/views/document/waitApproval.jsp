@@ -40,7 +40,7 @@
 					<label for="inputDocumentNum">제목</label>
 				</div>
 				<div class="form-group col-md-11">
-					<input type="text" class="form-control" name="dmTitle"
+					<input type="text" class="form-control" id="dmTitle" name="dmTitle"
 						placeholder="제목">
 				</div>
 			</div>
@@ -49,20 +49,15 @@
 					<label for="inputDocumentNum">문서상태</label>
 				</div>
 				<div class="form-group col-md-5">
-					<select name="apCode" class="form-control">
-						<option>선택</option>
-						<option value="P">진행</option>
-						<option value="C">완료</option>
-						<option value="R">반려</option>
-						<option value="D">보류</option>
-						<option value="F">회수</option>
-					</select>
+					<span name="apCode" value="P" class="form-control">
+						진행
+					</span>
 				</div>
 				<div class="form-group col-md-1">
 					<label for="inputDocumentNum">문서종류</label>
 				</div>
 				<div class="form-group col-md-5">
-					<select name="dmCode" class="form-control">
+					<select id = "dmCode" name="dmCode" class="form-control">
 						<option>선택</option>
 						<option value="D">기안</option>
 						<option value="E">시행</option>
@@ -81,7 +76,7 @@
 				</div>
 				<div class="form-group col-md-1">
 					<input type="button" class="btn btn-primary" value="Search"
-						onClick="sampleFunction()" />
+						onClick="searchText('P','W')" />
 				</div>
 			</div>
 
@@ -101,6 +96,7 @@
 						<th>날짜</th>
 					</tr>
 				</thead>
+
 				<tbody>
 				
 			<c:forEach var="docList" items="${docList}">
@@ -113,6 +109,8 @@
 				</tr>
 			</c:forEach>	
 
+
+	
 				</tbody>
 			</table>
 		</div>

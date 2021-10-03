@@ -61,27 +61,74 @@ public class Document {
 		//여기서 sessino에 들어간 cmCode 저장
 		try {
 			db.setCmCode((String)ssn.getAttribute("cmCode"));
+			db.setDmWriteId((String)ssn.getAttribute("userId"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		this.handleNullValues(db);
 		this.changeDateFormat(db);
 
-		List<DocumentBean> docList;
+		List<DocumentBean> docList=null;
 
-		System.out.println("dmCode:" + db.getCmCode());
+		System.out.println("cmCode:" + db.getCmCode());
 		System.out.println("dmNum:" + db.getDmNum());
 		System.out.println("dmwriter:" + db.getDmWriter());
+		System.out.println("dmtitle:" + db.getDmTitle());
 		System.out.println("dmCode:" + db.getDmCode());
 		System.out.println("apcode:" + db.getApCode());
-		System.out.println("dmtitle:" + db.getDmTitle());
+		System.out.println("dmWriteID:" + db.getDmWriteId());		
 		System.out.println("dmdate:" + db.getDmDate());
 		System.out.println("dmdate2:" + db.getDmDate2());
 		
-		docList = sqlSession.selectList("searchCompletedDocs", db);
+		
+		
+		switch(db.getSearchCode()) {
+		case "W":
+			System.out.println("w");
+			docList = sqlSession.selectList("searchWDocs", db);
+			System.out.println(docList.size());
+			System.out.println(docList.toString());
+			break;
+		case "P":
+			docList = sqlSession.selectList("searchPDocs", db);
+			break;
+		case "C":
+			docList = sqlSession.selectList("searchCDocs", db);
+			break;
+		case "R":
+			docList = sqlSession.selectList("searchRDocs", db);
+			break;
+		case "D":
+			docList = sqlSession.selectList("searchDDocs", db);
+			break;
+		case "RF":
+			docList = sqlSession.selectList("searchRFDocs", db);
+			break;
+		case "RL":
+			docList = sqlSession.selectList("searchRLDocs", db);
+			break;
+		case "ML":
+			docList = sqlSession.selectList("searchMLDocs", db);
+			break;
+		default:
+			System.out.println("검색에러");
+			break;
+		}
+		
+		System.out.println(docList.toString());
+		System.out.println(docList.size());
+		
+		if(docList.size() == 0) {
+			db.setDmNumCheck("0");
+			docList.add(0, db);
+		}
+		
+		System.out.println(docList);
 		
 		return docList;
+
 	}	
+
 
 	public List<UserBean> mWriteDraft(UserBean ub) {
 		List<UserBean> userList = null;
@@ -466,6 +513,9 @@ public class Document {
 		}
 		if(db.getDmDate2().isEmpty()) {
 			db.setDmDate2(this.getToday());
+		}
+		if(db.getDmWriter().isEmpty()) {
+			db.setDmWriter("");
 		}
 	}
 	
@@ -991,13 +1041,54 @@ public class Document {
 
 	
 	//Transaction configuration 
-	private void setTransactionConf(int propagation, int isolationLevel, boolean isRead) {
-		def = new DefaultTransactionDefinition();
-		def.setPropagationBehavior(propagation);
-		def.setIsolationLevel(isolationLevel);
-		def.setReadOnly(isRead);
-		status = tx.getTransaction(def);
-	}
+
+		private void setTransactionConf(int propagation, int isolationLevel, boolean isRead) {
+			def = new DefaultTransactionDefinition();
+			def.setPropagationBehavior(propagation);
+			def.setIsolationLevel(isolationLevel);
+			def.setReadOnly(isRead);
+			status = tx.getTransaction(def);
+		}
+
+		//Transaction Result
+		private void setTransactionResult(boolean isCheck) {
+			if(isCheck) {
+				tx.commit(status);
+			}else{
+				tx.rollback(status);
+			}
+		}
+
+
+		public List<DocumentBean> adminSearchText(DocumentBean db) {
+			try {
+				db.setCmCode((String)ssn.getAttribute("cmCode"));
+				db.setDmWriteId((String)ssn.getAttribute("userId"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			this.handleNullValues(db);
+			this.changeDateFormat(db);
+
+			List<DocumentBean> docList;
+
+			System.out.println("cmCode:" + db.getCmCode());
+			System.out.println("dmNum:" + db.getDmNum());
+			System.out.println("dmwriter:" + db.getDmWriter());
+			System.out.println("dmCode:" + db.getDmCode());
+			System.out.println("apcode:" + db.getApCode());
+			System.out.println("dmtitle:" + db.getDmTitle());
+			System.out.println("dmdate:" + db.getDmDate());
+			System.out.println("dmdate2:" + db.getDmDate2());
+			
+			docList = sqlSession.selectList("adminSearchDocs", db);
+			
+			System.out.println(docList.toString());
+			
+			return docList;
+		}
+
+
 
 	//Transaction Result
 	private void setTransactionResult(boolean isCheck) {
