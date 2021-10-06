@@ -1,4 +1,4 @@
-function searchText() {
+function adminSearchText() {
 
 	const dmNum = document.getElementsByName("dmNum")[0].value;
 	const dmTitle = document.getElementsByName("dmTitle")[0].value;
@@ -8,7 +8,7 @@ function searchText() {
 	const dmDate2 = document.getElementsByName("dmDate2")[0].value;
 	
 	
-fetch('/searchText',{
+fetch('/adminSearchText',{
 		method:'post',
 		headers:{
 			'Accept': 'application/json, text/plain, */*',
@@ -79,9 +79,15 @@ function confirmDel(){
 		}
 	}
 	
-	if(confirm(arr.length+"명의 직원을 정말 삭제합니까?")){
+	if(arr.length != 0){
+		if(confirm(arr.length+"명의 직원을 정말 삭제합니까?")){
 		requestDelEmp(arr);
+		}
+	}else{
+		alert("삭제할 직원을 체크 해주세요.");
 	}
+	
+	
 }
 
 
@@ -108,12 +114,13 @@ function searchEmployee(){
 
 function afterSearch(data){
 	let empList = JSON.parse(data);
-	console.log(empList[0].userId);
+	
 	empListBody = document.querySelector("#empListBody");
 	empListBody.innerHTML="";
 	let tr = ``;
-	for(i=0; i<empList.length; i++){
-		console.log(i);
+	if(empList[0].message != "1"){
+		for(i=0; i<empList.length; i++){
+		
 		tr += `<tr>
 					<td><input type="checkBox" class="empListRow" value="${empList[i].userId}"></td>
 					<td>${empList[i].userId}</td>
@@ -121,21 +128,33 @@ function afterSearch(data){
 					<td>${empList[i].grName}</td>
 					<td>${empList[i].dpName}</td>
 				</tr>`
+		}
+	}else{
+		tr += `<tr></tr>`
+		alert(`${empList[0].userName} 은 존재하지 않습니다.`);
 	}
+	
 	empListBody.innerHTML = tr;
 }
 
 function requestUserInfoDetail(){
 	let userId = document.querySelectorAll(".empListRow");
 	let jsonData;
+	let userCheck = false;
 	
 	for(let i =0; i<userId.length; i++){
 		if(userId[i].checked == true){
 			jsonData = {userId:userId[i].value}
+			userCheck = true;
 		}
 	}
 	
-	fetchAjax("/userInfo","post",jsonData,showModifyModal);
+	if(userCheck){
+		fetchAjax("/userInfo","post",jsonData,showModifyModal);
+	}else{
+		alert("수정할 직원을 선택해주세요.");
+	}
+	
 }
 
 function showModifyModal(data){
@@ -206,13 +225,13 @@ function deleteDoc(){
 		body: JSON.stringify(objArray)
 	}).then(res =>{
 		if(res.ok){
-		return res.json()	
+		return res.json();	
 		}else{
 			console.error(`HTTP error status: ${res.status}`)
 		}
 	}) 
 	.then(jsonData =>{
-		console.log(jsonData)
+		console.log(jsonData);
 		location.reload();
 	}).catch(err=>{
 		console.log(err)

@@ -24,9 +24,9 @@
 				<div class="form-group col-md-5">
 					<select name ="grCode">
 						<option value="">직급선택</option>
-						<c:forEach var = "grade" items="${grList}">
-							<option value="${grade.gdCode}">
-								${grade.gdName }
+						<c:forEach var = "grList" items="${grList}">
+							<option value="${grList.GDCODE}">
+								${grList.GDNAME }
 							</option>
 						</c:forEach>
 					</select>
@@ -40,9 +40,9 @@
 				<div class="form-group col-md-5">
 					<select name ="dpCode">
 						<option value="">부서선택</option>
-						<c:forEach var = "department" items="${dpList}">
-							<option value="${department.dpCode}">
-								${department.dpName }
+						<c:forEach var = "dpList" items="${dpList}">
+							<option value="${dpList.DPCODE}">
+								${dpList.DPNAME }
 							</option>
 						</c:forEach>
 					</select>
@@ -72,23 +72,40 @@
 				</tr>
 			</thead>
 			<tbody id="empListBody">
-			<c:forEach var = "empLists" items="${empList}">
+			<c:forEach var = "empList" items="${empList}">
 				<tr>
 					<td>
-						<input type="checkBox" class="empListRow" value="${empLists.userId}">
-						<input type="hidden" class="empListRowName" value="${empLists.userName}">
-						<input type="hidden" class="empListRowgrName" value="${empLists.grName}">
-						<input type="hidden" class="empListRowdpName" value="${empLists.dpName}">
+						<input type="checkBox" class="empListRow" value="${empList.USERID}">
+						<input type="hidden" class="empListRowName" value="${empList.USERNAME}">
+						<input type="hidden" class="empListRowgrName" value="${empList.GRNAME}">
+						<input type="hidden" class="empListRowdpName" value="${empList.DPNAME}">
 					</td>
-					<td><c:out value="${empLists.userId}" /></td>
-					<td><c:out value="${empLists.userName}" /></td>
-					<td><c:out value="${empLists.grName}" /></td>
-					<td><c:out value="${empLists.dpName}" /></td>
+					<td><c:out value="${empList.USERID}" /></td>
+					<td><c:out value="${empList.USERNAME}" /></td>
+					<td><c:out value="${empList.GRNAME}" /></td>
+					<td><c:out value="${empList.DPNAME}" /></td>
 				</tr>
 			</c:forEach>
 			</tbody>
 		</table>
 	</div>
+	<ul class="btn-group pagination">
+		<c:if test="${pagination.prev }">
+			<li><a
+				href='<c:url value="/admin?page=${pagination.startPage-1 }"/>'><i
+					class="fa fa-chevron-left"></i></a></li>
+		</c:if>
+		<c:forEach begin="${pagination.startPage }"
+			end="${pagination.endPage }" var="pageNum">
+			<li><a href='<c:url value="/admin?page=${pageNum }"/>'><i
+					class="fa">${pageNum }</i></a></li>
+		</c:forEach>
+		<c:if test="${pagination.next && pagination.endPage >0 }">
+			<li><a
+				href='<c:url value="/admin?page=${pagination.endPage+1 }"/>'><i
+					class="fa fa-chevron-right"></i></a></li>
+		</c:if>
+	</ul>
 	<!-- add Employee modal -->
 	<div id="addModal" role="dialog" class="modal fade">
       <div class="modal-dialog">
@@ -111,9 +128,9 @@
             	<label for ="grGradeNew">직급</label>
             	<select id="grGradeNewBox" name ="grCodeNew">
 					<option value="">직급선택</option>
-						<c:forEach var = "grade" items="${grList}">
-							<option value="${grade.gdCode}">
-								${grade.gdName }
+						<c:forEach var = "grList" items="${grList}">
+							<option value="${grList.GDCODE}">
+								${grList.GDNAME }
 							</option>
 					</c:forEach>
 				</select>
@@ -122,9 +139,9 @@
             	<label for ="dpCodeNew">부서</label>
             	<select id="dpCodeNewBox" name ="dpCodeNew">
 					<option value="">부서선택</option>
-					<c:forEach var = "department" items="${dpList}">
-						<option value="${department.dpCode}">
-							${department.dpName }
+					<c:forEach var = "dpList" items="${dpList}">
+						<option value="${dpList.DPCODE}">
+							${dpList.DPNAME }
 						</option>
 						</c:forEach>
 				</select>
@@ -166,9 +183,9 @@
             	<span id="grCodeSelected"></span>
             	<select id="grCodeSelectedBox" name ="grCodeSelected">
 					<option value="">직급선택</option>
-						<c:forEach var = "grade" items="${grList}">
-							<option value="${grade.gdCode}">
-								${grade.gdName }
+						<c:forEach var = "grList" items="${grList}">
+							<option value="${grList.GDCODE}">
+								${grList.GDNAME }
 							</option>
 					</c:forEach>
 				</select>
@@ -178,9 +195,9 @@
             	<span id="dpCodeSelected"></span>
             	<select id="dpCodeSelectedBox" name ="dpCodeSelected">
 					<option value="">부서선택</option>
-					<c:forEach var = "department" items="${dpList}">
-						<option value="${department.dpCode}">
-							${department.dpName }
+					<c:forEach var = "dpList" items="${dpList}">
+						<option value="${dpList.DPCODE }">
+							${dpList.DPNAME }
 						</option>
 						</c:forEach>
 				</select>
@@ -210,10 +227,10 @@
             			<th>부서이름</th>
             		</tr>
             		
-            		<c:forEach var = "department" items="${dpList}">
-            		<tr value="${department.dpCode}">
+            		<c:forEach var = "dpList" items="${dpList}">
+            		<tr value="${dpList.DPCODE}">
             			<td></td>
-            			<td><c:out value="${department.dpName}" /></td>
+            			<td><c:out value="${dpList.DPNAME}" /></td>
 						</c:forEach>
 					</tr>
 				</table>

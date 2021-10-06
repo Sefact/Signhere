@@ -204,3 +204,9 @@ function makeForm(action, method, name = null) {
 	
 	return form;
 }
+<<<<<<< HEAD
+=======
+
+
+	
+>>>>>>> 14b8b7b8e6b2d5cfcdda3207b2da6d861cfb28a0

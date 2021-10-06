@@ -7,8 +7,10 @@ import lombok.Data;
 @Data
 public class CompanionDeferBean {
 	private String dmNum;
-	private String codReason;
-	private String codId;
-	private String codName;
-	private Date codDate;
+	private String dpName;
+	private String grName;
+	private String cpContents;
+	private String cpId;
+	private String cpName;
+	private Date cpDate;
 }
