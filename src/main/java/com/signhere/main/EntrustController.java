@@ -1,6 +1,7 @@
 package com.signhere.main;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class EntrustController {
 		mav = ent.mSetEntrust(cri);
 		
 		this.tempCheck(cri);
+		
 		
 		return mav;
 	}

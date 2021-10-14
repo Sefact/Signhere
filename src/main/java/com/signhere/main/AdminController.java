@@ -41,6 +41,7 @@ public class AdminController {
 	public ModelAndView admin(Criteria cri) {
 		mav = new ModelAndView();
 		mav = mag.mAdmin(cri);
+		
 		return mav;
 	}
 	
@@ -103,7 +104,7 @@ public class AdminController {
 	@ResponseBody
 	public String apListRemove(@RequestBody DocumentBean docList) {
 		//문서 삭제를 한꺼번에 여러개 가능 하게 할경우에 RequestBody(json)나 modelAttribute로 받아야함
-		System.out.println("controller");
+	
 		String result = mag.mApListRemove(docList);
 		return result;
 	}
