@@ -7,4 +7,5 @@ public class ReadingReferenceBean {
 	private String dmNum;
 	private String rdId;
 	private String rdName;
+	private String rfSeq;
 }

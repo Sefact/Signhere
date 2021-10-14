@@ -6,9 +6,30 @@
 
 <mapper namespace="com.signhere.mapper.DocumentInter">
 
-  <select id="searchCompletedDocs" parameterType="DocumentBean" resultType="DocumentBean">
+	<select id="getLogInInfo2" parameterType="AccessBean" resultType="DocumentBean"> 
+		SELECT MM.ID AS userId, 
+			   MM.PW AS userPwd, 
+			   MM.NAME AS userName,
+			   MM.PWINITIAL as pwInitial, 
+			   MM.COMPANY_CODE AS cmCode,
+			   CM.COMPANY_NAME AS cmName,
+			   GR.GRADE_NAME AS grName,
+			   DP.DEPARTMENT_NAME AS dpName,
+			   MM.MAIL AS userMail,
+			   DP.DEPARTMENT_CODE AS dpCode,
+		       MM.ADMIN as admin      
+		FROM MM  INNER JOIN CM ON MM.COMPANY_CODE=CM.COMPANY_CODE
+				 INNER JOIN GR ON GR.GRADE_CODE=MM.GRADE_CODE
+				 INNER JOIN DP ON DP.COMPANY_CODE=MM.COMPANY_CODE 
+					    AND DP.DEPARTMENT_CODE = MM.DEPARTMENT_CODE
+		WHERE ID=#{userId}
+	</select>
+
+	
+	<select id="adminSearchDocs" parameterType="DocumentBean" resultType="DocumentBean">
+
 		SELECT DM.DOCUMENT_NUM AS dmNum,
-        DM.COMPANY_CODE AS cmCode,
+		DM.COMPANY_CODE AS cmCode,
 		DM.DOCUMENT_TITLE AS dmTitle,
 		DM.APPROVAL_CODE AS apCode,
 		DM.DOCUMENT_CODE AS dmCode,
@@ -23,134 +44,727 @@
 		AND DOCUMENT_CODE LIKE '%'|| #{dmCode} ||'%' 
 		AND APPROVAL_CODE = 'C'   
 		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
-  </select>
-  
-	<select id="myDraft" parameterType="DocumentBean" resultType="DocumentBean">
-		SELECT  DISTINCT 
-				DM.DOCUMENT_NUM AS "dmNum",
-        		DM.DOCUMENT_TITLE AS "dmTitle",
-        		APS.APPROVAL_NAME AS "apName",
-        		DOCUMENT_DATE AS "dmDate"
-        		FROM MM
-        		INNER JOIN DM
-        		ON MM.COMPANY_CODE = DM.COMPANY_CODE
-        		INNER JOIN APS
-        		ON DM.APPROVAL_CODE = APS.APPROVAL_CODE
-        		WHERE WRITER = #{dmWriteId} AND DOCUMENT_CODE='D'
-        		
-        	</select> 		
-        		
-      <select id="myEnforceMent" parameterType="DocumentBean" resultType="DocumentBean">
+	</select>
+
+
+	<select id="searchWDocs" parameterType="DocumentBean" resultType="DocumentBean">
+	<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE '%'|| #{dmCode}  ||'%'
+		AND APPROVAL_CODE = #{apCode}
+		AND AL.SIGN_LOCATION IS NULL
+		AND AL.APPROVAL_ID = #{dmWriteId}
+		AND AL.APPROVAL_SEQ_CHECK = #{apCode}
+		AND AL.APPROVAL_SEQ <= (SELECT MIN(APPROVAL_SEQ) FROM AL
+		WHERE SIGN_LOCATION IS NULL AND APPROVAL_ID = #{dmWriteId})
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+  	
+	<select id="countMyDraft" resultType="Integer">
+		SELECT COUNT(*) FROM DM WHERE WRITER = #{senderId} AND DOCUMENT_CODE='D'
+	</select>
+	
+	<select id="myDraft" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[		
+			SELECT * FROM(
 				SELECT  DISTINCT 
 				DM.DOCUMENT_NUM AS "dmNum",
         		DM.DOCUMENT_TITLE AS "dmTitle",
         		APS.APPROVAL_NAME AS "apName",
-        		DOCUMENT_DATE AS "dmDate"
+        		DOCUMENT_DATE AS "dmDate",
+				ROWNUM AS RNUM
         		FROM MM
         		INNER JOIN DM
         		ON MM.COMPANY_CODE = DM.COMPANY_CODE
+				AND MM.ID = DM.WRITER
         		INNER JOIN APS
         		ON DM.APPROVAL_CODE = APS.APPROVAL_CODE
-        		WHERE WRITER = #{dmWriteId} AND DOCUMENT_CODE='E'
-	  </select>
-	  
-	   <select id="waitApproval" parameterType="DocumentBean" resultType="DocumentBean">		
-					SELECT  
-        			DM.DOCUMENT_NUM AS "dmNum",
-        			DM.DOCUMENT_TITLE AS "dmTitle",
-        			DS.DOCUMENT_TITLE AS "dmCode",
-        			MM.NAME AS "dmWriter",
-        			DOCUMENT_DATE AS "dmDate"
-        			FROM DM 
-        			INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
-        			INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
-        			INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
-        			WHERE DM.APPROVAL_CODE = 'P' 
-       				AND AL.SIGN_LOCATION IS NULL
-        			AND AL.APPROVAL_SEQ=(SELECT MIN(APPROVAL_SEQ)
-        			FROM AL
-        			WHERE SIGN_LOCATION IS NULL AND APPROVAL_ID=#{apId})
+        		WHERE WRITER = #{senderId} AND DOCUMENT_CODE='D'
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select> 		
+        		
+	<select id="countMyEnforceMent" resultType="Integer">
+		SELECT COUNT(*) FROM DM WHERE WRITER = #{senderId} AND DOCUMENT_CODE='E'
+	</select>
+	
+	<select id="myEnforceMent" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[		
+			SELECT * FROM(
+				SELECT  DISTINCT 
+				DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+        		APS.APPROVAL_NAME AS "apName",
+        		DOCUMENT_DATE AS "dmDate",
+				ROWNUM AS RNUM
+        		FROM MM
+        		INNER JOIN DM
+        		ON MM.COMPANY_CODE = DM.COMPANY_CODE
+				AND MM.ID = DM.WRITER 
+        		INNER JOIN APS
+        		ON DM.APPROVAL_CODE = APS.APPROVAL_CODE
+        		WHERE WRITER = #{senderId} AND DOCUMENT_CODE='E'
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	 
+	<select id="countWaitList" resultType="Integer">
+	<![CDATA[
+		SELECT COUNT(*) 
+		FROM DM 
+        INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+        INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+        WHERE DM.APPROVAL_CODE = 'P' 
+       	AND AL.SIGN_LOCATION IS NULL 
+		AND AL.APPROVAL_ID=#{senderId} 
+		AND AL.APPROVAL_SEQ_CHECK='P'
+        AND AL.APPROVAL_SEQ>=(SELECT MIN(APPROVAL_SEQ)
+        FROM AL
+        WHERE SIGN_LOCATION IS NULL AND APPROVAL_ID=#{senderId})
+	]]>
+	</select>
 
-	  </select>
-	  
-	  <select id="approvalProcced" parameterType="DocumentBean" resultType="DocumentBean">
-	  	
-	  		SELECT      DM.DOCUMENT_NUM AS "dmNum",
-        				DM.DOCUMENT_TITLE AS "dmTitle",
-       		 			DS.DOCUMENT_TITLE AS "dmCode",
-        				MM.NAME AS "dmWriter",
-        				DOCUMENT_DATE AS "dmDate"
-        				FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
-        				INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
-        				INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
-        				WHERE DM.APPROVAL_CODE = 'P' AND AL.APPROVAL_ID = #{apId}
-        				AND AL.SIGN_LOCATION IS NOT NULL  
-	  </select>
-	  
-	  
-	  <select id="completeApproval" parameterType="DocumentBean" resultType="DocumentBean">
-	  	
- 	    SELECT  DM.DOCUMENT_NUM AS "dmNum",
+	
+	<select id="waitApproval" parameterType="hashmap"  resultType="hashmap">
+		<![CDATA[		
+			SELECT * FROM(
+			SELECT 
+			DM.DOCUMENT_NUM AS "dmNum",
+        	DM.DOCUMENT_TITLE AS "dmTitle",
+        	DS.DOCUMENT_TITLE AS "dmCode",
+        	MM.NAME AS "dmWriter",
+        	DOCUMENT_DATE AS "dmDate",
+			ROWNUM AS RNUM
+			FROM DM 
+        	INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
+        	INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID 
+        	INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE 
+        	WHERE 
+			DM.APPROVAL_CODE = 'P' 
+       		AND AL.SIGN_LOCATION IS NULL 
+			AND AL.APPROVAL_ID=#{senderId}
+			AND AL.APPROVAL_SEQ_CHECK='P' 
+        	AND AL.APPROVAL_SEQ >= (SELECT MIN(APPROVAL_SEQ) 
+        	FROM AL 
+        	WHERE SIGN_LOCATION IS NULL AND APPROVAL_ID=#{senderId})
+			AND ROWNUM <= #{page} * #{perPageNum}) 
+			WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchPDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE '%'|| #{dmCode}  ||'%'
+		AND DM.APPROVAL_CODE = 'P' AND AL.APPROVAL_ID LIKE '%'|| #{dmWriteId}  ||'%'
+		AND AL.APPROVAL_SEQ_CHECK='C' AND AL.SIGN_LOCATION IS NOT NULL
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>	 
+
+	<select id = "countApprovalProceed" resultType = "Integer">
+		SELECT COUNT(*) 
+		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
+        INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID 
+        INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE 
+        WHERE DM.APPROVAL_CODE = 'P' AND AL.APPROVAL_ID = #{senderId} 
+		AND AL.APPROVAL_SEQ_CHECK='C'
+        AND AL.SIGN_LOCATION IS NOT NULL 
+	</select>
+ 
+	<select id="approvalProcced" parameterType="hashmap"  resultType="hashmap">
+	<![CDATA[		
+			SELECT * FROM(
+			SELECT   
+				DM.DOCUMENT_NUM AS "dmNum",
         		DM.DOCUMENT_TITLE AS "dmTitle",
        		 	DS.DOCUMENT_TITLE AS "dmCode",
         		MM.NAME AS "dmWriter",
-        		DOCUMENT_DATE AS "dmDate"
-        		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+        		DOCUMENT_DATE AS "dmDate",
+				ROWNUM AS RNUM 
+        		FROM DM 
+				INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
+        		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID 
+        		INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE 
+        		WHERE DM.APPROVAL_CODE = 'P' AND AL.APPROVAL_ID = #{senderId} 
+				AND AL.APPROVAL_SEQ_CHECK='C' AND AL.SIGN_LOCATION IS NOT NULL
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchCDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE = #{apCode}
+		AND AL.APPROVAL_ID = #{dmWriteId}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+	
+	<select id="countCompletedDocs" resultType ="Integer">
+		SELECT COUNT(*) 
+		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+        INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        WHERE DM.APPROVAL_CODE = 'C' AND AL.APPROVAL_ID = #{senderId}
+	</select>  
+	  
+	<select id="completeApproval" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[		
+			SELECT * FROM(
+			SELECT   
+				DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+       		 	DS.DOCUMENT_TITLE AS "dmCode",
+        		MM.NAME AS "dmWriter",
+        		DOCUMENT_DATE AS "dmDate",
+				ROWNUM AS RNUM 
+        		FROM DM 
+				INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
+        		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID 
+        		INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE 
+        		WHERE DM.APPROVAL_CODE = 'C' AND AL.APPROVAL_ID = #{senderId} 
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchRDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE = #{apCode}
+		AND AL.APPROVAL_ID = #{dmWriteId}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+	
+	<select id="countReturnedDocs" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
+        INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID 
+        INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE 
+        WHERE DM.APPROVAL_CODE = 'R' AND AL.APPROVAL_ID = #{senderId} 
+	</select>
+	  		
+	<select id="returnedApproval" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[		
+				SELECT * FROM(
+				SELECT   
+				DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+       		 	DS.DOCUMENT_TITLE AS "dmCode",
+        		MM.NAME AS "dmWriter",
+        		DOCUMENT_DATE AS "dmDate",
+				ROWNUM AS RNUM 
+        		FROM DM 
+				INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
+        		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID 
+        		INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE 
+        		WHERE DM.APPROVAL_CODE = 'R' AND AL.APPROVAL_ID = #{senderId} 
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchDDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.WRITER = MM.ID AND DM.COMPANY_CODE = MM.COMPANY_CODE 
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE = #{apCode}
+		AND AL.APPROVAL_ID = #{dmWriteId}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+	
+	<select id="countdeferredDocs" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
+        INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID 
+        INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE 
+        WHERE DM.APPROVAL_CODE = 'D' AND AL.APPROVAL_ID = #{senderId} 
+	</select>
+	
+	<select id="deferredApproval" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[		
+				SELECT * FROM(
+				SELECT   
+				DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+       		 	DS.DOCUMENT_TITLE AS "dmCode",
+        		MM.NAME AS "dmWriter",
+        		DOCUMENT_DATE AS "dmDate",
+				ROWNUM AS RNUM 
+        		FROM DM 
+				INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM 
+        		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID 
+        		INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE 
+        		WHERE DM.APPROVAL_CODE = 'D' AND AL.APPROVAL_ID = #{senderId} 
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchRFDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT DM.DOCUMENT_NUM AS dmNum,
+		DM.COMPANY_CODE AS cmCode,
+		DM.DOCUMENT_TITLE AS dmTitle,
+		DM.APPROVAL_CODE AS apCode,
+		DM.DOCUMENT_CODE AS dmCode,
+		MM.ID AS dmWriteId,
+		MM.NAME AS dmWriter,
+		DS.DOCUMENT_TITLE AS dmName,
+		DM.DOCUMENT_DATE AS dmDate 
+		FROM DM 
+		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+        INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        INNER JOIN RF ON DM.DOCUMENT_NUM = RF.DOCUMENT_NUM
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE LIKE '%'|| #{apCode} ||'%' 
+		AND RF.REFERENCE_ID = #{dmWriteId}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+
+	<select id="countReferredDocs" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM DM INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
+				INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+        		INNER JOIN RF ON DM.DOCUMENT_NUM = RF.DOCUMENT_NUM
+        WHERE RF.REFERENCE_ID=#{senderId} 
+	</select>
+	
+        
+  <select id="referenceApproval" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[		
+				SELECT * FROM(
+				SELECT  DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+        		DS.DOCUMENT_TITLE AS "dmCode",
+        		MM.NAME AS "dmWriter",
+        		DOCUMENT_DATE AS "dmDate",
+				ROWNUM AS RNUM 
+        		FROM DM 
         		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
         		INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
-        		WHERE DM.APPROVAL_CODE = 'C' AND AL.APPROVAL_ID = #{apId}
-	  </select>
-	  
-	  	   <select id="compaionApproval" parameterType="DocumentBean" resultType="DocumentBean">
-	  	
- 	  			SELECT DM.DOCUMENT_NUM AS "dmNum",
-        	           DM.DOCUMENT_TITLE AS "dmTitle",
-        			   DS.DOCUMENT_TITLE AS "dmCode",
-                       MM.NAME AS "dmWriter",
-                       DOCUMENT_DATE AS "dmDate"
-                       FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
-                       INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
-                       INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
-                       WHERE DM.APPROVAL_CODE = 'R' AND AL.APPROVAL_ID = #{apId}
-	  		</select>
-	  		
-	  		
-	  		<select id="deferList" parameterType="DocumentBean" resultType="DocumentBean">
-	  		 
- 				SELECT  DM.DOCUMENT_NUM AS "dmNum",
-       					DM.DOCUMENT_TITLE AS "dmTitle",
-        				DS.DOCUMENT_TITLE AS "dmCode",
-        				MM.NAME AS "dmWriter",
-        				DOCUMENT_DATE AS "dmDate"
-        				FROM DM INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
-        				INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
-        				INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
-        				WHERE DM.APPROVAL_CODE = 'D' AND AL.APPROVAL_ID = #{apId}
-        
-           </select>
-        
-        	<select id="referenceApproval" parameterType="DocumentBean" resultType="DocumentBean">
+        		INNER JOIN RF ON DM.DOCUMENT_NUM=RF.DOCUMENT_NUM
+        		WHERE RF.REFERENCE_ID=#{senderId}   
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchRLDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT RL.DOCUMENT_NUM AS dmNum,
+		RL.DOCUMENT_NUM AS "dmNum",
+        RL.DOCUMENT_TITLE AS "dmTitle",
+        DS.DOCUMENT_TITLE AS "dmCode",
+        RL.COMPANY_CODE AS "sentCmCode",
+		CM.COMPANY_NAME AS "cmName",
+        DOCUMENT_DATE AS "dmDate",
+		MM.NAME AS "writer" 
+		FROM RL 
+		INNER JOIN DS ON RL.DOCUMENT_TYPE = DS.DOCUMENT_CODE
+        INNER JOIN CM ON RL.COMPANY_CODE = CM.COMPANY_CODE 
+		INNER JOIN MM ON RL.COMPANY_CODE = MM.COMPANY_CODE AND RL.WRITER=MM.ID
+		WHERE 
+        RL.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND RL.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%'  
+		AND RL.RECEIVE_COMPANY = #{cmCode}
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD') 
+		]]>
+	</select>
+	
+	<select id="countReceiveDocs" resultType="Integer">
+		SELECT COUNT(*) 
+		FROM RL 
+		INNER JOIN CM ON RL.COMPANY_CODE = CM.COMPANY_CODE
+		WHERE RL.RECEIVE_COMPANY= #{senderId} 
+	</select>
+	
+	<select id="receiveList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[		
+				SELECT * FROM(
+				SELECT  
+				RL.DOCUMENT_NUM AS "dmNum",
+        		RL.DOCUMENT_TITLE AS "dmTitle",
+        		DS.DOCUMENT_TITLE AS "dmCode",
+        		RL.COMPANY_CODE AS "sentCmCode",
+				CM.COMPANY_NAME AS "cmName",
+        		DOCUMENT_DATE AS "dmDate",
+				MM.NAME AS "writer", 
+				ROWNUM AS RNUM 
+        		FROM RL 
+        		INNER JOIN DS ON RL.DOCUMENT_TYPE = DS.DOCUMENT_CODE
+        		INNER JOIN CM ON RL.COMPANY_CODE = CM.COMPANY_CODE 
+				INNER JOIN MM ON RL.COMPANY_CODE = MM.COMPANY_CODE AND RL.WRITER=MM.ID
+        		WHERE RL.RECEIVE_COMPANY = #{senderId}      
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>
+	
+	<select id="searchMLDocs" parameterType="DocumentBean" resultType="DocumentBean">
+		<![CDATA[
+		SELECT  
+		DM.DOCUMENT_NUM AS "dmNum",
+        DM.DOCUMENT_TITLE AS "dmTitle",
+        DS.DOCUMENT_TITLE AS "dmCode",
+        MM.NAME AS "dmWriter",
+        DOCUMENT_DATE AS "dmDate",
+		ROWNUM AS RNUM 
+        FROM DM 
+        INNER JOIN PL ON dm.document_num = pl.document_num
+        INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER = MM.ID
+        INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+		WHERE DM.COMPANY_CODE=#{cmCode} 
+        AND DM.DOCUMENT_NUM LIKE '%'|| #{dmNum} ||'%'  
+		AND MM.NAME LIKE '%'|| #{dmWriter} ||'%' 
+		AND DM.DOCUMENT_TITLE LIKE '%'|| #{dmTitle} ||'%' 
+		AND DM.DOCUMENT_CODE LIKE  '%'|| #{dmCode} ||'%'  
+		AND APPROVAL_CODE LIKE '%'|| #{apCode} ||'%' 
+        AND PL.ID = #{dmWriteId}   
+		AND DOCUMENT_DATE BETWEEN TO_DATE(#{dmDate},'YYYYMMDD') AND TO_DATE(#{dmDate2},'YYYYMMDD')
+		]]>
+	</select>
+	
+	<select id="countMyList" resultType="Integer">
+		SELECT COUNT(*) FROM PL WHERE ID=#{senderId}
+	</select>
+	
+	<select id="myList" parameterType="hashmap" resultType="hashmap">
+		<![CDATA[		
+				SELECT * FROM(
+				SELECT  DM.DOCUMENT_NUM AS "dmNum",
+        		DM.DOCUMENT_TITLE AS "dmTitle",
+        		DS.DOCUMENT_TITLE AS "dmCode",
+        		MM.NAME AS "dmWriter",
+        		DOCUMENT_DATE AS "dmDate",
+				ROWNUM AS RNUM 
+        		FROM DM 
+                INNER JOIN PL ON dm.document_num = pl.document_num
+        		INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER = MM.ID
+        		INNER JOIN DS ON DM.DOCUMENT_CODE = DS.DOCUMENT_CODE
+        		WHERE PL.ID = #{senderId}    
+				AND ROWNUM <= #{page} * #{perPageNum}) 
+				WHERE RNUM > (#{page} -1) * #{perPageNum} 
+		]]>
+	</select>        	
+
+	<insert id="insTemporary" parameterType="DocumentBean">
+		INSERT INTO TL (DOCUMENT_NUM, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES(CONCAT(#{cmCode}, TEMP_SEQ.NEXTVAL), #{dmWriteId}, #{dmTitle}, SYSDATE, #{cmCode}, #{dmCode})
+	</insert>
         	
-        	SELECT
-        			DM.DOCUMENT_NUM AS "dmNum",
-        			DM.DOCUMENT_TITLE AS "dmTitle",
-        			DS.DOCUMENT_TITLE AS "dmCode",
-        			MM.NAME AS "dmWriter",
-        			DOCUMENT_DATE AS "dmDate"
-        			FROM DM 
-        			INNER JOIN MM ON DM.COMPANY_CODE = MM.COMPANY_CODE AND DM.WRITER=MM.ID
-        			INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
-        			INNER JOIN RF ON DM.DOCUMENT_NUM=RF.DOCUMENT_NUM
-        			INNER JOIN RD ON DM.DOCUMENT_NUM=RD.DOCUMENT_NUM
-        			WHERE RF.REFERENCE_ID=#{refpId} OR RD.READER_ID=#{readingId}
+	<select id="selTemporary" parameterType="DocumentBean" resultType="DocumentBean">
+		SELECT DOCUMENT_NUM AS "dmNum", DOCUMENT_DATE AS "dmDate" FROM TL WHERE WRITER = #{dmWriteId} AND DOCUMENT_TITLE = #{dmTitle} AND COMPANY_CODE = #{cmCode}
+	</select>
         	
-        	</select>
+	<select id="selDmCode" parameterType="String" resultType="String">
+		SELECT DOCUMENT_NUM AS "dmNum" FROM TL WHERE WRITER = #{dmWriteId} AND DOCUMENT_TITLE = #{dmTitle} AND COMPANY_CODE = #{cmCode}
+	</select>
         	
-        	<insert id="insTemporary" parameterType="DocumentBean">
-        		INSERT INTO TL (DOCUMENT_NUM, WRITER, COMPANY_CODE, DOCUMENT_CODE) VALUES(CONCAT(#{cmCode}, TEMP_SEQ.NEXTVAL), #{apId}, #{cmCode}, #{dmCode})
-        	</insert>
+	<update id="upTemporary" parameterType="DocumentBean">
+		UPDATE TL SET DOCUMENT_TITLE = #{dmTitle}, DOCUMENT_DATE = TO_CHAR(SYSDATE) WHERE DOCUMENT_NUM = #{dmNum}
+	</update>
+        	
+	<delete id="delTemporary" parameterType ="DocumentBean">
+		DELETE FROM TEMPORARYLIST WHERE DOCUMENT_NUM = #{dmNum}
+	</delete>
+	
+	<insert id="insDocument" parameterType="WriteBean">
+		INSERT INTO DOCUMENT (DOCUMENT_NUM, APPROVAL_CODE, FILE_LOCATION, WRITER, DOCUMENT_TITLE, DOCUMENT_DATE, COMPANY_CODE, DOCUMENT_CODE) VALUES (#{dmNum}, 'P', #{fileLoc}, #{dmWriter}, #{dmTitle}, TO_DATE(TO_CHAR(TO_timestamp(#{dmDate}), 'yyyymmddhh24miss'), 'yyyymmddhh24miss'), #{cmCode}, #{dmCode})
+	</insert>
+	
+	<insert id="insApprovalComment" parameterType="WriteBean">
+		INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM, SIGN_LOCATION, APPROVAL_SEQ_CHECK) VALUES(#{dmWriter}, '1', #{dmNum}, #{signLoc}, 'C')
+	</insert>
+   
+   <insert id="insApprovalProgress" parameterType="WriteBean">
+      INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM, APPROVAL_SEQ_CHECK) VALUES(#{dmWriter}, #{aplSeq}, #{dmNum}, 'P')
+   </insert>
+   
+   <insert id="insApprovalOther" parameterType="WriteBean">
+      INSERT INTO APPROVALLINE (APPROVAL_ID, APPROVAL_SEQ, DOCUMENT_NUM, APPROVAL_SEQ_CHECK) VALUES(#{dmWriter}, #{aplSeq}, #{dmNum}, 'W')
+   </insert>
+	
+	<insert id="insReference" parameterType="WriteBean">
+		INSERT INTO RF (DOCUMENT_NUM, REFERENCE_ID) VALUES(#{dmNum}, #{refId})
+	</insert>	
+
+	<select id="detailDocument" parameterType="WriteBean" resultType="WriteBean">
+		SELECT
+		DM.DOCUMENT_TITLE AS "dmTitle",
+		DM.DOCUMENT_NUM AS "dmNum",
+		DM.FILE_LOCATION AS "fileLoc",
+		DM.DOCUMENT_DATE AS "dmDate",
+		DM.APPROVAL_CODE AS " apCode",
+		MM.NAME AS "dmWriter",
+		AL.APPROVAL_ID AS "apId",
+		AL.APPROVAL_SEQ AS "aplSeq",
+		AL.SIGN_LOCATION AS "signLoc",
+		AL.RECEIVER AS "receiver",
+		DS.DOCUMENT_TITLE AS "dmName"
+		FROM DM
+		INNER JOIN AL ON DM.DOCUMENT_NUM = AL.DOCUMENT_NUM
+		INNER JOIN MM ON DM.WRITER = MM.ID
+		INNER JOIN DS ON DM.DOCUMENT_CODE=DS.DOCUMENT_CODE
+		WHERE DM.DOCUMENT_NUM=#{dmNumCheck}
+	</select>
+	
+	<select id="detailRefer" parameterType="ReadingReferenceBean" resultType="ReadingReferenceBean">	
+		SELECT 
+		RF.DOCUMENT_NUM AS"dmNum",
+		MM.NAME AS "rdName",
+		RF.REFERENCE_ID AS "rdId"
+		FROM RF
+		INNER JOIN MM ON RF.REFERENCE_ID=MM.ID
+		WHERE DOCUMENT_NUM=#{dmNum}
+	</select>
+	
+	<select id="signLocation" parameterType="ApprovalBean" resultType="ApprovalBean">
+		SELECT AL.SIGN_LOCATION AS "aplLocation",
+        AL.APPROVAL_SEQ AS "aplSeq"   
+		FROM AL
+        WHERE DOCUMENT_NUM=#{dmNum}
+	</select>
+	
+	<select id="selGrInfo" parameterType="String" resultType="String">
+		SELECT GR.GRADE_NAME AS "grName"
+		FROM MM INNER JOIN GR ON MM.GRADE_CODE = GR.GRADE_CODE
+		WHERE ID = #{apId}
+	</select>
+	
+	<select id="selDpInfo" parameterType="String" resultType="String">
+		SELECT DP.DEPARTMENT_NAME AS "dpName"
+		FROM MM INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND
+                         MM.COMPANY_CODE = DP.COMPANY_CODE
+		WHERE ID = #{apId}
+	</select>
+
+	<insert id="goMyList" parameterType="hashmap">
+		INSERT INTO PL VALUES(#{userId},#{dmNum})
+	</insert>
+	
+	<delete id="delMyList" parameterType="hashmap">
+		DELETE FROM PL WHERE ID=#{userId} AND DOCUMENT_NUM = #{dmNum}
+	</delete>
+
+	<select id="apList" parameterType="ApprovalBean" resultType="ApprovalBean">
+		SELECT  DISTINCT 
+        MM.NAME AS "aplName",
+        DP.DEPARTMENT_NAME AS "dpName",
+        GR.GRADE_NAME AS "grName",
+        AL.APPROVAL_SEQ AS "aplSeq"
+		FROM    AL
+		INNER JOIN MM ON AL.APPROVAL_ID = MM.ID
+		INNER JOIN DM ON AL.DOCUMENT_NUM = DM.DOCUMENT_NUM
+		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE
+		INNER JOIN GR ON MM.GRADE_CODE = GR.GRADE_CODE
+		WHERE AL.DOCUMENT_NUM=#{dmNum}
+		ORDER BY AL.APPROVAL_SEQ
+	</select>
+	
+	<select id="apCommentList" parameterType="ApprovalCommentBean" resultType="ApprovalCommentBean">
+		SELECT  DISTINCT 
+        MM.NAME AS "acName",
+        DP.DEPARTMENT_NAME AS "dpName",
+        GR.GRADE_NAME AS "grName",
+        AC.APPROVAL_COMMENT AS "acContents",
+        AC.APPROVAL_DATE AS "acDate"
+		FROM    AC
+		INNER JOIN MM ON AC.APPROVAL_WRITER = MM.ID
+		INNER JOIN DM ON AC.DOCUMENT_NUM = DM.DOCUMENT_NUM
+		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE
+		INNER JOIN GR ON MM.GRADE_CODE = GR.GRADE_CODE
+		WHERE AC.DOCUMENT_NUM=#{dmNum}
+	</select>
+	
+	<select id="cpCommentList" parameterType="CompanionDeferBean" resultType="CompanionDeferBean">
+		SELECT  DISTINCT 
+        MM.NAME AS "cpName",
+        DP.DEPARTMENT_NAME AS "dpName",
+        GR.GRADE_NAME AS "grName",
+        COD.COMPANION_COMMENT AS "cpContents",
+        COD.COMPANION_DATE AS "cpDate"
+		FROM    COD
+		INNER JOIN MM ON COD.COMPANION_WRITER = MM.ID
+		INNER JOIN DM ON COD.DOCUMENT_NUM = DM.DOCUMENT_NUM
+		INNER JOIN DP ON MM.DEPARTMENT_CODE = DP.DEPARTMENT_CODE AND MM.COMPANY_CODE = DP.COMPANY_CODE
+		INNER JOIN GR ON MM.GRADE_CODE = GR.GRADE_CODE
+		WHERE COD.DOCUMENT_NUM=#{dmNum}
+	</select>
+	
+	<select id="isApSeqCheck" parameterType="DocumentBean" resultType="int">
+		SELECT COUNT (*) 
+		FROM AL
+		WHERE 
+		APPROVAL_ID=#{apId} 
+		AND DOCUMENT_NUM=#{dmNum} 
+		AND
+		(SELECT APPROVAL_SEQ FROM AL WHERE APPROVAL_ID = #{apId} AND DOCUMENT_NUM=#{dmNum})
+		=
+		(SELECT MAX(APPROVAL_SEQ) 
+		FROM AL 
+		WHERE DOCUMENT_NUM=#{dmNum})
+	</select>
+		
+		
+	<update id ="approvalUpdateMyAplSeqCheck" parameterType="DocumentBean">
+		UPDATE AL
+		SET APPROVAL_SEQ_CHECK='C', SIGN_LOCATION=#{signLoc} 
+		WHERE APPROVAL_ID=#{apId}
+		AND DOCUMENT_NUM=#{dmNum}
+	</update>
+		
+	<update id ="approvalUpdateNextAplSeqCheck" parameterType="DocumentBean">	
+		UPDATE AL
+		SET APPROVAL_SEQ_CHECK='P'
+		WHERE APPROVAL_SEQ=
+		(SELECT APPROVAL_SEQ FROM AL WHERE APPROVAL_ID = #{apId} AND DOCUMENT_NUM=#{dmNum} )+'1'
+		AND DOCUMENT_NUM=#{dmNum}
+	</update>
+	
+	
+		
+	<insert id ="insertApprovalComment" parameterType="ApprovalCommentBean">
+		INSERT INTO AC VALUES (#{dmNum},#{acContents},#{acId}, SYSDATE)
+
+
+	</insert>
+	
+	
+<update id ="approvalFinalUpdateNextAplSeqCheck" parameterType="DocumentBean">
+		UPDATE DM
+		SET APPROVAL_CODE='C'
+		WHERE DOCUMENT_NUM=#{dmNum}
+	</update>
+		
+	<update id ="approvalFinalUpdateMyAplSeqCheck" parameterType="DocumentBean">
+		UPDATE AL
+		SET APPROVAL_SEQ_CHECK='C', SIGN_LOCATION=#{signLoc}  
+		WHERE APPROVAL_ID=#{apId}
+		AND DOCUMENT_NUM=#{dmNum}
+	</update>
+		
+
+		<update id="confirmDefer" parameterType="DocumentBean">
+			UPDATE DM
+			SET APPROVAL_CODE='D'
+			WHERE DOCUMENT_NUM=#{dmNum}
+		
+		</update>
+		
+		
+		<insert id ="insertCompanionComment" parameterType="CompanionBean">
+				
+			INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
+		
+		</insert>
+		
+			
+		<insert id ="insertDeferComment" parameterType="DeferBean">
+				
+			INSERT INTO COD VALUES (#{dmNum},#{cpContents},#{cpId},SYSDATE)
+			
+			</insert>
+
+
+		
+	<update id="confirmCompanion" parameterType="DocumentBean">
+		UPDATE DM
+		SET APPROVAL_CODE='R'
+		WHERE DOCUMENT_NUM=#{dmNum}
+	</update>
+
 </mapper>
-
-
-	
-	

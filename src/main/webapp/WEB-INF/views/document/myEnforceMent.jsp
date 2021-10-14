@@ -21,9 +21,10 @@
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
 <body>
+	<jsp:include page="../utils/navigation.jsp" />
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-	<h1 class="page-header">MyDraft</h1>
+	<h1 class="page-header">내가 보낸 시행문</h1>
 
 	<form>
 		<div class="form-row">
@@ -101,8 +102,8 @@
 				<tbody>
 					<c:forEach var="docList" items="${docList}">
 				<tr>
-				<td><c:out value="${docList.dmNum }"/></td>
-				<td><c:out value="${docList.dmTitle }"/></td>
+				<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum }"/></a></td>
+				<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmTitle }"/></a>a</td>
 				<td><c:out value="${docList.apName }"/></td>
 				<td><c:out value="${docList.dmDate }"/></td>
 					</tr>
@@ -111,8 +112,23 @@
 				</tbody>
 			</table>
 		</div>
+		<ul class="btn-group pagination">
+		<c:if test="${pagination.prev }">
+			<li><a
+				href='<c:url value="/myEnforceMent?page=${pagination.startPage-1 }"/>'><i
+					class="fa fa-chevron-left"></i></a></li>
+		</c:if>
+		<c:forEach begin="${pagination.startPage }"
+			end="${pagination.endPage }" var="pageNum">
+			<li><a href='<c:url value="/myEnforceMent?page=${pageNum }"/>'><i
+					class="fa">${pageNum }</i></a></li>
+		</c:forEach>
+		<c:if test="${pagination.next && pagination.endPage >0 }">
+			<li><a
+				href='<c:url value="/myEnforceMent?page=${pagination.endPage+1 }"/>'><i
+					class="fa fa-chevron-right"></i></a></li>
+		</c:if>
+	</ul>
 	</div>
-	
-		<jsp:include page="../utils/navigation.jsp" />
-	</body>
-	</html>
+</body>
+</html>

@@ -9,6 +9,7 @@
 	
 	<!-- Resources JS -->
 	<script src="/resources/js/login/main.js"></script>
+	<script src="/resources/js/document/searchAndList.js"></script>
 	<!-- Bootstrap core CSS -->
 	<link href="/webjars/bootstrap/3.4.1/css/bootstrap.css" rel="stylesheet">
 	<!-- Jquery Core JS -->
@@ -21,9 +22,10 @@
 	<link href="/resources/css/login/main.css" rel="stylesheet">
 </head>
 <body>
+	<jsp:include page="../utils/navigation.jsp" />
 	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 
-	<h1 class="page-header">결재진행함</h1>
+	<h1 class="page-header">결재 진행함</h1>
 
 	<form>
 		<div class="form-row">
@@ -31,7 +33,7 @@
 				<label for="inputDocumentNum">문서번호</label>
 			</div>
 			<div class="form-group col-md-11">
-				 <input type="text" class="form-control" name="dmNum" placeholder="문서번호">
+				 <input type="text" class="form-control"  name="dmNum" placeholder="문서번호">
 			</div>
 		</div>
 		<div class="form-row">
@@ -39,7 +41,7 @@
 				<label for="inputDocumentNum">제목</label>
 			</div>
 			<div class="form-group col-md-11">
-				 <input type="text" class="form-control" name="dmTitle" placeholder="제목">
+				 <input type="text" class="form-control" id = "dmTitle" name="dmTitle" placeholder="제목">
 			</div>
 		</div>
 		<div class="form-row">
@@ -47,21 +49,15 @@
 				<label for="inputDocumentNum">문서상태</label>
 			</div>
 			<div class="form-group col-md-5">
-				<select name="apCode"
-					class="form-control">
-					<option>선택</option>
-					<option value="P">진행</option>
-					<option value="C">완료</option>
-					<option value="R">반려</option>
-					<option value="D">보류</option>
-					<option value="F">회수</option>
-				</select>
+				<span name="apCode" value="P" class="form-control">
+						진행
+				</span>
 			</div>
 			<div class="form-group col-md-1">
 				<label for="inputDocumentNum">문서종류</label>
 			</div>
 			<div class="form-group col-md-5">
-				<select name="dmCode"
+				<select name="dmCode" id="dmCode"
 					class="form-control">
 					<option>선택</option>
 					<option value="D">기안</option>
@@ -80,7 +76,7 @@
 				<input type="date" class="form-control" name="dmDate"/>
 			</div>
 			<div class="form-group col-md-1">
-				<input type="button" class="btn btn-primary" value="Search" onClick="sampleFunction()"/>
+				<input type="button" class="btn btn-primary" value="Search" onClick="searchText('C','P')"/>
 			</div>
 		</div>
 		
@@ -99,11 +95,11 @@
 						<th>날짜</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id = "docListBody">
 			<c:forEach var="docList" items="${docList}">
 				<tr>
-					<td><c:out value="${docList.dmNum }"/></td>
-					<td><c:out value="${docList.dmTitle }"/></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}" /></a></td>
+					<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmTitle }"/></a></td>
 					<td><c:out value="${docList.dmCode }"/></td>				
 					<td><c:out value="${docList.dmWriter }"/></td>
 					<td><c:out value="${docList.dmDate }"/></td>
@@ -112,8 +108,23 @@
 				</tbody>
 			</table>
 		</div>
+		<ul class="btn-group pagination">
+				    <c:if test="${pagination.prev }">
+				    <li>
+				        <a href='<c:url value="/apIngList?page=${pagination.startPage-1 }"/>'><i class="fa fa-chevron-left"></i></a>
+				    </li>
+				    </c:if>
+				    <c:forEach begin="${pagination.startPage }" end="${pagination.endPage }" var="pageNum">
+				    <li>
+				        <a href='<c:url value="/apIngList?page=${pageNum }"/>'><i class="fa">${pageNum }</i></a>
+				    </li>
+				    </c:forEach>
+				    <c:if test="${pagination.next && pagination.endPage >0 }">
+				    <li>
+				        <a href='<c:url value="/apIngList?page=${pagination.endPage+1 }"/>'><i class="fa fa-chevron-right"></i></a>
+				    </li>
+				    </c:if>
+		</ul>
 	</div>
-	
-		<jsp:include page="../utils/navigation.jsp" />
-	</body>
-	</html>
+</body>
+</html>

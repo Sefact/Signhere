@@ -9,5 +9,17 @@
 		<typeAlias type="com.signhere.beans.EntrustBean" alias="EntrustBean"/>
 		<typeAlias type="com.signhere.beans.DepartmentBean" alias="DepartmentBean"/>
 		<typeAlias type="com.signhere.beans.GradeBean" alias="GradeBean"/>
+		<typeAlias type="com.signhere.beans.WriteBean" alias="WriteBean"/>
+		<typeAlias type="com.signhere.beans.ReadingReferenceBean" alias="ReadingReferenceBean"/>
+		<typeAlias type="com.signhere.beans.ApprovalBean" alias="ApprovalBean"/>
+		<typeAlias type="com.signhere.beans.ApprovalCommentBean" alias="ApprovalCommentBean"/>
+		<typeAlias type="com.signhere.beans.CompanionBean" alias="CompanionBean"/>
+		<typeAlias type="com.signhere.beans.DeferBean" alias="DeferBean"/>
+		<typeAlias type="com.signhere.beans.CompanionDeferBean" alias="CompanionDeferBean"/>
+		
+		
+		
+		
+		
 	</typeAliases>
 </configuration>

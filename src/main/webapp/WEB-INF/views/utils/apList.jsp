@@ -72,15 +72,15 @@
 			</div>
 			<div class="form-group col-md-1">
 				<input type="button" class="btn btn-primary" value="Search"
-					onClick="searchText()" />
+					onClick="adminSearchText()" />
 			</div>
 		</div>
 
 	</form>
-	<input id="updatedList" style="display:none;" value="${docList}" />
-	<h2 class="sub-header">문서리스트</h2>
+	<input id="updatedList" style="display: none;" value="${docList}" />
+	<h2 class="sub-header">문서 목록</h2>
 	<input type="button" class="btn btn-primary" value="Delete"
-			onClick="deleteDoc()" />
+		onClick="deleteDoc()" />
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>
@@ -94,17 +94,36 @@
 				</tr>
 			</thead>
 			<tbody>
-			<c:forEach var = "name" items="${docList}">
-				<tr>
-					<td><input type="checkBox" class="docListRow" value="${name.dmNum}"><c:out value="${name.dmNum}" /></td>
-					<td><c:out value="${name.dmTitle}" /></td>
-					<td><c:out value="${name.apName}" /></td>
-					<td><c:out value="${name.dmName}" /></td>
-					<td><c:out value="${name.dmWriter}" /></td>
-					<td><c:out value="${name.dmDate}" /></td>
-				</tr>
-			</c:forEach>
+				<c:forEach var="docList" items="${docList}">
+					<tr>
+						<td><input type="checkBox" class="docListRow"
+							value="${docList.DMNUM}">
+						<c:out value="${docList.DMNUM}" /></td>
+						<td><c:out value="${docList.DMTITLE}" /></td>
+						<td><c:out value="${docList.APNAME}" /></td>
+						<td><c:out value="${docList.DMNAME}" /></td>
+						<td><c:out value="${docList.DMWRITER}" /></td>
+						<td><c:out value="${docList.DMDATE}" /></td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 	</div>
+	<ul class="btn-group pagination">
+		<c:if test="${pagination.prev }">
+			<li><a
+				href='<c:url value="/apListAdmin?page=${pagination.startPage-1 }"/>'><i
+					class="fa fa-chevron-left"></i></a></li>
+		</c:if>
+		<c:forEach begin="${pagination.startPage }"
+			end="${pagination.endPage }" var="pageNum">
+			<li><a href='<c:url value="/apListAdmin?page=${pageNum }"/>'><i
+					class="fa">${pageNum }</i></a></li>
+		</c:forEach>
+		<c:if test="${pagination.next && pagination.endPage >0 }">
+			<li><a
+				href='<c:url value="/apListAdmin?page=${pagination.endPage+1 }"/>'><i
+					class="fa fa-chevron-right"></i></a></li>
+		</c:if>
+	</ul>
 </div>

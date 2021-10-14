@@ -23,8 +23,9 @@
 <body>
 
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-
-	<h1 class="page-header">MyDraft</h1>
+	<jsp:include page="../utils/navigation.jsp" />
+	
+	<h1 class="page-header">내가 보낸 기안문</h1>
 
 	<form>
 		<div class="form-row">
@@ -102,17 +103,33 @@
 				<tbody>
 				<c:forEach var="docList" items="${docList}">
 					<tr>
-						<td><a onClick='clicktest(${docList.dmNum})'><c:out value="${docList.dmNum}"/></a></td>
-						<td><a onClick='clicktest("${docList.dmTitle}")'><c:out value="${docList.dmTitle}"/></a></td>
-						<td><a onClick='clicktest("${docList.apName}")'><c:out value="${docList.apName}"/></a></td>
-						<td><a onClick='clicktest(${docList.dmDate})'><c:out value="${docList.dmDate}"/></a></td>
+						<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmNum}"/></a></td>
+						<td><a href="/documentBox?dmNumCheck=${docList.dmNum}" ><c:out value="${docList.dmTitle}"/></a></td>
+						<td><c:out value="${docList.apName}"/></td>
+						<td><c:out value="${docList.dmDate}"/></td>
 					</tr>
 					</c:forEach>			
 				</tbody>
 			</table>
 		</div>
+		<ul class="btn-group pagination">
+				    <c:if test="${pagination.prev }">
+				    <li>
+				        <a href='<c:url value="/myDraft?page=${pagination.startPage-1 }"/>'><i class="fa fa-chevron-left"></i></a>
+				    </li>
+				    </c:if>
+				    <c:forEach begin="${pagination.startPage }" end="${pagination.endPage }" var="pageNum">
+				    <li>
+				        <a href='<c:url value="/myDraft?page=${pageNum }"/>'><i class="fa">${pageNum }</i></a>
+				    </li>
+				    </c:forEach>
+				    <c:if test="${pagination.next && pagination.endPage >0 }">
+				    <li>
+				        <a href='<c:url value="/myDraft?page=${pagination.endPage+1 }"/>'><i class="fa fa-chevron-right"></i></a>
+				    </li>
+				    </c:if>
+		</ul>
+		
 	</div>
-	
-		<jsp:include page="../utils/navigation.jsp" />
-	</body>
-	</html>
+</body>
+</html>

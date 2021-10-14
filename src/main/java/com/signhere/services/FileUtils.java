@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.signhere.beans.ApprovalBean;
 import com.signhere.beans.ApprovalCommentBean;
-import com.signhere.beans.CompanionDeferBean;
+import com.signhere.beans.CompanionBean;
 import com.signhere.beans.DocumentBean;
 import com.signhere.beans.EntrustBean;
 import com.signhere.beans.ReadingReferenceBean;
@@ -47,7 +47,7 @@ public class FileUtils {
 		return mav;
 	}
 	
-	public ModelAndView mCompanion(DocumentBean db, CompanionDeferBean cdb) {
+	public ModelAndView mCompanion(DocumentBean db, CompanionBean cdb) {
 		mav = new ModelAndView();
 		
 		mav.setViewName("companionApproval");
@@ -55,7 +55,7 @@ public class FileUtils {
 		return mav;
 	}
 	
-	public ModelAndView mDefer(ApprovalBean ab, CompanionDeferBean cdb) {
+	public ModelAndView mDefer(ApprovalBean ab, CompanionBean cdb) {
 		mav = new ModelAndView();
 		
 		mav.setViewName("deferList");
@@ -95,10 +95,10 @@ public class FileUtils {
 		return mav;
 	}
 	
-	public List<DocumentBean> mDocumentBox(DocumentBean db) {
+	public List<DocumentBean> mDocumentBox(String dmNum) {
 		List<DocumentBean> docList;
 		
-		docList = null;
+		docList = sqlSession.selectList("selectWaitDocDetail",dmNum);
 		
 		return docList;
 	}

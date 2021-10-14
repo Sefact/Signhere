@@ -34,6 +34,8 @@ public class Management {
 	@Autowired
 	Encryption enc;
 	
+	Pagination pgn;
+	
 	ModelAndView mav;
 	private DefaultTransactionDefinition def;
 	private TransactionStatus status;
@@ -43,37 +45,54 @@ public class Management {
 		mav = new ModelAndView();
 	}
 	
-	public ModelAndView mAdmin() {
-		
-		UserBean ub = new UserBean();
-		DepartmentBean dp = new DepartmentBean();
-		GradeBean gr = new GradeBean();
-		
+	public ModelAndView mAdmin(Criteria cri) {
+		mav = new ModelAndView();
 		try {
-			ub.setCmCode((String)ssn.getAttribute("cmCode"));
-			dp.setCmCode((String)ssn.getAttribute("cmCode"));
+			cri.setSenderId((String)ssn.getAttribute("cmCode"));
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}	
 		
-		//사원리스트
-		List<UserBean> empList;
-		empList = sqlSession.selectList("getAllEmp",ub);
-		//부서리스트
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countAllEmp",cri));
 		
-		List<DepartmentBean> dpList;
-		dpList = sqlSession.selectList("getAllDp",dp);
-		//직급리스트
-		List<GradeBean> grList;
-		grList = sqlSession.selectList("getAllGr",gr);
+		List<Map<String,Object>> empList = sqlSession.selectList("getAllEmp",cri);
+		List<Map<String,Object>> dpList = sqlSession.selectList("getAllDp",cri);
+		List<Map<String,Object>> grList = sqlSession.selectList("getAllGr",cri);
+		
+	
 		
 		mav.addObject("grList",grList);
 		mav.addObject("dpList",dpList);
 		mav.addObject("empList",empList);
+		mav.addObject("pagination", pgn);
 		mav.setViewName("admin/admin");
+		
 		
 		return mav;
 	}
+	
+	public UserBean mailDup(UserBean ub) {
+	
+		
+		String dupCheck="";
+		
+		int dupId=sqlSession.selectOne("mailDupCheck",ub);
+		
+		if(dupId==0) {
+			dupCheck="사용가능";
+		}else {
+			dupCheck="사용불가";
+			
+		}
+		
+		ub.setMessage(dupCheck);
+		
+		return ub;
+	
+	}
+	
 	
 
 	public String mAddEmployee(UserBean ub) {
@@ -85,9 +104,10 @@ public class Management {
 			e.printStackTrace();
 		}
 		
-		
+		//암호화 추가 
 		int result = sqlSession.insert("addNewEmp",ub);
 		
+
 		return result+"";
 	}
 
@@ -105,6 +125,7 @@ public class Management {
 		}
 		
 		cb.setMessage(dupCheck);
+		
 		
 		return cb;
 	}
@@ -126,6 +147,8 @@ public class Management {
 			
 		}
 		ub.setMessage(dupCheck);
+		
+
 		return ub;
 	}
 
@@ -158,30 +181,25 @@ public class Management {
 		return result;
 	}
 
-	public ModelAndView mApListAdmin() {
-		// session에 id와 company Code가 있다는 가정하에 진행 
-		DocumentBean db = new DocumentBean();
+	public ModelAndView mApListAdmin(Criteria cri) {
+		mav = new ModelAndView();
 		try {
-			db.setCmCode((String)ssn.getAttribute("cmCode"));
+			cri.setSenderId((String)ssn.getAttribute("cmCode"));
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		db.setApCode("C");
-		List<DocumentBean> searchedList;
-		Map<String,Object> map = new HashMap<>();
-
-		searchedList = sqlSession.selectList("getAllApListAdmin",db);
-
-		if(searchedList != null) {
-			mav.addObject("docList",searchedList);
-			//mav.addObject("docList",searchedList);
-		}else {
-			mav.addObject("docList","문서가 존재하지않습니다.");
-		}
-
+		}	
+		
+		pgn = new Pagination();
+		pgn.setCri(cri);
+		pgn.setTotalCount((Integer) sqlSession.selectOne("countAllApproval",cri));
+		
+		List<Map<String,Object>> getAllApListAdmin = sqlSession.selectList("getAllApListAdmin",cri);
+		
+		
 		mav.setViewName("admin/aplistAdmin");
-
-
+		mav.addObject("docList", getAllApListAdmin);
+		mav.addObject("pagination", pgn);
+		
 		return mav;
 	}
 
@@ -309,8 +327,15 @@ public class Management {
 		this.handleNullValues(ub);
 		List<UserBean> empList;
 		
+		
 		empList = sqlSession.selectList("searchEmp",ub);
-		empList.get(0).setMessage(empList.size()+"");
+		if(empList.size() != 0) {
+			empList.get(0).setMessage(empList.size()+"");
+		}else {
+			ub.setMessage("1");
+			empList.add(ub);
+		}
+
 		return empList;
 	}
 
@@ -348,6 +373,8 @@ public class Management {
 		System.out.println(result);
 		return result;
 	}
+
+
 
 
 }

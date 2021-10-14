@@ -19,7 +19,9 @@
 </head>
 <body>   
     <div class="login-form">
-        <h2 class="text-center">Sign Here</h2>   
+   
+        <h2 class="text-center">Sign Here</h2> 
+         <div class="message" style="text-align:center; font-size:30px; color:red;">${failMessage}</div>  
         <div class="form-group has-error">
         	<input type="text" class="form-control" name="cmCode" placeholder="회사코드:사업자번호 10자리 (하이픈제외)" required="required" onBlur="dupCmCodeCheckblur()">
         </div>
@@ -42,11 +44,13 @@
         </div>
        <div id="pwdMsg"></div>
         <div class="form-group">
-            <input type="password" class="form-control" name="userPwd" placeholder="비밀번호 확인" onBlur="pwdConfirm()">
+            <input type="password" class="form-control" name="userPwd2" placeholder="비밀번호 확인" onBlur="pwdConfirm()">
         </div>
          <div id="pwdMsg2"></div>
         <div class="form-group">
-            <input type="text" class="form-control" name="userMail" placeholder="이메일" required="required">
+            <input type="text" class="form-control" name="userMail" placeholder="이메일" onBlur="mailValidate()" > 
+             <input id="dupBtnMail" type="button" value="중복체크" onClick="dupUserMailCheck()" />
+             <div id="dupBtnUserMail2"></div>
         </div>       
         <div class="form-group">
             <button type="submit" class="btn btn-primary btn-lg btn-block" onClick="requestSignUp()">확인</button>
