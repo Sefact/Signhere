@@ -40,8 +40,8 @@
     <bean id="javaMail" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.naver.com"/>
 		<property name="port" value="465" />
-		<property name="username" value="telecaster0"/>
-		<property name="password" value="fuckyourself!@#"/>
+		<property name="username" value="${javamail.userId}"/>
+		<property name="password" value="${javamail.password}"/>
 		<property name="defaultEncoding" value="utf-8"/>
 		<property name="javaMailProperties">
 			<props>
