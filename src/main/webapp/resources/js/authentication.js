@@ -327,7 +327,10 @@ function dupUserMailCheck2(jsonData){
 		{userMailCheck="false";
 			alert("이미 존재하는 메일입니다");
 			userMail.value="";
-			userMail.focus();
+			selTimeout(function(){
+				
+					userMail.focus();
+			},2000);	
 }
 }
 //메일 재입력 button
