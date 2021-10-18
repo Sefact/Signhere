@@ -717,7 +717,9 @@
 					console.log(data.result);
 					
 					var delHtml = "";
+
 					delHtml += "<input type='button'  class='btn btn-primary' data-src="+ data.result +" id='docDelete' value='지우기'/>";
+
 					
 					if($("#docDelete").length > 0) {
 						console.log("Delete Button already");

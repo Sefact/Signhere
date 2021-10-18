@@ -327,8 +327,15 @@ public class Management {
 		this.handleNullValues(ub);
 		List<UserBean> empList;
 		
+		
 		empList = sqlSession.selectList("searchEmp",ub);
-		empList.get(0).setMessage(empList.size()+"");
+		if(empList.size() != 0) {
+			empList.get(0).setMessage(empList.size()+"");
+		}else {
+			ub.setMessage("1");
+			empList.add(ub);
+		}
+
 		return empList;
 	}
 
